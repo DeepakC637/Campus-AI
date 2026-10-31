@@ -1,0 +1,13 @@
+# PlacementHub Agent Rules
+
+- Always read docs/SPEC.md before implementing any feature. It is the source of truth for models, roles, modules, and URLs.
+- CRITICAL — canonical field names are locked in docs/SPEC.md Section 10. Use these EXACT names, never a "more descriptive" alternative: StudentProfile.year (not graduation_year), Interview.scheduled_at (not scheduled_time), Interview.link_or_venue (not link_or_location), PlacementRecord.package_lpa (not salary_package). This list exists because an earlier build of this project drifted from the spec on these exact fields and it cost a full audit-and-fix cycle to repair. Do not repeat that mistake.
+- Match the Stitch designs in design/stitch/ when building templates — same sidebar layout, same blue (#2563EB) and white theme, same card and badge styles.
+- Stack: Django, SQLite for dev, PostgreSQL for prod, Tailwind CSS (via CDN for now), vanilla JS where needed.
+- One Django app per module, as scaffolded in Phase 3. Do not merge or rename apps without asking.
+- Models must match the ER diagram and field list in docs/SPEC.md section 8 exactly, including field names.
+- Every view must enforce role-based access (Student/Recruiter/Admin) per docs/SPEC.md section 7.
+- Application has a unique constraint on (student, job).
+- Resume parsing and AI scoring run synchronously at upload/apply time — no Celery.
+- After generating code for a phase, list what was created/changed in plain text before finishing.
+- Work one phase at a time. Do not jump ahead to later phases unless asked.
