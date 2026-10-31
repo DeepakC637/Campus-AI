@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="admin_dashboard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#7bd0ff", "on-tertiary": "#ffffff", "inverse-primary": "#b4c5ff", "inverse-surface": "#2d3133", "on-primary-fixed": "#00174b", "on-error-container": "#93000a", "surface-container-highest": "#e0e3e5", "outline": "#737686", "tertiary": "#005b7c", "surface-container-lowest": "#ffffff", "on-surface-variant": "#434655", "on-tertiary-container": "#e1f2ff", "on-secondary": "#ffffff", "background": "#f7f9fb", "on-secondary-fixed-variant": "#3f465c", "tertiary-container": "#00759f", "secondary": "#565e74", "on-secondary-container": "#5c647a", "error": "#ba1a1a", "primary": "#004ac6", "surface-bright": "#f7f9fb", "on-surface": "#191c1e", "on-primary-container": "#eeefff", "primary-fixed-dim": "#b4c5ff", "surface": "#f7f9fb", "inverse-on-surface": "#eff1f3", "on-error": "#ffffff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "on-background": "#191c1e", "surface-tint": "#0053db", "on-tertiary-fixed-variant": "#004c69", "outline-variant": "#c3c6d7", "secondary-fixed": "#dae2fd", "tertiary-fixed": "#c4e7ff", "secondary-container": "#dae2fd", "surface-variant": "#e0e3e5", "surface-container-low": "#f2f4f6", "on-secondary-fixed": "#131b2e", "surface-container": "#eceef0", "on-primary-fixed-variant": "#003ea8", "surface-container-high": "#e6e8ea", "on-primary": "#ffffff", "secondary-fixed-dim": "#bec6e0", "primary-container": "#2563eb", "on-tertiary-fixed": "#001e2c", "primary-fixed": "#dbe1ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "2rem", "space-md": "1rem", "gutter": "1.5rem" }, "fontFamily": { "headline-lg": ["Inter"], "body-lg": ["Inter"], "headline-xl": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><header class="fixed top-0 left-64 right-0 h-16 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between px-gutter"><div class="flex items-center gap-space-md"><span class="text-headline-sm text-on-surface">Admin Central</span></div><div class="flex items-center gap-space-md"><button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-space-sm pl-space-sm border-l border-outline-variant/30"><div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-label-md">AD</div><div class="hidden md:block text-left"><div class="text-label-md text-on-surface">Placement Office</div><div class="text-body-sm text-on-surface-variant">Admin Portal</div></div></div></div></header><aside class="fixed top-0 left-0 w-64 h-full bg-surface-container-low border-r border-outline-variant/20 flex flex-col z-50"><div class="h-16 flex items-center px-gutter gap-space-md border-b border-outline-variant/25"><img alt="PlacementHub Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsgrj5BFOSo8sfSwGAqGk39iHjmtNWmwY-JMSj0-9NvcKFG8Hv2i18JnoEOyZAzOQE30yfxYT59_RMHqsQrfR6YOYCBDqc0uynKa76KKHdofXRCZQtXdMpRjMOuElIdpagaSSk3sZD9Q968OlEjqNI8ky3pOhoJEIbY7wKdgIqh-s4XoFBxPNARC37lpG7URFkZMFXFh-EuqcR2YgXtQXdYBYkpwONC8CCcpNWqRzi5bhyNOhY26yR"/><span class="text-headline-sm text-primary">PlacementHub</span></div><nav class="flex-1 py-space-md px-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm"><a aria-current="page" class="transition-colors flex items-center gap-space-md bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm" data-path="admin-dashboard" href="#">Dashboard</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-students" href="#">Students</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-recruiters" href="#">Recruiters</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-approvals" href="#">Approvals</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-placements" href="#">Placements</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-reports" href="#">Reports</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="admin-logout" href="#">Logout</a></nav><div class="p-space-md border-t border-outline-variant/25"><div class="text-body-sm text-on-surface-variant text-center">PlacementHub Admin</div></div></aside><main class="w-full pl-64 pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full px-margin py-space-lg gap-space-xl">
+<!-- Command Header & Quick Action Row -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm text-primary tracking-wide uppercase">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Realtime Analytics Sync Active</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Institutional Placement Command Center</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">University Placement Cell Overview • Academic Year 2024–2025</p>
+</div>
+<!-- Quick Action Bar -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-label-md font-label-md transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">picture_as_pdf</span>
+<span>Download Cycle Report (PDF)</span>
+</button>
+<button class="relative flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-label-md font-label-md transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px] text-tertiary">verified_user</span>
+<span>Verify New Recruiters</span>
+<span class="ml-space-xs px-space-xs py-0.5 rounded-full bg-tertiary text-on-tertiary text-label-sm font-label-sm">6</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary text-label-md font-label-md transition-all shadow-sm hover:shadow-md active:scale-95">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Add Placement Drive</span>
+</button>
+</div>
+</div>
+<!-- Key Institutional Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-primary/5 group-hover:scale-125 transition-transform duration-500"></div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Total Students Registered</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">school</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="text-headline-md font-headline-md text-on-surface tracking-tight">2,840</div>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="material-symbols-outlined text-primary text-[16px]">trending_up</span>
+<span class="text-label-sm font-label-sm text-primary font-semibold">+12%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">vs last academic cycle</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 88%"></div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-tertiary/5 group-hover:scale-125 transition-transform duration-500"></div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Corporate Partners</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="text-headline-md font-headline-md text-on-surface tracking-tight">148</div>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="material-symbols-outlined text-tertiary text-[16px]">verified</span>
+<span class="text-body-sm font-body-sm text-on-surface">Verified industry recruiters</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-tertiary h-full rounded-full transition-all duration-1000" style="width: 72%"></div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-secondary-fixed/30 group-hover:scale-125 transition-transform duration-500"></div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Active Job Drives</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">work_history</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="text-headline-md font-headline-md text-on-surface tracking-tight">64</div>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="text-body-sm font-body-sm text-on-surface">Live recruitment drives</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-1000" style="width: 64%"></div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-primary/10 group-hover:scale-125 transition-transform duration-500"></div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Placement Rate</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="text-headline-md font-headline-md text-on-surface tracking-tight">84.6%</div>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="material-symbols-outlined text-primary text-[16px]">arrow_upward</span>
+<span class="text-label-sm font-label-sm text-primary font-semibold">+6.2%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">vs previous cycle</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-1000" style="width: 84.6%"></div>
+</div>
+</div>
+</div>
+<!-- Interactive Visual Data Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-stretch">
+<!-- Left Card: Placements by Engineering Branch (7 Cols) -->
+<div class="lg:col-span-7 p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface tracking-tight">Placements by Engineering Branch</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Graduation benchmark cohort tracking for 2024–2025</p>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container rounded-lg p-1 text-label-sm font-label-sm">
+<span class="px-space-sm py-1 bg-surface-container-lowest rounded shadow-sm text-on-surface font-semibold">2024–25</span>
+<span class="px-space-sm py-1 text-on-surface-variant hover:text-on-surface cursor-pointer">Previous</span>
+</div>
+</div>
+<!-- Branch Bar Chart -->
+<div class="mt-space-lg flex flex-col gap-space-md">
+<!-- Computer Science -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Computer Science &amp; Engineering</span>
+<span class="font-semibold text-primary">94%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-700 hover:opacity-90" style="width: 94%"></div>
+</div>
+</div>
+<!-- Data Science & AI -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Data Science &amp; Artificial Intelligence</span>
+<span class="font-semibold text-primary">91%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-primary-container transition-all duration-700 hover:opacity-90" style="width: 91%"></div>
+</div>
+</div>
+<!-- Electrical & ECE -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Electrical &amp; Electronics Engineering (ECE)</span>
+<span class="font-semibold text-tertiary">82%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-tertiary-container transition-all duration-700 hover:opacity-90" style="width: 82%"></div>
+</div>
+</div>
+<!-- Mechanical -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Mechanical Engineering</span>
+<span class="font-semibold text-secondary">76%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-secondary transition-all duration-700 hover:opacity-90" style="width: 76%"></div>
+</div>
+</div>
+<!-- Civil & Infrastructure -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Civil &amp; Infrastructure Systems</span>
+<span class="font-semibold text-on-surface-variant">68%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-outline transition-all duration-700 hover:opacity-90" style="width: 68%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Metrics Strip -->
+<div class="mt-space-lg pt-space-md flex items-center justify-between bg-surface-container-low p-space-md rounded-xl">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">insights</span>
+<span class="text-body-sm font-body-sm text-on-surface font-medium">CS &amp; AI accounts for 58% of global international tier-1 offers</span>
+</div>
+<span class="text-label-sm font-label-sm text-primary cursor-pointer hover:underline">Explore Branch Metrics →</span>
+</div>
+</div>
+<!-- Right Card: Application Funnel Breakdown (5 Cols) -->
+<div class="lg:col-span-5 p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface tracking-tight">Application Funnel Breakdown</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Current pipeline conversion stages</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<!-- Donut & Legends -->
+<div class="mt-space-md flex flex-col sm:flex-row items-center justify-center gap-space-lg">
+<!-- Donut Graphic (Inline SVG) -->
+<div class="relative w-44 h-44 flex items-center justify-center flex-shrink-0">
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 120 120">
+<!-- Background Ring -->
+<circle class="text-surface-container" cx="60" cy="60" fill="transparent" r="46" stroke="currentColor" stroke-width="14"></circle>
+<!-- Applied: 42% (circumference ~ 289, 42% = 121.38, dashoffset: 0) -->
+<circle class="transition-all duration-1000" cx="60" cy="60" fill="transparent" r="46" stroke="#2563EB" stroke-dasharray="121.38 289" stroke-dashoffset="0" stroke-width="14"></circle>
+<!-- Shortlisted: 28% (28% of 289 = 80.92, dashoffset: -121.38) -->
+<circle class="transition-all duration-1000" cx="60" cy="60" fill="transparent" r="46" stroke="#7bd0ff" stroke-dasharray="80.92 289" stroke-dashoffset="-121.38" stroke-width="14"></circle>
+<!-- Selected/Offers: 18% (18% of 289 = 52.02, dashoffset: -202.3) -->
+<circle class="transition-all duration-1000" cx="60" cy="60" fill="transparent" r="46" stroke="#00759f" stroke-dasharray="52.02 289" stroke-dashoffset="-202.3" stroke-width="14"></circle>
+<!-- Rejected: 12% (12% of 289 = 34.68, dashoffset: -254.32) -->
+<circle class="transition-all duration-1000" cx="60" cy="60" fill="transparent" r="46" stroke="#ba1a1a" stroke-dasharray="34.68 289" stroke-dashoffset="-254.32" stroke-width="14"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+<span class="text-headline-sm font-headline-sm text-on-surface">11.4k</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Submissions</span>
+</div>
+</div>
+<!-- Funnel Legends -->
+<div class="flex flex-col gap-space-sm w-full">
+<div class="flex items-center justify-between p-space-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span>
+<span class="text-body-sm font-body-sm text-on-surface">Applied</span>
+</div>
+<span class="text-label-md font-label-md font-semibold text-on-surface">42%</span>
+</div>
+<div class="flex items-center justify-between p-space-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-body-sm font-body-sm text-on-surface">Shortlisted</span>
+</div>
+<span class="text-label-md font-label-md font-semibold text-on-surface">28%</span>
+</div>
+<div class="flex items-center justify-between p-space-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-tertiary-container"></span>
+<span class="text-body-sm font-body-sm text-on-surface">Selected / Offers</span>
+</div>
+<span class="text-label-md font-label-md font-semibold text-on-surface">18%</span>
+</div>
+<div class="flex items-center justify-between p-space-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-error"></span>
+<span class="text-body-sm font-body-sm text-on-surface">Not Selected</span>
+</div>
+<span class="text-label-md font-label-md font-semibold text-on-surface">12%</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>Average processing timeline:</span>
+<span class="font-semibold text-on-surface">9.4 Days per Drive</span>
+</div>
+</div>
+</div>
+<!-- Recent Placement Drives Activity Feed Section -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface tracking-tight">Recent Placement Drives Activity</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">High-impact marquee campus placements closed in the past 7 days</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span>Filter Status</span>
+</div>
+<button class="text-label-sm font-label-sm text-primary hover:underline font-semibold">View All 64 Drives →</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm">
+<th class="py-space-sm px-space-md rounded-l-lg">Enterprise Partner</th>
+<th class="py-space-sm px-space-md">Drive Type</th>
+<th class="py-space-sm px-space-md">Offers Disbursed</th>
+<th class="py-space-sm px-space-md">Average Compensation</th>
+<th class="py-space-sm px-space-md">Drive Phase</th>
+<th class="py-space-sm px-space-md rounded-r-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-body-md font-body-md text-on-surface">
+<!-- Row 1: Google -->
+<tr class="hover:bg-surface-container/60 transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-bold text-primary shadow-sm flex-shrink-0">
+<span class="text-label-md font-label-md">GO</span>
+</div>
+<div class="min-w-0">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Google</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant truncate">Mountain View &amp; Global Tech Hubs</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm">Software &amp; Cloud</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-semibold">
+<span class="text-primary text-headline-sm font-headline-sm">18</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Offers Made</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-semibold text-on-surface">$145,000</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Base + Equity package</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Drive Completed
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="View Drive Dossier">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Microsoft -->
+<tr class="hover:bg-surface-container/60 transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-bold text-tertiary shadow-sm flex-shrink-0">
+<span class="text-label-md font-label-md">MS</span>
+</div>
+<div class="min-w-0">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Microsoft</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant truncate">Redmond &amp; Azure Core Labs</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm">Systems &amp; Platform</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-semibold">
+<span class="text-tertiary text-headline-sm font-headline-sm">14</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Offers Made</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-semibold text-on-surface">$140,000</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Annual Compensation</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Drive Completed
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="View Drive Dossier">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Amazon -->
+<tr class="hover:bg-surface-container/60 transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-bold text-secondary shadow-sm flex-shrink-0">
+<span class="text-label-md font-label-md">AM</span>
+</div>
+<div class="min-w-0">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Amazon</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant truncate">AWS Infrastructure &amp; Retail Tech</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm">Cloud Infrastructure</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-semibold">
+<span class="text-secondary text-headline-sm font-headline-sm">22</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Offers Made</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-semibold text-on-surface">$130,000</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Median Base Offering</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-label-sm font-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                Final Interviews
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="View Drive Dossier">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Jane Street -->
+<tr class="hover:bg-surface-container/60 transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center font-bold text-primary shadow-sm flex-shrink-0">
+<span class="text-label-md font-label-md">JS</span>
+</div>
+<div class="min-w-0">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Jane Street</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant truncate">Quantitative Trading &amp; Research</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded-full bg-primary-fixed-dim/40 text-on-primary-fixed-variant text-label-sm font-label-sm font-semibold">Marquee High-Tier</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-semibold">
+<span class="text-primary-container text-headline-sm font-headline-sm">3</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Offers Made</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-semibold text-primary">$260,000</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Top Tier Benchmark Package</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Drive Completed
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="View Drive Dossier">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Placement Highlights Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between pt-space-md border-none gap-space-sm">
+<div class="flex items-center gap-space-xs text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-tertiary">bolt</span>
+<span>Showing marquee records • 57 additional offers confirmed by partner institutions today</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container text-on-surface text-label-sm font-label-sm hover:bg-surface-container-high transition-colors">Export Log (.CSV)</button>
+<button class="px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary text-label-sm font-label-sm hover:bg-primary transition-colors">Manage All Drives</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Ensure the App Shell navigation reflects the active Dashboard route
+  document.addEventListener('DOMContentLoaded', () => {
+    const navItems = document.querySelectorAll('aside nav a');
+    navItems.forEach(item => {
+      if (item.getAttribute('data-path') === 'admin-dashboard') {
+        item.classList.add('bg-primary-container', 'text-on-primary-container', 'font-medium');
+        item.classList.remove('text-on-surface-variant');
+      }
+    });
+  });
+</script></main></body></html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#7bd0ff", "on-tertiary": "#ffffff", "inverse-primary": "#b4c5ff", "inverse-surface": "#2d3133", "on-primary-fixed": "#00174b", "on-error-container": "#93000a", "surface-container-highest": "#e0e3e5", "outline": "#737686", "tertiary": "#005b7c", "surface-container-lowest": "#ffffff", "on-surface-variant": "#434655", "on-tertiary-container": "#e1f2ff", "on-secondary": "#ffffff", "background": "#f7f9fb", "on-secondary-fixed-variant": "#3f465c", "tertiary-container": "#00759f", "secondary": "#565e74", "on-secondary-container": "#5c647a", "error": "#ba1a1a", "primary": "#004ac6", "surface-bright": "#f7f9fb", "on-surface": "#191c1e", "on-primary-container": "#eeefff", "primary-fixed-dim": "#b4c5ff", "surface": "#f7f9fb", "inverse-on-surface": "#eff1f3", "on-error": "#ffffff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "on-background": "#191c1e", "surface-tint": "#0053db", "on-tertiary-fixed-variant": "#004c69", "outline-variant": "#c3c6d7", "secondary-fixed": "#dae2fd", "tertiary-fixed": "#c4e7ff", "secondary-container": "#dae2fd", "surface-variant": "#e0e3e5", "surface-container-low": "#f2f4f6", "on-secondary-fixed": "#131b2e", "surface-container": "#eceef0", "on-primary-fixed-variant": "#003ea8", "surface-container-high": "#e6e8ea", "on-primary": "#ffffff", "secondary-fixed-dim": "#bec6e0", "primary-container": "#2563eb", "on-tertiary-fixed": "#001e2c", "primary-fixed": "#dbe1ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "2rem", "space-md": "1rem", "gutter": "1.5rem" }, "fontFamily": { "headline-lg": ["Inter"], "body-lg": ["Inter"], "headline-xl": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><header class="fixed top-0 left-64 right-0 h-16 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between px-gutter"><div class="flex items-center gap-space-md"><span class="text-headline-sm text-on-surface">Welcome back, Recruiter</span></div><div class="flex items-center gap-space-md"><button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-space-sm pl-space-sm border-l border-outline-variant/30"><div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md">TC</div><div class="hidden md:block text-left"><div class="text-label-md text-on-surface">TechCorp Inc.</div><div class="text-body-sm text-on-surface-variant">Recruiter Portal</div></div></div></div></header><aside class="fixed top-0 left-0 w-64 h-full bg-surface-container-low border-r border-outline-variant/20 flex flex-col z-50"><div class="h-16 flex items-center px-gutter gap-space-md border-b border-outline-variant/25"><img alt="PlacementHub Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsgrj5BFOSo8sfSwGAqGk39iHjmtNWmwY-JMSj0-9NvcKFG8Hv2i18JnoEOyZAzOQE30yfxYT59_RMHqsQrfR6YOYCBDqc0uynKa76KKHdofXRCZQtXdMpRjMOuElIdpagaSSk3sZD9Q968OlEjqNI8ky3pOhoJEIbY7wKdgIqh-s4XoFBxPNARC37lpG7URFkZMFXFh-EuqcR2YgXtQXdYBYkpwONC8CCcpNWqRzi5bhyNOhY26yR"/><span class="text-headline-sm text-primary">PlacementHub</span></div><nav class="flex-1 py-space-md px-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm"><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-dashboard" href="#">Dashboard</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-company-profile" href="#">Company Profile</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-my-jobs" href="#">My Jobs</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-post-job" href="#">Post Job</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-applicants" href="#">Applicants</a><a aria-current="page" class="transition-colors flex items-center gap-space-md bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm" data-path="recruiter-interviews" href="#">Interviews</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-logout" href="#">Logout</a></nav><div class="p-space-md border-t border-outline-variant/25"><div class="text-body-sm text-on-surface-variant text-center">PlacementHub Recruiter</div></div></aside><main class="w-full pl-64 pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="p-margin flex flex-col gap-space-lg">
+<!-- Top Headline & Meta Context -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm uppercase tracking-wider text-secondary">
+<span>Recruitment Pipeline</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-semibold">Stage 3: Evaluation</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Schedule Candidate Interview</h1>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-3xl">
+          Set up interview rounds, meeting details, and send automated calendar invites to candidates and evaluation panels.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high transition text-on-surface text-label-md font-label-md" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">history</span>
+<span>Interview Logs</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-secondary-fixed text-on-secondary-fixed text-label-md font-label-md hover:opacity-90 transition" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Panel Availabilities</span>
+</button>
+</div>
+</div>
+<!-- 1. Candidate Banner Hero Component -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm p-space-lg">
+<div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary-fixed/20 blur-3xl pointer-events-none"></div>
+<div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
+<div class="flex items-start sm:items-center gap-space-lg">
+<div class="relative flex-shrink-0">
+<img class="w-20 h-20 rounded-xl object-cover shadow-sm" data-alt="Portrait photo of candidate Alex Chen, male asian computer science student in early 20s, smiling confident, clean professional tech studio portrait with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7vnoHwqd8-wjrblqNK_eEyn-6GNOIBsipcWE5n4Lgn-8xWeLrXKtMWvvqM7mvPbViit7Y6yjXk0Ckeuo49iLl4yaqFY0JqJO1a3ejkh_ewXopZd4ZvEgrZmbP1N-bpMGYYflNjppSFuN-l1RPjxKytvshDOo9qcn8G68rOwgVaX6wJwu79p67kn8IW55EpmwxHECyG9jch15M1kw1_YP5EclrdMJBH20yz7zd8dw"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest p-0.5 rounded-full">
+<span class="flex h-4 w-4 rounded-full bg-primary-container items-center justify-center text-[10px] text-on-primary">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+</span>
+</div>
+</div>
+<div class="space-y-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<h2 class="text-headline-md font-headline-md text-on-surface">Alex Chen</h2>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">school</span>
+                Stanford University
+              </span>
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                CS &amp; Artificial Intelligence '25
+              </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant flex items-center gap-space-sm">
+              Applying for: <span class="font-medium text-on-surface">Senior AI Research Engineer</span>
+<span class="text-outline-variant">•</span>
+<span>Ref: #ENG-AI-9042</span>
+</p>
+</div>
+</div>
+<!-- AI Match Metric Block -->
+<div class="flex items-center gap-space-lg bg-surface-container-low px-space-lg py-space-sm rounded-xl self-start lg:self-center">
+<div class="relative w-14 h-14 flex items-center justify-center">
+<svg class="w-14 h-14 -rotate-90" viewbox="0 0 48 48">
+<circle class="text-surface-container-highest" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary-container" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="2.5" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<span class="absolute font-headline-sm text-headline-sm text-on-surface font-bold">98</span>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="text-label-md font-label-md text-on-surface font-semibold">AI Match Score</span>
+<span class="material-symbols-outlined text-primary text-[16px]">spark</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Top 1% of pool (NLP &amp; Large Models)</p>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. Two-Column Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Form Container (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-lg">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Interview Parameters</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Configure stage type, scheduling windows, and assign reviewers.</p>
+</div>
+<form class="flex flex-col gap-space-lg" id="schedule-form" onsubmit="event.preventDefault();">
+<!-- Round Type Selection -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Round Type</label>
+<div class="relative">
+<select class="w-full h-11 px-space-md pr-10 rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition appearance-none">
+<option selected="" value="tech1">Technical Round 1: Algorithms &amp; Problem Solving</option>
+<option value="sysdesign">System Design &amp; Scalability</option>
+<option value="hr">HR &amp; Cultural Fit Assessment</option>
+<option value="gd">Panel Case Study / Group Discussion</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-3 top-2.5 text-on-surface-variant text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Mode Toggle Tabs -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Interview Mode</label>
+<div class="grid grid-cols-2 p-1 bg-surface-container rounded-lg">
+<button class="py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary shadow-sm transition" id="tab-online" type="button">
+<span class="material-symbols-outlined text-[18px]">videocam</span>
+<span>Online (Video Call)</span>
+</button>
+<button class="py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs text-on-surface-variant hover:text-on-surface transition" id="tab-offline" type="button">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+<span>Offline (On Campus)</span>
+</button>
+</div>
+</div>
+<!-- Date & Time Slot Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Interview Date</label>
+<div class="relative flex items-center">
+<input class="w-full h-11 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition" type="text" value="Oct 24, 2024"/>
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">calendar_today</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Time Slot</label>
+<div class="relative flex items-center">
+<input class="w-full h-11 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition" type="text" value="10:00 AM - 11:00 AM PST"/>
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">schedule</span>
+</div>
+</div>
+</div>
+<!-- Dynamic Mode Location: Online / Offline -->
+<div class="flex flex-col gap-space-xs" id="online-field-group">
+<div class="flex items-center justify-between">
+<label class="text-label-md font-label-md text-on-surface">Online Meeting Link</label>
+<button class="text-body-sm font-body-sm text-primary hover:underline flex items-center gap-1" id="btn-generate-link" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+                Auto-generate Google Meet
+              </button>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">link</span>
+<input class="w-full h-11 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition font-mono" id="meeting-url" type="text" value="https://meet.google.com/qpx-mkva-rvz"/>
+</div>
+</div>
+<div class="hidden flex-col gap-space-xs" id="offline-field-group">
+<label class="text-label-md font-label-md text-on-surface">Venue / Campus Room</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">location_on</span>
+<input class="w-full h-11 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition" placeholder="Placement Cell Hall A, Interview Room 302" type="text"/>
+</div>
+</div>
+<!-- Panelists Multi-select Field -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Interviewers &amp; Evaluation Panel</label>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-wrap gap-space-xs items-center">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-lowest text-on-surface text-body-sm font-body-sm shadow-sm">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary text-[10px] flex items-center justify-center font-bold">DK</span>
+<span>David Kim (Lead Architect)</span>
+<button class="text-on-surface-variant hover:text-error ml-1" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-lowest text-on-surface text-body-sm font-body-sm shadow-sm">
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-on-tertiary text-[10px] flex items-center justify-center font-bold">SJ</span>
+<span>Sarah Jenkins (VP Eng)</span>
+<button class="text-on-surface-variant hover:text-error ml-1" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-1 rounded-full text-primary hover:bg-surface-container text-label-sm font-label-sm transition" type="button">
+<span class="material-symbols-outlined text-[16px]">person_add</span>
+<span>Add Panelist</span>
+</button>
+</div>
+</div>
+<!-- Instructions & Preparation Notes -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<label class="text-label-md font-label-md text-on-surface">Instructions &amp; Candidate Preparation Notes</label>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Shared in invite</span>
+</div>
+<textarea class="w-full p-space-md rounded-lg bg-surface-container-low text-on-surface text-body-md font-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition resize-none" placeholder="Provide link to coding sandbox, expected duration, guidelines, and what candidate should bring..." rows="3">Candidate should be prepared to discuss recent publications in transformer optimization and run an architectural walk-through on Colab sandbox. Please ensure camera and mic are tested 5 minutes before scheduled slot.</textarea>
+</div>
+<!-- Action Buttons -->
+<div class="pt-space-md flex flex-col-reverse sm:flex-row items-center justify-end gap-space-md">
+<button class="w-full sm:w-auto px-space-lg py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container transition text-label-md font-label-md text-center" type="button">
+              Cancel
+            </button>
+<button class="w-full sm:w-auto px-space-xl py-space-sm rounded-xl bg-primary-container text-on-primary hover:opacity-95 shadow-md flex items-center justify-center gap-space-sm text-label-md font-label-md transition" id="btn-submit-invite" type="button">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Send Interview Invite</span>
+</button>
+</div>
+</form>
+</div>
+<!-- RIGHT COLUMN: Realtime Context & Rubrics (5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Conflict Checker Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface font-semibold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">event_available</span>
+              Real-time Availability
+            </span>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+              Live Sync
+            </span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-md">
+<div class="p-space-xs rounded-full bg-primary-container text-on-primary mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div class="space-y-0.5">
+<h4 class="text-label-md font-label-md text-on-surface font-semibold">Alex Chen is Available</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant">No Stanford course lectures or prior university placement slots detected between 10:00 AM - 11:30 AM PST.</p>
+</div>
+</div>
+<!-- Panel availability badges -->
+<div class="space-y-space-xs pt-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">David Kim (Architect)</span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span> Free
+              </span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Sarah Jenkins (VP Eng)</span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span> Free
+              </span>
+</div>
+</div>
+</div>
+<!-- Rubric Preview Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<h3 class="text-label-md font-label-md text-on-surface font-semibold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">grading</span>
+              Evaluation Rubric Preview
+            </h3>
+<span class="text-body-sm font-body-sm text-secondary">3 Core Competencies</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            Panelists will score candidate based on standardized benchmarks for Senior Research Engineer:
+          </p>
+<div class="space-y-space-md pt-space-xs">
+<!-- Criterion 1 -->
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Coding &amp; Algorithm Proficiency</span>
+<span class="text-secondary font-label-sm">Weight: 40%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container">
+<div class="h-2 rounded-full bg-primary-container" style="width: 40%;"></div>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant text-[11px]">
+                Focus on clean execution, algorithmic complexity, PyTorch / CUDA fluency.
+              </div>
+</div>
+<!-- Criterion 2 -->
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">System Architecture &amp; Scale</span>
+<span class="text-secondary font-label-sm">Weight: 35%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container">
+<div class="h-2 rounded-full bg-tertiary-container" style="width: 35%;"></div>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant text-[11px]">
+                Distributed training paradigms, high throughput latency trade-offs.
+              </div>
+</div>
+<!-- Criterion 3 -->
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="font-medium text-on-surface">Research Problem Solving &amp; Clarity</span>
+<span class="text-secondary font-label-sm">Weight: 25%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container">
+<div class="h-2 rounded-full bg-secondary" style="width: 25%;"></div>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant text-[11px]">
+                Ability to articulate thesis, decompose ambiguous edge questions.
+              </div>
+</div>
+</div>
+</div>
+<!-- Automated Reminder Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex items-start gap-space-md">
+<div class="p-space-sm rounded-lg bg-surface-container text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">notifications_active</span>
+</div>
+<div class="space-y-space-xs">
+<h4 class="text-label-md font-label-md text-on-surface font-semibold">Automated Reminders Active</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+              Calendar .ics invite dispatched instantaneously. Automated SMS alert and email reminder will be sent 
+              <span class="font-medium text-on-surface">24 hours prior</span> to start time.
+            </p>
+<div class="pt-1 flex items-center gap-space-md text-label-sm font-label-sm text-secondary">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">mail</span> Email alerts enabled
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sms</span> SMS enabled
+              </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initScheduler() {
+    const tabOnline = document.getElementById('tab-online');
+    const tabOffline = document.getElementById('tab-offline');
+    const onlineGroup = document.getElementById('online-field-group');
+    const offlineGroup = document.getElementById('offline-field-group');
+    const btnGen = document.getElementById('btn-generate-link');
+    const meetingUrl = document.getElementById('meeting-url');
+    const btnSubmit = document.getElementById('btn-submit-invite');
+
+    if (tabOnline && tabOffline && onlineGroup && offlineGroup) {
+      tabOnline.addEventListener('click', () => {
+        tabOnline.className = 'py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary shadow-sm transition';
+        tabOffline.className = 'py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs text-on-surface-variant hover:text-on-surface transition';
+        onlineGroup.classList.remove('hidden');
+        onlineGroup.classList.add('flex');
+        offlineGroup.classList.add('hidden');
+        offlineGroup.classList.remove('flex');
+      });
+
+      tabOffline.addEventListener('click', () => {
+        tabOffline.className = 'py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary shadow-sm transition';
+        tabOnline.className = 'py-2 rounded-lg text-label-md font-label-md flex items-center justify-center gap-space-xs text-on-surface-variant hover:text-on-surface transition';
+        offlineGroup.classList.remove('hidden');
+        offlineGroup.classList.add('flex');
+        onlineGroup.classList.add('hidden');
+        onlineGroup.classList.remove('flex');
+      });
+    }
+
+    if (btnGen && meetingUrl) {
+      btnGen.addEventListener('click', () => {
+        const randId = Math.random().toString(36).substring(2, 5) + '-' + 
+                       Math.random().toString(36).substring(2, 6) + '-' + 
+                       Math.random().toString(36).substring(2, 5);
+        meetingUrl.value = 'https://meet.google.com/' + randId;
+      });
+    }
+
+    if (btnSubmit) {
+      btnSubmit.addEventListener('click', () => {
+        const origText = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span><span>Dispatching Invites...</span>';
+        btnSubmit.classList.add('opacity-80', 'pointer-events-none');
+        setTimeout(() => {
+          btnSubmit.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span><span>Interview Scheduled!</span>';
+          btnSubmit.classList.remove('opacity-80');
+          setTimeout(() => {
+            btnSubmit.innerHTML = origText;
+            btnSubmit.classList.remove('pointer-events-none');
+          }, 2500);
+        }, 1000);
+      });
+    }
+  })();
+</script></main></body></html>

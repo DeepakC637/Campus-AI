@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#7bd0ff", "on-tertiary": "#ffffff", "inverse-primary": "#b4c5ff", "inverse-surface": "#2d3133", "on-primary-fixed": "#00174b", "on-error-container": "#93000a", "surface-container-highest": "#e0e3e5", "outline": "#737686", "tertiary": "#005b7c", "surface-container-lowest": "#ffffff", "on-surface-variant": "#434655", "on-tertiary-container": "#e1f2ff", "on-secondary": "#ffffff", "background": "#f7f9fb", "on-secondary-fixed-variant": "#3f465c", "tertiary-container": "#00759f", "secondary": "#565e74", "on-secondary-container": "#5c647a", "error": "#ba1a1a", "primary": "#004ac6", "surface-bright": "#f7f9fb", "on-surface": "#191c1e", "on-primary-container": "#eeefff", "primary-fixed-dim": "#b4c5ff", "surface": "#f7f9fb", "inverse-on-surface": "#eff1f3", "on-error": "#ffffff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "on-background": "#191c1e", "surface-tint": "#0053db", "on-tertiary-fixed-variant": "#004c69", "outline-variant": "#c3c6d7", "secondary-fixed": "#dae2fd", "tertiary-fixed": "#c4e7ff", "secondary-container": "#dae2fd", "surface-variant": "#e0e3e5", "surface-container-low": "#f2f4f6", "on-secondary-fixed": "#131b2e", "surface-container": "#eceef0", "on-primary-fixed-variant": "#003ea8", "surface-container-high": "#e6e8ea", "on-primary": "#ffffff", "secondary-fixed-dim": "#bec6e0", "primary-container": "#2563eb", "on-tertiary-fixed": "#001e2c", "primary-fixed": "#dbe1ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "2rem", "space-md": "1rem", "gutter": "1.5rem" }, "fontFamily": { "headline-lg": ["Inter"], "body-lg": ["Inter"], "headline-xl": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><header class="fixed top-0 left-64 right-0 h-16 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between px-gutter"><div class="flex items-center gap-space-md"><span class="text-headline-sm text-on-surface">Welcome back, Recruiter</span></div><div class="flex items-center gap-space-md"><button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-space-sm pl-space-sm border-l border-outline-variant/30"><div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md">TC</div><div class="hidden md:block text-left"><div class="text-label-md text-on-surface">TechCorp Inc.</div><div class="text-body-sm text-on-surface-variant">Recruiter Portal</div></div></div></div></header><aside class="fixed top-0 left-0 w-64 h-full bg-surface-container-low border-r border-outline-variant/20 flex flex-col z-50"><div class="h-16 flex items-center px-gutter gap-space-md border-b border-outline-variant/25"><img alt="PlacementHub Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsgrj5BFOSo8sfSwGAqGk39iHjmtNWmwY-JMSj0-9NvcKFG8Hv2i18JnoEOyZAzOQE30yfxYT59_RMHqsQrfR6YOYCBDqc0uynKa76KKHdofXRCZQtXdMpRjMOuElIdpagaSSk3sZD9Q968OlEjqNI8ky3pOhoJEIbY7wKdgIqh-s4XoFBxPNARC37lpG7URFkZMFXFh-EuqcR2YgXtQXdYBYkpwONC8CCcpNWqRzi5bhyNOhY26yR"/><span class="text-headline-sm text-primary">PlacementHub</span></div><nav class="flex-1 py-space-md px-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm"><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-dashboard" href="#">Dashboard</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-company-profile" href="#">Company Profile</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-my-jobs" href="#">My Jobs</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-post-job" href="#">Post Job</a><a aria-current="page" class="transition-colors flex items-center gap-space-md bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm" data-path="recruiter-applicants" href="#">Applicants</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-interviews" href="#">Interviews</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-logout" href="#">Logout</a></nav><div class="p-space-md border-t border-outline-variant/25"><div class="text-body-sm text-on-surface-variant text-center">PlacementHub Recruiter</div></div></aside><main class="w-full pl-64 pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="p-margin flex flex-col gap-space-lg">
+<!-- Active Navigation Shell Script -->
+<script>
+      (function() {
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+          if (link.getAttribute('data-path') === 'recruiter-applicants') {
+            link.className = 'bg-primary-container text-on-primary font-medium rounded-lg px-space-md py-space-sm flex items-center gap-space-md shadow-sm';
+          }
+        });
+      })();
+    </script>
+<!-- Top Headline & Action Ribbon -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm relative overflow-hidden">
+<div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-gradient-to-br from-primary/10 via-primary-fixed/20 to-transparent pointer-events-none blur-2xl"></div>
+<div class="flex flex-col gap-space-xs z-10 max-w-3xl">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+            AI-Ranked Batch 2024
+          </span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Req ID: REQ-8842-AI</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Applicant Review &amp; Candidate Tracking</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Filter, review AI match scores, inspect resumes, and manage recruitment stages for <span class="font-medium text-on-surface">Senior AI Research Engineer</span>.</p>
+</div>
+<!-- Quick Metrics Pipeline Tracker -->
+<div class="z-10 flex items-center gap-space-sm self-start lg:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">tune</span>
+          Evaluation Matrix
+        </button>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary hover:bg-primary/90 transition-colors shadow-sm font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">add</span>
+          Invite Candidate
+        </button>
+</div>
+</div>
+<!-- Candidate Funnel Summary Stats Ribbon -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+<!-- Total Applicants -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary">Total Applied</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface">384</span>
+<span class="font-label-sm text-label-sm text-primary flex items-center">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>+18 new
+          </span>
+</div>
+<div class="mt-space-sm w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-full rounded-full"></div>
+</div>
+</div>
+<!-- Shortlisted -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary">Shortlisted</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-tertiary group-hover:bg-tertiary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface">42</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10.9% pool</span>
+</div>
+<div class="mt-space-sm w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[42%] rounded-full"></div>
+</div>
+</div>
+<!-- Interviewing -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary">Interviews</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary-container group-hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">videocam</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface">18</span>
+<span class="font-label-sm text-label-sm text-primary flex items-center">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 6 Today
+          </span>
+</div>
+<div class="mt-space-sm w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-[18%] rounded-full"></div>
+</div>
+</div>
+<!-- Rejected / Archived -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary">Rejected</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-error group-hover:bg-error-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3.1% archive</span>
+</div>
+<div class="mt-space-sm w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-outline h-full w-[12%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Control Bar (Search, Filters, Bulk Operations) -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1 min-w-[280px]">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-11 pr-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:outline-none font-body-md text-body-md text-on-surface transition-all placeholder:text-outline" placeholder="Search candidates by name, email, PyTorch, LangChain, Transformers..." type="text"/>
+</div>
+<!-- Filter Dropdowns & Bulk Actions -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Branch Filter -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md pl-3 pr-8 py-2.5 rounded-lg focus:outline-none cursor-pointer">
+<option>All Branches</option>
+<option>CS &amp; AI Engineering</option>
+<option>Data Science</option>
+<option>Computer Engineering</option>
+<option>Electrical &amp; CS</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- CGPA Filter -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md pl-3 pr-8 py-2.5 rounded-lg focus:outline-none cursor-pointer">
+<option>Min CGPA: 8.0+</option>
+<option>Min CGPA: 9.0+</option>
+<option>Min CGPA: 7.5+</option>
+<option>Any Academic Score</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Status Filter -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md pl-3 pr-8 py-2.5 rounded-lg focus:outline-none cursor-pointer">
+<option>Status: All</option>
+<option>Status: Shortlisted</option>
+<option>Status: Interview</option>
+<option>Status: Applied</option>
+<option>Status: Rejected</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Sort Filter -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md pl-3 pr-8 py-2.5 rounded-lg focus:outline-none cursor-pointer">
+<option>Sort: Match Score (High to Low)</option>
+<option>Sort: CGPA (High to Low)</option>
+<option>Sort: Application Date (Newest)</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">sort</span>
+</div>
+<div class="h-6 w-px bg-outline-variant/40 hidden xl:block mx-1"></div>
+<!-- Bulk Action Buttons -->
+<button class="flex items-center gap-1.5 px-space-md py-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" title="Export current view to CSV">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
+          Export CSV
+        </button>
+<button class="flex items-center gap-1.5 px-space-md py-2.5 rounded-lg bg-secondary-fixed hover:bg-secondary-fixed-dim text-on-secondary-fixed font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+          Bulk Shortlist
+        </button>
+</div>
+</div>
+<!-- Comprehensive Data Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-sm text-label-sm tracking-wider uppercase select-none">
+<th class="py-space-md px-space-md w-12 text-center">
+<input class="rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" id="selectAll" type="checkbox"/>
+</th>
+<th class="py-space-md px-space-md">Candidate</th>
+<th class="py-space-md px-space-md">Branch &amp; Dept</th>
+<th class="py-space-md px-space-md">CGPA / Score</th>
+<th class="py-space-md px-space-md">AI Match Score</th>
+<th class="py-space-md px-space-md">Recruitment Stage</th>
+<th class="py-space-md px-space-md text-center">Resume</th>
+<th class="py-space-md px-space-md text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Row 1: Alex Chen -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-md text-center">
+<input class="candidate-checkbox rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Close up professional portrait of Alex Chen, a young male Asian software engineer wearing dark navy shirt against an out of focus modern lab background with clean soft lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnJ_aYoqryeHwcxJFaF_MA3rA4YmuvZ7Jb33ZaBTQ8wxZT0LIrRgzB8nXnn7LKkUgzWEsUNTwgN8bplSIO7CdQRSh7E9H-mnaHQe_-Qgsi0h2nkKjval1-I1noplg0-3-1B7oiCu9ATrmAo8R6smKDk5E5hoY21GpXjsNVccX0jzR5ARNd5e-8D-HvWv-pac4JFMTsMDa-8L6mdzGSdbFrbPB-gXk5m8rR2xk7xFs"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-container-lowest" title="Available immediately"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Alex Chen</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">IIT Rank 04</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">alex.chen@academic.edu</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-md text-on-surface whitespace-nowrap">
+                CS &amp; AI
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Class of 2024</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="font-medium text-on-surface">3.92 <span class="text-on-surface-variant font-normal">/ 4.0</span></div>
+<div class="font-label-sm text-label-sm text-secondary">9.8 Scale Equivalent</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center relative flex-shrink-0">
+<svg class="w-10 h-10 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-emerald-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="98, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-emerald-800">98%</span>
+</div>
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm font-semibold text-emerald-700">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span> Top Fit
+                    </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">High semantic match</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="relative inline-block">
+<select class="appearance-none font-label-md text-label-md font-medium px-3 py-1.5 pr-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed hover:bg-tertiary-fixed-dim transition-colors cursor-pointer focus:outline-none">
+<option selected="">Shortlisted</option>
+<option>Interview</option>
+<option>Offer Extended</option>
+<option>Rejected</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-on-tertiary-fixed">unfold_more</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors group/btn">
+<span class="material-symbols-outlined text-[16px] text-primary group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+                  View PDF
+                </button>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all font-label-md text-label-md shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                  Schedule Round
+                </button>
+</td>
+</tr>
+<!-- Row 2: Maria Garcia -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+<td class="py-space-md px-space-md text-center">
+<input class="candidate-checkbox rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Professional studio portrait of Maria Garcia, a Hispanic female research student smiling with glasses in an elegant corporate campus setting, daylight tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYVWOQnWmHyF5eaIge4zSF_hUfLxhqCzVQzeUK56jDNWiQ5zAlO5vuEjztCvkq889T2SR-01ODr_ciuW246RTIQWGQhPRffuSeeCYY1DyBBFxdhUTSA756vJdsEetp0yXD6csdXPjEMEKI-DOi-7Snz7xYNMCubgMAH8EE4QZ7p8TqP40AeYtQpWzkrfGGHijzct6xVpK6z6kGPJ13u2p54z_1DxLxQFMKog1VNWg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Maria Garcia</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">m.garcia@polytech.edu</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-md text-on-surface whitespace-nowrap">
+                Data Science
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Class of 2024</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="font-medium text-on-surface">3.85 <span class="text-on-surface-variant font-normal">/ 4.0</span></div>
+<div class="font-label-sm text-label-sm text-secondary">9.5 Scale Equivalent</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center relative flex-shrink-0">
+<svg class="w-10 h-10 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-emerald-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="96, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-emerald-800">96%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-emerald-700">Exceptional</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Neural Net Specialization</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="relative inline-block">
+<select class="appearance-none font-label-md text-label-md font-medium px-3 py-1.5 pr-8 rounded-full bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim transition-colors cursor-pointer focus:outline-none">
+<option selected="">Interview Scheduled</option>
+<option>Technical Screen</option>
+<option>Completed</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-on-secondary-fixed">unfold_more</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors group/btn">
+<span class="material-symbols-outlined text-[16px] text-primary group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+                  View PDF
+                </button>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-all font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">update</span>
+                  Reschedule
+                </button>
+</td>
+</tr>
+<!-- Row 3: Liam Johnson -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-md text-center">
+<input class="candidate-checkbox rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="A portrait of Liam Johnson, a Caucasian male engineering graduate student with neat brown hair and neutral background, sharp corporate portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo3Jg_0DE43lCEJ3ZsAqDTDZNw9nx0Z94Aq4-NwbVt3g0U3Wv2ybjjnBLAAdcwCwHIOHWR3xcOKbQm_bGw3L6n2L6BfafegiapeaTwYXdbXf14X2AdDlsay9h07fZSZemwB2JmmoKc5CcBM-8k_p_tiYjD26V53ZEMajD0TgDjLPYfU2T2UtWZya3oLGjhhkdFKtD8RGzNCr16oHnwsDruTKZMdfg2tw8R91Nyc2A"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Liam Johnson</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">ljohnson@engr.state.edu</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-md text-on-surface whitespace-nowrap">
+                Computer Eng
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Class of 2024</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="font-medium text-on-surface">3.78 <span class="text-on-surface-variant font-normal">/ 4.0</span></div>
+<div class="font-label-sm text-label-sm text-secondary">9.1 Scale Equivalent</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center relative flex-shrink-0">
+<svg class="w-10 h-10 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="91, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-primary">91%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-primary">Strong Match</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Distributed Systems</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="relative inline-block">
+<select class="appearance-none font-label-md text-label-md font-medium px-3 py-1.5 pr-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed hover:bg-tertiary-fixed-dim transition-colors cursor-pointer focus:outline-none">
+<option selected="">Shortlisted</option>
+<option>Interview</option>
+<option>Rejected</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-on-tertiary-fixed">unfold_more</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors group/btn">
+<span class="material-symbols-outlined text-[16px] text-primary group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+                  View PDF
+                </button>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all font-label-md text-label-md shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                  Schedule Round
+                </button>
+</td>
+</tr>
+<!-- Row 4: Priya Sharma -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+<td class="py-space-md px-space-md text-center">
+<input class="candidate-checkbox rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Editorial portrait of Priya Sharma, a young South Asian female engineer smiling with confidence in an open-plan modern university research lab, soft daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB3T4rt8lOgxKXCcomAWmRQeTsO2QcHLDyS9guCqjRASsHieREsO11IqvhLO_ckcSApOSGzdHvuIdgUFp_nlMqlv2JXn_Dj8O2m5KOn2C6YZG5zUW1Is5XsZcA_r3U0tOcGXwg1_pJwUa1YkSAmuvpQ--ECMOzs-QwyWdw0qwDAAIqStEb-R6Yy8_A5xp70OqmseBZPaCXo9Q7p-SkaiQF7djJNuf1Kt1NqZjlj8c"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Priya Sharma</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">priya.sharma@inst.edu</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-md text-on-surface whitespace-nowrap">
+                Electrical &amp; CS
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Class of 2024</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="font-medium text-on-surface">3.82 <span class="text-on-surface-variant font-normal">/ 4.0</span></div>
+<div class="font-label-sm text-label-sm text-secondary">9.3 Scale Equivalent</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center relative flex-shrink-0">
+<svg class="w-10 h-10 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="89, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-primary">89%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-primary">Solid Match</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">CUDA &amp; Hardware AI</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="relative inline-block">
+<select class="appearance-none font-label-md text-label-md font-medium px-3 py-1.5 pr-8 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-dim transition-colors cursor-pointer focus:outline-none">
+<option selected="">Applied</option>
+<option>Shortlisted</option>
+<option>Interview</option>
+<option>Rejected</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">unfold_more</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors group/btn">
+<span class="material-symbols-outlined text-[16px] text-primary group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+                  View PDF
+                </button>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-fixed hover:bg-primary-fixed-dim text-on-primary-fixed font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                  Shortlist
+                </button>
+</td>
+</tr>
+<!-- Row 5: Marcus Vance -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-md text-center">
+<input class="candidate-checkbox rounded bg-surface text-primary focus:ring-0 cursor-pointer h-4 w-4" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Modern professional portrait of Marcus Vance, an African American male software engineer in a minimal grey sweatshirt against an architectural glass office backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd467V_JA8x_aWZgMYF4QZl-kPVwfo2r_3j0YUaRTZEoMiRB-ojMdfdrALNBXUzHfXKTUiIVYxGWJ2lYh8CryfW_tDv4sQh6z1KrFXCpVCTAlG1KOGIuIhkOwgkPrzuO2hGzpamcuLkR4gTSMKfBQWICzDZRZQomJhdAgcYR1GXKUSilF20VHUH69UEc8tgNDt43f6aaqPJCumPTZY3lX8ay_XLpfUvWGCSpbnj_o"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-amber-500 border-2 border-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors truncate">Marcus Vance</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">m.vance@techpoly.edu</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-md text-on-surface whitespace-nowrap">
+                Information Tech
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Class of 2024</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="font-medium text-on-surface">3.45 <span class="text-on-surface-variant font-normal">/ 4.0</span></div>
+<div class="font-label-sm text-label-sm text-secondary">8.2 Scale Equivalent</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center relative flex-shrink-0">
+<svg class="w-10 h-10 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-amber-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="74, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-amber-700">74%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-amber-700">Moderate Fit</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">General Software Skills</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="relative inline-block">
+<select class="appearance-none font-label-md text-label-md font-medium px-3 py-1.5 pr-8 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-dim transition-colors cursor-pointer focus:outline-none">
+<option selected="">Under Review</option>
+<option>Shortlist</option>
+<option>Reject</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">unfold_more</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors group/btn">
+<span class="material-symbols-outlined text-[16px] text-primary group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+                  View PDF
+                </button>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-fixed hover:bg-primary-fixed-dim text-on-primary-fixed font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                  Shortlist
+                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span>Showing <strong class="text-on-surface font-medium">1-5</strong> of <strong class="text-on-surface font-medium">384</strong> applicants</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<div class="flex items-center gap-1">
+<span>Rows per page:</span>
+<select class="bg-surface rounded px-1.5 py-0.5 text-on-surface font-label-sm text-label-sm focus:outline-none cursor-pointer">
+<option>5</option>
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="First page" class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-outline hover:text-on-surface disabled:opacity-40 transition-colors" disabled="">
+<span class="material-symbols-outlined text-[18px]">first_page</span>
+</button>
+<button aria-label="Previous page" class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-outline hover:text-on-surface disabled:opacity-40 transition-colors" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold shadow-sm">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">3</button>
+<span class="px-1 text-outline font-label-sm">...</span>
+<button class="w-8 h-8 rounded-lg bg-surface text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">77</button>
+<button aria-label="Next page" class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+<button aria-label="Last page" class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">last_page</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Intelligence Insight Banner -->
+<div class="bg-gradient-to-r from-primary-fixed/40 via-surface-container-low to-tertiary-fixed/30 p-space-md rounded-xl flex items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface">Auto-Screening Active</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Top 42 candidates exceed your 85% match threshold for PyTorch and LLM deployment architectures.</span>
+</div>
+</div>
+<button class="whitespace-nowrap px-space-md py-space-sm bg-surface-container-lowest hover:bg-surface-container text-primary font-label-md text-label-md rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+<span>Batch Interview Invites</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Interactive Select All Handler Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('.candidate-checkbox');
+
+      if (selectAll && checkboxes.length > 0) {
+        selectAll.addEventListener('change', function(e) {
+          checkboxes.forEach(cb => {
+            cb.checked = e.target.checked;
+          });
+        });
+      }
+    });
+  </script>
+</div></main></body></html>

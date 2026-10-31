@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#7bd0ff", "on-tertiary": "#ffffff", "inverse-primary": "#b4c5ff", "inverse-surface": "#2d3133", "on-primary-fixed": "#00174b", "on-error-container": "#93000a", "surface-container-highest": "#e0e3e5", "outline": "#737686", "tertiary": "#005b7c", "surface-container-lowest": "#ffffff", "on-surface-variant": "#434655", "on-tertiary-container": "#e1f2ff", "on-secondary": "#ffffff", "background": "#f7f9fb", "on-secondary-fixed-variant": "#3f465c", "tertiary-container": "#00759f", "secondary": "#565e74", "on-secondary-container": "#5c647a", "error": "#ba1a1a", "primary": "#004ac6", "surface-bright": "#f7f9fb", "on-surface": "#191c1e", "on-primary-container": "#eeefff", "primary-fixed-dim": "#b4c5ff", "surface": "#f7f9fb", "inverse-on-surface": "#eff1f3", "on-error": "#ffffff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "on-background": "#191c1e", "surface-tint": "#0053db", "on-tertiary-fixed-variant": "#004c69", "outline-variant": "#c3c6d7", "secondary-fixed": "#dae2fd", "tertiary-fixed": "#c4e7ff", "secondary-container": "#dae2fd", "surface-variant": "#e0e3e5", "surface-container-low": "#f2f4f6", "on-secondary-fixed": "#131b2e", "surface-container": "#eceef0", "on-primary-fixed-variant": "#003ea8", "surface-container-high": "#e6e8ea", "on-primary": "#ffffff", "secondary-fixed-dim": "#bec6e0", "primary-container": "#2563eb", "on-tertiary-fixed": "#001e2c", "primary-fixed": "#dbe1ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "2rem", "space-md": "1rem", "gutter": "1.5rem" }, "fontFamily": { "headline-lg": ["Inter"], "body-lg": ["Inter"], "headline-xl": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><header class="fixed top-0 left-64 right-0 h-16 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between px-gutter"><div class="flex items-center gap-space-md"><span class="text-headline-sm text-on-surface">Welcome back, Recruiter</span></div><div class="flex items-center gap-space-md"><button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-space-sm pl-space-sm border-l border-outline-variant/30"><div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md">TC</div><div class="hidden md:block text-left"><div class="text-label-md text-on-surface">TechCorp Inc.</div><div class="text-body-sm text-on-surface-variant">Recruiter Portal</div></div></div></div></header><aside class="fixed top-0 left-0 w-64 h-full bg-surface-container-low border-r border-outline-variant/20 flex flex-col z-50"><div class="h-16 flex items-center px-gutter gap-space-md border-b border-outline-variant/25"><img alt="PlacementHub Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsgrj5BFOSo8sfSwGAqGk39iHjmtNWmwY-JMSj0-9NvcKFG8Hv2i18JnoEOyZAzOQE30yfxYT59_RMHqsQrfR6YOYCBDqc0uynKa76KKHdofXRCZQtXdMpRjMOuElIdpagaSSk3sZD9Q968OlEjqNI8ky3pOhoJEIbY7wKdgIqh-s4XoFBxPNARC37lpG7URFkZMFXFh-EuqcR2YgXtQXdYBYkpwONC8CCcpNWqRzi5bhyNOhY26yR"/><span class="text-headline-sm text-primary">PlacementHub</span></div><nav class="flex-1 py-space-md px-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm"><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-dashboard" href="#">Dashboard</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-company-profile" href="#">Company Profile</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-my-jobs" href="#">My Jobs</a><a aria-current="page" class="transition-colors flex items-center gap-space-md bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm" data-path="recruiter-post-job" href="#">Post Job</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-applicants" href="#">Applicants</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-interviews" href="#">Interviews</a><a class="text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md" data-path="recruiter-logout" href="#">Logout</a></nav><div class="p-space-md border-t border-outline-variant/25"><div class="text-body-sm text-on-surface-variant text-center">PlacementHub Recruiter</div></div></aside><main class="w-full pl-64 pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<script>
+    document.querySelectorAll('aside nav a').forEach(el => {
+      if (el.getAttribute('data-path') === 'recruiter-post-job') {
+        el.className = 'bg-primary-container text-on-primary-container font-medium rounded-lg px-space-md py-space-sm flex items-center gap-space-md';
+      } else {
+        el.className = 'text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg px-space-md py-space-sm flex items-center gap-space-md';
+      }
+    });
+  </script>
+<div class="px-margin py-space-lg flex flex-col gap-space-xl max-w-7xl mx-auto w-full">
+<!-- Top Context & Header Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm p-space-xl">
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-gradient-to-br from-primary-fixed/40 via-tertiary-fixed/20 to-transparent blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-sm">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-primary bg-primary-fixed/40 px-space-sm py-0.5 rounded-full">Recruitment Cycle 2024-25</span>
+<span class="text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container inline-block"></span> Draft Auto-saved 2m ago
+            </span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Post a New Job Opportunity</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Create and configure campus placement drive listings, specify criteria, and launch recruitment.</p>
+</div>
+<!-- AI Match Estimate Visual Badge -->
+<div class="flex items-center gap-space-md bg-surface-container-low p-space-md rounded-xl self-start md:self-auto shadow-sm">
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-12 h-12 -rotate-90" viewbox="0 0 48 48">
+<circle class="text-surface-container-highest" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary-container" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="26.3" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-label-sm font-label-sm font-bold text-primary">82%</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md text-on-surface">Target Talent Density</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">~410 matching candidates</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Form Grid (2 Columns: Form Core + Strategic Insights) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Primary Form Flow (8 Cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- Section 1: Job Details Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between border-b-0 pb-0">
+<div class="flex items-center gap-space-sm">
+<span class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary font-bold text-label-md">01</span>
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Job Role &amp; Overview</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Define core functional role, remuneration, and technical competencies.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-tertiary-container bg-tertiary-fixed/30 px-space-sm py-1 rounded-full">Primary Specs</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Job Title -->
+<div class="flex flex-col gap-space-xs md:col-span-2">
+<label class="text-label-md font-label-md text-on-surface flex items-center justify-between">
+<span>Job Title <span class="text-error">*</span></span>
+<span class="text-body-sm text-on-surface-variant font-normal">e.g. Senior AI Research Engineer</span>
+</label>
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" placeholder="Enter position designation" type="text" value="Senior AI Research Engineer"/>
+</div>
+<!-- Department / Role Function -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Department / Function <span class="text-error">*</span></label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" type="text" value="Engineering &amp; Applied AI"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">domain</span>
+</div>
+</div>
+<!-- Job Location -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Location &amp; Mode <span class="text-error">*</span></label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" type="text" value="San Francisco, CA (Hybrid) / Bangalore"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">location_on</span>
+</div>
+</div>
+<!-- Package / CTC -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Annual CTC / Compensation <span class="text-error">*</span></label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" type="text" value="$180,000 - $220,000 / annum or ₹28-35 LPA"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">payments</span>
+</div>
+</div>
+<!-- Application Deadline -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Application Deadline <span class="text-error">*</span></label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container transition-all cursor-pointer" type="text" value="Nov 15, 2024"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Rich Textarea with Editor Toolbar -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="text-label-md font-label-md text-on-surface">Job Description &amp; Responsibilities</label>
+<button class="text-label-sm font-label-sm text-primary flex items-center gap-1 hover:underline" type="button">
+<span class="material-symbols-outlined text-[16px]">auto_fix_high</span> Enhance with PlacementHub AI
+              </button>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary-container transition-all">
+<!-- Toolbar -->
+<div class="bg-surface-container px-space-md py-space-xs flex flex-wrap items-center gap-space-xs">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">format_underlined</span></button>
+<div class="w-px h-4 bg-outline-variant/40 mx-1"></div>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">format_list_numbered</span></button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">code</span></button>
+<div class="w-px h-4 bg-outline-variant/40 mx-1"></div>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<span class="ml-auto text-body-sm text-on-surface-variant">Markdown Supported</span>
+</div>
+<!-- Textarea content -->
+<textarea class="w-full bg-transparent px-space-md py-space-sm text-body-md text-on-surface focus:outline-none resize-y leading-relaxed font-body-md" rows="7">We are seeking exceptional graduating AI Engineers and Researchers to build next-generation distributed inference systems and state-of-the-art transformer architectures.
+
+Responsibilities:
+• Architect scalable neural network pipelines using PyTorch and customized CUDA kernels.
+• Collaborate with applied science teams to optimize foundation models for edge deployment.
+• Lead campus mentorship and participate directly in our AI Fellowship initiatives.
+
+What We Offer:
+• Comprehensive equity grants, hybrid flexibility, and $5,000 annual learning stipend.</textarea>
+</div>
+</div>
+<!-- Required Skills Tag Cloud -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-label-md font-label-md text-on-surface">Required Skills &amp; Frameworks</label>
+<div class="bg-surface-container-low p-space-sm rounded-xl flex flex-wrap items-center gap-space-xs min-h-[48px]">
+<span class="inline-flex items-center gap-1.5 bg-primary-container text-on-primary px-space-md py-1 rounded-full text-label-sm font-label-sm shadow-sm transition-transform hover:scale-105 cursor-pointer">
+                PyTorch
+                <span class="material-symbols-outlined text-[14px] hover:opacity-80">close</span>
+</span>
+<span class="inline-flex items-center gap-1.5 bg-primary-container text-on-primary px-space-md py-1 rounded-full text-label-sm font-label-sm shadow-sm transition-transform hover:scale-105 cursor-pointer">
+                Python
+                <span class="material-symbols-outlined text-[14px] hover:opacity-80">close</span>
+</span>
+<span class="inline-flex items-center gap-1.5 bg-primary-container text-on-primary px-space-md py-1 rounded-full text-label-sm font-label-sm shadow-sm transition-transform hover:scale-105 cursor-pointer">
+                Distributed Systems
+                <span class="material-symbols-outlined text-[14px] hover:opacity-80">close</span>
+</span>
+<span class="inline-flex items-center gap-1.5 bg-primary-container text-on-primary px-space-md py-1 rounded-full text-label-sm font-label-sm shadow-sm transition-transform hover:scale-105 cursor-pointer">
+                CUDA
+                <span class="material-symbols-outlined text-[14px] hover:opacity-80">close</span>
+</span>
+<span class="inline-flex items-center gap-1.5 bg-primary-container text-on-primary px-space-md py-1 rounded-full text-label-sm font-label-sm shadow-sm transition-transform hover:scale-105 cursor-pointer">
+                NLP
+                <span class="material-symbols-outlined text-[14px] hover:opacity-80">close</span>
+</span>
+<div class="flex-1 min-w-[140px] flex items-center px-space-xs">
+<input class="w-full bg-transparent text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none py-1" placeholder="+ Type skill &amp; press Enter" type="text"/>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm text-on-surface-variant px-1">
+<span>Suggested based on title: <button class="text-primary hover:underline font-medium" type="button">+ Triton</button>, <button class="text-primary hover:underline font-medium" type="button">+ Docker</button>, <button class="text-primary hover:underline font-medium" type="button">+ Ray</button></span>
+<span>5 skills added</span>
+</div>
+</div>
+</section>
+<!-- Section 2: Eligibility & Academic Criteria Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-label-md">02</span>
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Eligibility &amp; Academic Criteria</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Filter automated candidate verification across college registries.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-secondary bg-secondary-fixed/50 px-space-sm py-1 rounded-full">College Standards</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Min CGPA -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-xl">
+<div class="flex items-center justify-between">
+<label class="text-label-md font-label-md text-on-surface">Minimum Cumulative CGPA</label>
+<span class="text-label-md font-label-md text-primary font-bold">8.00 / 10.0</span>
+</div>
+<div class="flex items-center gap-space-md pt-space-xs">
+<input class="w-full accent-primary-container h-2 bg-surface-container-highest rounded-lg cursor-pointer" max="10.0" min="6.0" step="0.1" type="range" value="8.0"/>
+</div>
+<div class="flex justify-between text-body-sm text-on-surface-variant">
+<span>Cutoff: 6.0</span>
+<span>Average: 7.8</span>
+<span>Strict: 9.0+</span>
+</div>
+</div>
+<!-- Graduation Year -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-xl justify-center">
+<label class="text-label-md font-label-md text-on-surface">Target Graduation Year</label>
+<div class="relative mt-1">
+<select class="w-full bg-surface-container-lowest text-on-surface px-space-md py-space-sm rounded-lg text-body-md appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer shadow-sm">
+<option selected="" value="2025">2025 Batch (Incoming Final Year)</option>
+<option value="2024">2024 Batch (Immediate Joinees)</option>
+<option value="2026">2026 Batch (Pre-Final Interns)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Allowed Branches Multi-Select Badges -->
+<div class="flex flex-col gap-space-xs md:col-span-2">
+<label class="text-label-md font-label-md text-on-surface flex items-center justify-between">
+<span>Eligible Academic Branches / Disciplines</span>
+<span class="text-body-sm text-primary font-medium cursor-pointer hover:underline">Select All STEM</span>
+</label>
+<div class="flex flex-wrap gap-space-sm pt-space-xs">
+<!-- Selected Chips -->
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-full text-label-sm font-label-sm shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Computer Science
+                </button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-full text-label-sm font-label-sm shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Data Science &amp; AI
+                </button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-full text-label-sm font-label-sm shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Information Tech
+                </button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-full text-label-sm font-label-sm shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Electrical Eng
+                </button>
+<!-- Unselected Chips -->
+<button class="inline-flex items-center gap-space-xs bg-surface-container text-on-surface-variant hover:bg-surface-container-high px-space-md py-space-sm rounded-full text-label-sm font-label-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span> Electronics &amp; Comm
+                </button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container text-on-surface-variant hover:bg-surface-container-high px-space-md py-space-sm rounded-full text-label-sm font-label-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span> Mathematics &amp; Computing
+                </button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container text-on-surface-variant hover:bg-surface-container-high px-space-md py-space-sm rounded-full text-label-sm font-label-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span> Mechanical Eng
+                </button>
+</div>
+</div>
+<!-- Maximum Allowed Backlogs -->
+<div class="flex flex-col gap-space-xs md:col-span-2 bg-surface-container-low p-space-md rounded-xl">
+<div class="flex items-center justify-between">
+<div>
+<label class="text-label-md font-label-md text-on-surface">Maximum Permitted Active Backlogs</label>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Candidates exceeding this limit will be auto-disqualified by portal policy.</p>
+</div>
+<div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-sm py-1 rounded-lg shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center bg-surface-container hover:bg-surface-container-high text-on-surface" type="button"><span class="material-symbols-outlined text-[16px]">remove</span></button>
+<span class="text-label-md font-label-md font-bold px-space-sm text-on-surface">0 Active</span>
+<button class="w-8 h-8 rounded flex items-center justify-center bg-surface-container hover:bg-surface-container-high text-on-surface" type="button"><span class="material-symbols-outlined text-[16px]">add</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Strategic Sidebar Insights & Drive Preview (4 Cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Live Drive Card Preview -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Candidate Feed Preview</span>
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-bold text-label-md">TC</div>
+<span class="text-label-sm font-label-sm text-primary bg-primary-fixed/50 px-2 py-0.5 rounded-full font-semibold">Tier 1 Placement</span>
+</div>
+<div>
+<div class="text-headline-sm font-headline-sm text-on-surface leading-tight">Senior AI Research Engineer</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">TechCorp Inc. • San Francisco / Blr</div>
+</div>
+<div class="flex items-center gap-space-xs text-body-sm font-body-sm text-on-surface font-semibold pt-1">
+<span class="material-symbols-outlined text-primary text-[18px]">payments</span>
+              $180k - $220k / ₹28-35 LPA
+            </div>
+<div class="flex flex-wrap gap-1 pt-1">
+<span class="text-body-sm bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-medium">PyTorch</span>
+<span class="text-body-sm bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-medium">CUDA</span>
+<span class="text-body-sm bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-medium">CGPA ≥ 8.0</span>
+</div>
+<div class="pt-space-xs border-t border-outline-variant/10 flex items-center justify-between text-body-sm text-on-surface-variant">
+<span>Closes in 28 days</span>
+<span class="text-primary font-semibold">Verified Drive</span>
+</div>
+</div>
+<div class="text-body-sm text-on-surface-variant">
+            This card represents how registered students will view this job listing inside the PlacementHub student portal.
+          </div>
+</div>
+<!-- Campus Engagement Pipeline Info -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<h3 class="text-label-md font-label-md text-on-surface">Campus Outreach Summary</h3>
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant">Eligible Students Pool</span>
+<span class="text-on-surface font-semibold">410 students</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-primary-container h-1.5 rounded-full" style="width: 72%"></div>
+</div>
+<div class="flex items-center justify-between text-body-sm pt-space-xs">
+<span class="text-on-surface-variant">Interview Slot Availability</span>
+<span class="text-on-surface font-semibold">32 Panelists Active</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-tertiary-container h-1.5 rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">verified_user</span>
+<p class="text-body-sm text-on-surface-variant leading-snug">
+              Instant notification will be broadcast to college placement officers upon job approval.
+            </p>
+</div>
+</div>
+<!-- Tech Stack Alignment Visual -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<h3 class="text-label-md font-label-md text-on-surface">Department Benchmark</h3>
+<span class="text-body-sm text-tertiary font-medium">CS &amp; AI Dept</span>
+</div>
+<div class="flex items-center justify-around py-space-sm">
+<!-- Metric 1 -->
+<div class="flex flex-col items-center">
+<span class="text-headline-md font-headline-md text-primary">8.6</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Median CGPA</span>
+</div>
+<div class="w-px h-8 bg-surface-container-high"></div>
+<!-- Metric 2 -->
+<div class="flex flex-col items-center">
+<span class="text-headline-md font-headline-md text-on-surface">94%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Pass Rate</span>
+</div>
+<div class="w-px h-8 bg-surface-container-high"></div>
+<!-- Metric 3 -->
+<div class="flex flex-col items-center">
+<span class="text-headline-md font-headline-md text-tertiary-container">12</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Offers Placed</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky / Prominent Action Footer Bar -->
+<div class="sticky bottom-4 z-30 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl p-space-md shadow-xl flex flex-col sm:flex-row items-center justify-between gap-space-md mt-space-md">
+<div class="flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span>All changes will be validated against collegiate hiring compliance guidelines.</span>
+</div>
+<div class="flex items-center gap-space-md w-full sm:w-auto justify-end">
+<!-- Draft Action -->
+<button class="px-space-lg py-space-sm rounded-lg text-secondary font-label-md hover:bg-surface-container transition-colors shadow-sm" type="button">
+          Save Draft
+        </button>
+<!-- Preview Modal/Action -->
+<button class="px-space-lg py-space-sm rounded-lg text-primary font-label-md hover:bg-primary-fixed/40 transition-colors" type="button">
+          Preview Posting
+        </button>
+<!-- Main Publish Trigger -->
+<button class="px-space-xl py-space-sm rounded-lg bg-primary-container text-on-primary font-label-md shadow-md hover:bg-primary hover:shadow-lg transition-all flex items-center gap-space-xs" type="button">
+<span>Publish Job Opening</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></body></html>
