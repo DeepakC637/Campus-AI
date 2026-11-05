@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Company
 
-# Register your models here.
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('company_name', 'user', 'industry', 'contact_person', 'website')
+    search_fields = ('company_name', 'user__email', 'contact_person', 'industry')
+    list_filter = ('industry',)

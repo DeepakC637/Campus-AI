@@ -183,3 +183,7 @@ LOGGING = {
         },
     },
 }
+
+# Authentication URL redirects
+LOGIN_URL = 'accounts:login'
+

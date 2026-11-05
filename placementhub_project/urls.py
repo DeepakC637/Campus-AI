@@ -6,6 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from core.views import landing_page
+from accounts.views import login_view, logout_view, register_view
 
 urlpatterns = [
     # Admin site
@@ -16,6 +17,11 @@ urlpatterns = [
 
     # Auth routes (/auth/)
     path('auth/', include('accounts.urls')),
+
+    # Direct top-level auth routes
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('register/', register_view, name='register'),
 
     # Student Portal (/student/)
     path('student/', include('students.urls')),
