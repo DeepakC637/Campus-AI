@@ -124,3 +124,4 @@ class InterviewScheduleForm(forms.ModelForm):
             'scheduled_at': forms.DateTimeInput(attrs={'class': 'w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500', 'type': 'datetime-local'}),
             'link_or_venue': forms.TextInput(attrs={'class': 'w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'e.g. https://meet.google.com/xyz or Main Conference Hall B'}),
         }
+

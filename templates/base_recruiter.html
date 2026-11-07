@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block body_wrapper %}
+<div class="min-h-screen bg-surface font-body-md text-on-surface antialiased flex flex-col">
+  <!-- Left Sidebar (Stitch Design) -->
+  <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between border-r border-outline-variant/20">
+    <div class="flex flex-col">
+      <!-- App Header / Brand -->
+      <div class="h-16 px-space-lg flex items-center justify-between gap-space-sm border-b border-outline-variant/15">
+        <a href="{% url 'recruiters:dashboard' %}" class="flex items-center gap-space-sm">
+          <span class="material-symbols-outlined text-primary text-[28px]">school</span>
+          <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">PlacementHub</span>
+        </a>
+        <span class="bg-secondary-container text-on-secondary-container font-label-sm text-[11px] px-space-xs py-0.5 rounded font-semibold tracking-wide">RECRUITER</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex flex-col gap-1 px-space-md pt-space-md">
+        <a href="{% url 'recruiters:dashboard' %}" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if active_tab == 'dashboard' %}bg-primary-container text-on-primary-container font-semibold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container hover:text-on-surface{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">grid_view</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'recruiters:profile' %}" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if active_tab == 'profile' %}bg-primary-container text-on-primary-container font-semibold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container hover:text-on-surface{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">domain</span>
+          <span>Company Profile</span>
+        </a>
+        <a href="{% url 'recruiters:jobs' %}" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if active_tab == 'jobs' %}bg-primary-container text-on-primary-container font-semibold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container hover:text-on-surface{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">work</span>
+          <span>My Job Drives</span>
+        </a>
+        <a href="{% url 'recruiters:job_create' %}" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if active_tab == 'post_job' %}bg-primary-container text-on-primary-container font-semibold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container hover:text-on-surface{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">add_circle</span>
+          <span>Post New Job</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- User / Organization Info & Sign out -->
+    <div class="p-space-md border-t border-outline-variant/15 flex flex-col gap-space-sm">
+      <div class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg bg-surface-container-low/70">
+        <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-label-md shrink-0">
+          {{ company.company_name|slice:":1"|upper|default:"R" }}
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">{{ company.company_name|default:"Enterprise Partner" }}</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant truncate">{{ request.user.email }}</span>
+        </div>
+      </div>
+      <a href="{% url 'accounts:logout' %}" class="flex items-center gap-space-sm px-space-md py-2 rounded-xl font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container transition-colors">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main View Area (Offset 64 = 16rem for sidebar) -->
+  <div class="pl-64 flex-1 flex flex-col min-w-0">
+    <!-- Top Fixed / Sticky Navigation Header -->
+    <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/85 backdrop-blur-xl border-b border-outline-variant/20 z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.02)]">
+      <div class="flex-1 max-w-md">
+        <div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-1.5 rounded-xl">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+          <input type="text" placeholder="Search applicants, jobs, schedules..." class="w-full bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:ring-0">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-space-lg">
+        {% if company.is_approved %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span> Verified Partner
+          </span>
+        {% else %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <span class="material-symbols-outlined text-[16px] text-amber-600">hourglass_top</span> Approval Pending
+          </span>
+        {% endif %}
+
+        <div class="flex items-center gap-space-md pl-space-md border-l border-outline-variant/30">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+            <span class="material-symbols-outlined text-[18px]">domain</span>
+          </div>
+          <div class="hidden sm:flex flex-col text-left">
+            <span class="font-label-md text-label-md text-on-surface font-semibold leading-none">{{ company.company_name|default:"Enterprise" }}</span>
+            <span class="font-body-sm text-[11px] text-on-surface-variant leading-none mt-1">Recruiter Command Center</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Messages / Alerts -->
+    {% if messages %}
+      <div class="pt-20 px-space-lg pb-0">
+        {% for message in messages %}
+          <div class="p-space-md mb-space-sm rounded-xl text-body-md font-medium flex items-center gap-space-sm {% if message.tags == 'error' %}bg-error-container text-on-error-container{% elif message.tags == 'warning' %}bg-amber-100 text-amber-900{% elif message.tags == 'success' %}bg-emerald-100 text-emerald-900 border border-emerald-200{% else %}bg-primary-fixed text-on-primary-fixed{% endif %} shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">
+              {% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}check_circle{% else %}info{% endif %}
+            </span>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Page Content Container -->
+    <main class="{% if not messages %}pt-16{% else %}pt-4{% endif %} bg-surface w-full px-space-lg pb-space-xl flex-1">
+      {% block recruiter_content %}{% block content %}{% endblock %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

@@ -1,92 +1,179 @@
-{% extends 'recruiters/base_recruiter.html' %}
+{% extends "recruiters/base_recruiter.html" %}
 
-{% block title %}Schedule Interview - {{ application.student.full_name }} - PlacementHub{% endblock %}
-{% block header_title %}Schedule Candidate Interview{% endblock %}
+{% block page_heading %}Schedule Interview{% endblock %}
 
-{% block content %}
-<div class="max-w-2xl mx-auto space-y-6">
-    <div class="flex items-center justify-between">
+{% block recruiter_content %}
+<div class="flex flex-col w-full pb-24 gap-space-lg">
+  <!-- Top Headline & Meta Context -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+    <div class="space-y-space-xs">
+      <div class="flex items-center gap-space-sm text-label-sm font-label-sm uppercase tracking-wider text-secondary">
+        <span>Recruitment Pipeline</span>
+        <span class="text-outline-variant">/</span>
+        <span class="text-primary font-semibold">Evaluation Stage</span>
+      </div>
+      <h1 class="text-headline-lg font-headline-lg text-on-surface">Schedule Candidate Interview</h1>
+      <p class="text-body-md font-body-md text-on-surface-variant max-w-3xl">
+        Configure interview round parameters, set evaluation timing, and dispatch invitations for candidate assessment.
+      </p>
+    </div>
+    <div class="flex items-center gap-space-sm self-start md:self-auto">
+      <a href="{% url 'recruiters:job_applicants' pk=application.job.pk %}" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high transition text-on-surface text-label-md font-label-md">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to Applicants</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Candidate Profile Banner Card -->
+  <div class="relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/15 p-space-lg">
+    <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary-fixed/20 blur-3xl pointer-events-none"></div>
+    <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
+      <div class="flex items-start sm:items-center gap-space-lg">
+        <div class="w-16 h-16 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-2xl shadow-sm shrink-0">
+          {{ application.student.full_name|slice:":1"|upper|default:"S" }}
+        </div>
+        <div class="space-y-space-xs">
+          <div class="flex flex-wrap items-center gap-space-sm">
+            <h2 class="text-headline-md font-headline-md text-on-surface font-bold">{{ application.student.full_name }}</h2>
+            <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-medium">
+              <span class="material-symbols-outlined text-[14px]">school</span>
+              Roll: {{ application.student.roll_no }}
+            </span>
+            <span class="inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+              {{ application.student.branch }} • CGPA: {{ application.student.cgpa }}
+            </span>
+          </div>
+          <p class="text-body-md font-body-md text-on-surface-variant flex items-center gap-space-sm">
+            Applying for: <span class="font-semibold text-on-surface">{{ application.job.title }}</span>
+            <span class="text-outline-variant">•</span>
+            <span>Current Stage: <strong class="text-primary">{{ application.status }}</strong></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- AI Fit Metric Badge (Phase 8 placeholder) -->
+      <div class="flex items-center gap-space-md bg-surface-container-low px-space-lg py-space-sm rounded-xl self-start lg:self-center border border-outline-variant/15">
+        <div class="relative w-12 h-12 flex items-center justify-center">
+          <svg class="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
+            <circle class="text-surface-container-highest" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-width="4"></circle>
+            <circle class="text-primary-container" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="30" stroke-linecap="round" stroke-width="4"></circle>
+          </svg>
+          <span class="absolute font-bold text-on-surface text-label-md">
+            {% if application.match_score %}{{ application.match_score|floatformat:0 }}%{% else %}—{% endif %}
+          </span>
+        </div>
         <div>
-            <h2 class="text-xl font-bold text-slate-800">Schedule Interview Round</h2>
-            <p class="text-sm text-slate-500">Candidate: <strong class="text-slate-700">{{ application.student.full_name }}</strong> ({{ application.student.roll_no }})</p>
-            <p class="text-xs text-slate-400">Position: {{ application.job.title }}</p>
+          <div class="flex items-center gap-1">
+            <span class="text-label-md font-label-md text-on-surface font-semibold">AI Match Score</span>
+            <span class="material-symbols-outlined text-primary text-[16px]">spark</span>
+          </div>
+          <p class="text-body-sm text-xs text-on-surface-variant">Semantic evaluation matrix</p>
         </div>
-        <a href="{% url 'recruiters:job_applicants' application.job.id %}" class="text-sm font-medium text-slate-600 hover:text-slate-800 transition">
-            &larr; Back to Applicants
-        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Layout Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+    <!-- LEFT COLUMN: Form Container (7 cols) -->
+    <div class="lg:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 p-space-lg flex flex-col gap-space-lg">
+      <div>
+        <h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold">Interview Parameters</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Configure stage type, scheduling windows, and meeting venue.</p>
+      </div>
+
+      <form method="POST" class="flex flex-col gap-space-md">
+        {% csrf_token %}
+
+        <!-- Round Type -->
+        <div>
+          <label class="block text-label-md font-label-md text-on-surface mb-space-xs" for="{{ form.round_type.id_for_label }}">
+            Interview Round Designation <span class="text-error">*</span>
+          </label>
+          {{ form.round_type }}
+          {% if form.round_type.errors %}
+            <p class="text-error font-body-sm text-xs mt-1">{{ form.round_type.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Mode -->
+        <div>
+          <label class="block text-label-md font-label-md text-on-surface mb-space-xs" for="{{ form.mode.id_for_label }}">
+            Evaluation Mode <span class="text-error">*</span>
+          </label>
+          {{ form.mode }}
+          {% if form.mode.errors %}
+            <p class="text-error font-body-sm text-xs mt-1">{{ form.mode.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Scheduled At -->
+        <div>
+          <label class="block text-label-md font-label-md text-on-surface mb-space-xs" for="{{ form.scheduled_at.id_for_label }}">
+            Date &amp; Time <span class="text-error">*</span>
+          </label>
+          {{ form.scheduled_at }}
+          {% if form.scheduled_at.errors %}
+            <p class="text-error font-body-sm text-xs mt-1">{{ form.scheduled_at.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Link or Venue -->
+        <div>
+          <label class="block text-label-md font-label-md text-on-surface mb-space-xs" for="{{ form.link_or_venue.id_for_label }}">
+            Meeting Link or Campus Venue <span class="text-error">*</span>
+          </label>
+          {{ form.link_or_venue }}
+          {% if form.link_or_venue.errors %}
+            <p class="text-error font-body-sm text-xs mt-1">{{ form.link_or_venue.errors.0 }}</p>
+          {% endif %}
+          <p class="text-body-sm text-xs text-on-surface-variant mt-1">Provide Google Meet URL or Campus room number.</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex items-center justify-end gap-space-md pt-space-md border-t border-outline-variant/15">
+          <a href="{% url 'recruiters:job_applicants' pk=application.job.pk %}" class="px-space-md py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">
+            Cancel
+          </a>
+          <button type="submit" class="px-space-xl py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+            <span>Confirm &amp; Schedule Round</span>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <!-- Existing Rounds if any -->
-    {% if application.interviews.exists %}
-        <div class="bg-indigo-50/60 border border-indigo-100 rounded-xl p-4">
-            <h3 class="text-xs font-bold uppercase text-indigo-800 tracking-wider mb-2">Previous Scheduled Rounds</h3>
-            <div class="space-y-2">
-                {% for iv in application.interviews.all %}
-                    <div class="flex justify-between items-center text-xs bg-white p-2.5 rounded-lg border border-indigo-100">
-                        <div>
-                            <span class="font-bold text-slate-800">{{ iv.round_type }}</span>
-                            <span class="text-slate-400">({{ iv.mode }})</span> &bull; 
-                            <span class="text-slate-600">{{ iv.scheduled_at|date:"M d, Y H:i" }}</span>
-                        </div>
-                        <span class="px-2 py-0.5 rounded text-[11px] font-semibold {% if iv.status == 'Scheduled' %}bg-blue-100 text-blue-700{% elif iv.status == 'Completed' %}bg-emerald-100 text-emerald-700{% else %}bg-slate-100 text-slate-600{% endif %}">
-                            {{ iv.status }}
-                        </span>
-                    </div>
-                {% endfor %}
-            </div>
+    <!-- RIGHT COLUMN: Guidelines & Applicant History (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-space-lg">
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 p-space-lg flex flex-col gap-space-md">
+        <h4 class="font-headline-sm text-body-lg font-semibold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+          Placement Cell Protocol
+        </h4>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Scheduling an interview automatically advances candidate status from <span class="font-medium text-on-surface">Shortlisted</span> to <span class="font-semibold text-primary">Interview</span>.
+        </p>
+        <div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm space-y-1.5 text-on-surface-variant">
+          <div class="flex justify-between">
+            <span>Candidate:</span>
+            <span class="font-medium text-on-surface">{{ application.student.full_name }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Email:</span>
+            <span class="font-medium text-on-surface">{{ application.student.user.email }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Phone:</span>
+            <span class="font-medium text-on-surface">{{ application.student.phone|default:"Not specified" }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Branch:</span>
+            <span class="font-medium text-on-surface">{{ application.student.branch }}</span>
+          </div>
         </div>
-    {% endif %}
-
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-        <form method="post" class="space-y-5">
-            {% csrf_token %}
-
-            {% if form.non_field_errors %}
-                <div class="p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-700">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.round_type.id_for_label }}">Round Name / Type *</label>
-                    {{ form.round_type }}
-                    {% if form.round_type.errors %}<p class="text-xs text-rose-500 mt-1">{{ form.round_type.errors.0 }}</p>{% endif %}
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.mode.id_for_label }}">Mode *</label>
-                    {{ form.mode }}
-                    {% if form.mode.errors %}<p class="text-xs text-rose-500 mt-1">{{ form.mode.errors.0 }}</p>{% endif %}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.scheduled_at.id_for_label }}">Scheduled Date & Time *</label>
-                {{ form.scheduled_at }}
-                {% if form.scheduled_at.errors %}<p class="text-xs text-rose-500 mt-1">{{ form.scheduled_at.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.link_or_venue.id_for_label }}">Meeting Link or In-Person Venue *</label>
-                {{ form.link_or_venue }}
-                {% if form.link_or_venue.errors %}<p class="text-xs text-rose-500 mt-1">{{ form.link_or_venue.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.feedback.id_for_label }}">Instructions / Notes for Candidate</label>
-                {{ form.feedback }}
-                {% if form.feedback.errors %}<p class="text-xs text-rose-500 mt-1">{{ form.feedback.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                <a href="{% url 'recruiters:job_applicants' application.job.id %}" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
-                    Cancel
-                </a>
-                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition">
-                    Confirm & Schedule
-                </button>
-            </div>
-        </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
