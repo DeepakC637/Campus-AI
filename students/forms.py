@@ -72,3 +72,4 @@ class ResumeUploadForm(forms.Form):
         if uploaded_file.size > 10 * 1024 * 1024:  # 10 MB limit
             raise ValidationError("File size exceeds 10MB limit.")
         return uploaded_file
+
