@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block body_wrapper %}
+<!-- Public Header / Navbar -->
+<header class="fixed top-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
+  <div class="h-16 w-full px-margin flex items-center justify-between">
+    <div class="flex items-center gap-space-lg">
+      <a class="flex items-center gap-space-xs" href="{% url 'landing' %}">
+        <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+          <span class="material-symbols-outlined text-[20px]">psychology</span>
+        </div>
+        <span class="font-headline-sm text-headline-sm text-primary-container tracking-tight">PlacementHub</span>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-space-md">
+        <a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'landing' %}#features">Features</a>
+        <a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'landing' %}#preview">Solutions</a>
+        <a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'landing' %}#students">For Students</a>
+        <a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'landing' %}#recruiters">For Recruiters</a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-space-sm">
+      {% if request.user.is_authenticated %}
+        {% if request.user.role == 'STUDENT' %}
+          <a class="px-space-md py-space-xs rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm hover:opacity-95 transition-opacity" href="{% url 'students:dashboard' %}">
+            Student Dashboard
+          </a>
+        {% elif request.user.role == 'RECRUITER' %}
+          <a class="px-space-md py-space-xs rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm hover:opacity-95 transition-opacity" href="{% url 'recruiters:dashboard' %}">
+            Recruiter Dashboard
+          </a>
+        {% elif request.user.role == 'ADMIN' %}
+          <a class="px-space-md py-space-xs rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm hover:opacity-95 transition-opacity" href="{% url 'core:admin_dashboard' %}">
+            Admin Portal
+          </a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}" class="inline">
+          {% csrf_token %}
+          <button type="submit" class="px-space-sm py-space-xs font-label-md text-label-md text-rose-600 hover:text-rose-800 transition-colors">
+            Sign Out
+          </button>
+        </form>
+      {% else %}
+        <a class="px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'login' %}">Sign In</a>
+        <a class="px-space-md py-space-xs rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm hover:opacity-95 transition-opacity" href="{% url 'register' %}">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<!-- Flash Messages -->
+{% if messages %}
+  <div class="max-w-7xl mx-auto px-margin pt-20 w-full">
+    {% for message in messages %}
+      <div class="p-4 mb-2 rounded-lg text-sm font-medium {% if message.tags == 'error' %}bg-rose-50 text-rose-700 border border-rose-200{% elif message.tags == 'warning' %}bg-amber-50 text-amber-700 border border-amber-200{% elif message.tags == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Main Content -->
+<main class="w-full {% if not messages %}pt-16{% endif %} bg-surface min-h-[calc(100vh-4rem)] flex flex-col justify-between">
+  {% block content %}{% endblock %}
+
+  <!-- Institutional Global Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 py-space-xl mt-auto">
+    <div class="w-full px-margin max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm">
+      <div class="flex items-center gap-space-xs">
+        <div class="w-6 h-6 rounded-lg bg-primary-container flex items-center justify-center text-on-primary text-xs font-bold">
+          <span class="material-symbols-outlined text-[14px]">psychology</span>
+        </div>
+        <span class="font-semibold text-on-surface">PlacementHub</span> &bull; <span>AI-Powered Institutional Placement Automation</span>
+      </div>
+      <div class="flex items-center gap-space-md">
+        <a href="{% url 'landing' %}#features" class="hover:text-primary transition-colors">Features</a>
+        <a href="{% url 'login' %}" class="hover:text-primary transition-colors">Sign In</a>
+        <a href="{% url 'register' %}" class="hover:text-primary transition-colors">Register</a>
+        <span>&copy; 2026 PlacementHub. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</main>
+{% endblock %}

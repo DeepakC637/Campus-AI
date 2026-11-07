@@ -1,50 +1,201 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 
 {% block title %}Sign In - PlacementHub{% endblock %}
 
 {% block content %}
-<div style="max-width: 440px; margin: 40px auto; padding: 32px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); font-family: sans-serif;">
-  <div style="text-align: center; margin-bottom: 24px;">
-    <h2 style="font-size: 24px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Sign In</h2>
-    <p style="color: #64748b; font-size: 14px; margin: 0;">Access your PlacementHub account</p>
-  </div>
+<div class="w-full min-h-[calc(100vh-4rem)] bg-surface flex items-center justify-center p-margin">
+  <div class="flex flex-col w-full items-center justify-center py-space-xl px-space-md">
+    <!-- Subtle decorative ambient glows -->
+    <div class="relative w-full max-w-[460px]">
+      <div class="absolute -top-12 -left-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -right-10 w-44 h-44 bg-tertiary-fixed-dim/20 rounded-full blur-2xl pointer-events-none"></div>
 
-  {% if form.errors %}
-    <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
-      {% for field, errors in form.errors.items %}
-        {% for error in errors %}
-          <div>{{ error }}</div>
-        {% endfor %}
-      {% endfor %}
-    </div>
-  {% endif %}
+      <!-- Main Card Container -->
+      <div class="relative w-full bg-surface-container-lowest rounded-xl shadow-xl p-space-xl flex flex-col border border-outline-variant/30">
+        <!-- PlacementHub Brand Header -->
+        <div class="flex flex-col items-center text-center">
+          <div class="flex items-center gap-space-xs bg-secondary-container/40 text-primary px-space-md py-space-xs rounded-full mb-space-md">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            <span class="font-label-sm text-label-sm font-semibold tracking-wide uppercase">PlacementHub AI</span>
+          </div>
+          <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">
+            Welcome back
+          </h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+            Sign in to your campus recruitment portal
+          </p>
+        </div>
 
-  <form method="post" action="{% url 'accounts:login' %}">
-    {% csrf_token %}
-    {% if next %}
-      <input type="hidden" name="next" value="{{ next }}">
-    {% endif %}
+        <!-- Role Selector Tabs -->
+        <div class="mt-space-lg p-space-xs bg-surface-container-low rounded-lg flex items-center justify-between gap-1" id="roleSelectorGroup">
+          <button class="flex-1 py-2 px-3 rounded-lg text-center font-label-md text-label-md font-semibold transition-all duration-200 bg-primary-container text-on-primary shadow-sm flex items-center justify-center gap-1.5" id="tab-student" onclick="selectRole('student')" type="button">
+            <span class="material-symbols-outlined text-[16px]">school</span>
+            <span>Student</span>
+          </button>
+          <button class="flex-1 py-2 px-3 rounded-lg text-center font-label-md text-label-md font-medium transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center justify-center gap-1.5" id="tab-recruiter" onclick="selectRole('recruiter')" type="button">
+            <span class="material-symbols-outlined text-[16px]">business_center</span>
+            <span>Recruiter</span>
+          </button>
+          <button class="flex-1 py-2 px-3 rounded-lg text-center font-label-md text-label-md font-medium transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center justify-center gap-1.5" id="tab-admin" onclick="selectRole('admin')" type="button">
+            <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+            <span>Admin</span>
+          </button>
+        </div>
 
-    <div style="margin-bottom: 16px;">
-      <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Email Address</label>
-      <input type="email" name="email" value="{{ form.email.value|default:'' }}" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
-    </div>
+        <!-- Form Errors -->
+        {% if form.errors %}
+          <div class="mt-space-md p-space-md bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm border border-error/20 flex flex-col gap-1">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]">error</span>
+                  <span>{{ error }}</span>
+                </div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
 
-    <div style="margin-bottom: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <label style="font-size: 14px; font-weight: 600; color: #334155; margin: 0;">Password</label>
-        <a href="{% url 'accounts:password_reset' %}" style="font-size: 13px; color: #2563eb; text-decoration: none;">Forgot password?</a>
+        <!-- Authentication Form -->
+        <form class="mt-space-lg flex flex-col gap-space-md" method="post" action="{% url 'accounts:login' %}">
+          {% csrf_token %}
+          {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+          {% endif %}
+
+          <!-- Email Input Section -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md font-medium text-on-surface" for="emailInput" id="emailLabel">
+              Institutional Email
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none transition-colors" id="emailIcon">mail</span>
+              <input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-11 pr-4 py-2.5 rounded-lg border border-transparent focus:border-primary-container focus:bg-surface-container-lowest outline-none focus:shadow-[0_0_0_2px_#2563eb] transition-all placeholder:text-outline/70" id="emailInput" name="email" value="{{ form.email.value|default:'' }}" placeholder="alex.chen@university.edu" required type="email"/>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant text-right" id="roleSubtext">Must end with authorized academic domain</span>
+          </div>
+
+          <!-- Password Input Section -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md font-medium text-on-surface flex justify-between items-center" for="passwordInput">
+              <span>Password</span>
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none transition-colors" id="lockIcon">lock</span>
+              <input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-11 pr-11 py-2.5 rounded-lg border border-transparent focus:border-primary-container focus:bg-surface-container-lowest outline-none focus:shadow-[0_0_0_2px_#2563eb] transition-all placeholder:text-outline/70" id="passwordInput" name="password" placeholder="••••••••••••" required type="password"/>
+              <button aria-label="Toggle password visibility" class="absolute right-3 text-outline hover:text-on-surface p-1 rounded transition-colors flex items-center justify-center" id="togglePasswordBtn" onclick="togglePasswordVisibility()" type="button">
+                <span class="material-symbols-outlined text-[20px]" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Device & Forgot Password Row -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer select-none group">
+              <input class="w-4 h-4 rounded text-primary-container accent-primary-container focus:ring-0 cursor-pointer" id="rememberMe" name="remember_me" type="checkbox"/>
+              <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Remember this device</span>
+            </label>
+            <a class="font-label-sm text-label-sm font-semibold text-primary-container hover:text-primary transition-colors" href="{% url 'accounts:password_reset' %}">
+              Forgot password?
+            </a>
+          </div>
+
+          <!-- Primary CTA Submit Button -->
+          <button class="w-full mt-2 py-3 px-4 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-md hover:shadow-lg active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2" id="submitBtn" type="submit">
+            <span id="btnText">Log In as Student</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </form>
+
+        <!-- Institutional SSO Divider -->
+        <div class="relative my-space-lg flex items-center justify-center">
+          <div class="w-full h-px bg-surface-container-high"></div>
+          <span class="absolute bg-surface-container-lowest px-3 font-label-sm text-label-sm text-on-surface-variant select-none">
+            Or continue with University SSO
+          </span>
+        </div>
+
+        <!-- SSO Alternative Buttons -->
+        <div class="grid grid-cols-2 gap-space-sm">
+          <button class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium transition-colors border border-outline-variant/30" type="button">
+            <span class="material-symbols-outlined text-tertiary text-[18px]">badge</span>
+            <span>Campus ID</span>
+          </button>
+          <button class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium transition-colors border border-outline-variant/30" type="button">
+            <span class="material-symbols-outlined text-primary text-[18px]">vpn_key</span>
+            <span>SAML 2.0</span>
+          </button>
+        </div>
+
+        <!-- Registration Footer link -->
+        <div class="mt-space-lg pt-space-md text-center bg-surface-container-lowest flex flex-col items-center">
+          <p class="font-body-sm text-body-sm text-on-surface-variant">
+            Don't have an account? 
+            <a class="font-label-sm text-label-sm font-semibold text-primary-container hover:text-primary transition-colors ml-1" href="{% url 'accounts:register' %}">
+              Register here
+            </a>
+          </p>
+
+          <!-- Academic Network Protection Notice -->
+          <div class="mt-space-sm flex items-center justify-center gap-1.5 text-on-surface-variant/70 font-body-sm text-[11px]">
+            <span class="material-symbols-outlined text-[13px]">verified_user</span>
+            <span>256-bit SSL Protected Campus Grid</span>
+          </div>
+        </div>
       </div>
-      <input type="password" name="password" required placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
     </div>
-
-    <button type="submit" style="width: 100%; padding: 12px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer;">
-      Sign In
-    </button>
-  </form>
-
-  <div style="text-align: center; margin-top: 24px; font-size: 14px; color: #64748b;">
-    Don't have an account? <a href="{% url 'accounts:register' %}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Register</a>
   </div>
 </div>
+
+<script>
+  let activeRole = 'student';
+
+  function selectRole(role) {
+    activeRole = role;
+    const roles = ['student', 'recruiter', 'admin'];
+    const emailInput = document.getElementById('emailInput');
+    const emailLabel = document.getElementById('emailLabel');
+    const roleSubtext = document.getElementById('roleSubtext');
+    const btnText = document.getElementById('btnText');
+
+    roles.forEach(r => {
+      const btn = document.getElementById('tab-' + r);
+      if (r === role) {
+        btn.className = 'flex-1 py-2 px-3 rounded-lg text-center font-label-md text-label-md font-semibold transition-all duration-200 bg-primary-container text-on-primary shadow-sm flex items-center justify-center gap-1.5';
+      } else {
+        btn.className = 'flex-1 py-2 px-3 rounded-lg text-center font-label-md text-label-md font-medium transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center justify-center gap-1.5';
+      }
+    });
+
+    if (role === 'student') {
+      emailLabel.innerText = 'Institutional Email';
+      emailInput.placeholder = 'alex.chen@university.edu';
+      roleSubtext.innerText = 'Must end with authorized academic domain';
+      btnText.innerText = 'Log In as Student';
+    } else if (role === 'recruiter') {
+      emailLabel.innerText = 'Work Email Address';
+      emailInput.placeholder = 'recruiter@company.com';
+      roleSubtext.innerText = 'Corporate recruiter portal access';
+      btnText.innerText = 'Log In as Recruiter';
+    } else if (role === 'admin') {
+      emailLabel.innerText = 'TPO / Officer Email';
+      emailInput.placeholder = 'director.placement@university.edu';
+      roleSubtext.innerText = 'Administrative privileges required';
+      btnText.innerText = 'Log In as Admin';
+    }
+  }
+
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('passwordInput');
+    const eyeIcon = document.getElementById('eyeIcon');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.innerText = 'visibility_off';
+    } else {
+      passwordInput.type = 'password';
+      eyeIcon.innerText = 'visibility';
+    }
+  }
+</script>
 {% endblock %}

@@ -1,15 +1,418 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 
-{% block title %}Welcome - PlacementHub{% endblock %}
+{% block title %}PlacementHub - AI-Powered Campus Placement Portal{% endblock %}
 
 {% block content %}
-<div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: sans-serif; text-align: center;">
-  <h1 style="color: #2563eb; font-size: 2.5rem; margin-bottom: 0.5rem;">PlacementHub</h1>
-  <p style="color: #475569; font-size: 1.25rem; margin-bottom: 2rem;">AI-Powered Campus Placement & Career Management Portal</p>
-  
-  <div style="display: flex; justify-content: center; gap: 16px; margin-top: 2rem;">
-    <a href="/auth/login/" style="padding: 12px 24px; background-color: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">Sign In</a>
-    <a href="/auth/register/" style="padding: 12px 24px; background-color: #f1f5f9; color: #1e293b; text-decoration: none; border-radius: 6px; font-weight: 600; border: 1px solid #cbd5e1;">Register</a>
-  </div>
+<div class="flex flex-col w-full">
+  <!-- HERO SECTION -->
+  <section class="relative w-full overflow-hidden bg-surface-container-lowest pt-space-xl pb-space-xl">
+    <!-- Subtle Ambient Dot / Light Gradient Layer -->
+    <div class="absolute inset-0 pointer-events-none opacity-40">
+      <svg class="w-full h-full" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern height="32" id="dot-mesh" patternunits="userSpaceOnUse" width="32">
+            <circle cx="2" cy="2" fill="#2563eb" fill-opacity="0.12" r="1.5"></circle>
+          </pattern>
+        </defs>
+        <rect fill="url(#dot-mesh)" height="100%" width="100%"></rect>
+      </svg>
+    </div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-primary-fixed/35 blur-3xl rounded-full pointer-events-none"></div>
+
+    <div class="relative w-full px-margin max-w-7xl mx-auto flex flex-col items-center text-center">
+      <!-- Live Badge Pill -->
+      <div class="inline-flex items-center gap-space-xs bg-secondary-container/60 px-space-md py-space-xs rounded-full shadow-sm mb-space-md">
+        <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+        <span class="font-label-sm text-label-sm text-on-secondary-fixed-variant tracking-wide font-semibold">2026 AI-FIRST CAMPUS RECRUITMENT SUITE</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="font-headline-xl text-headline-xl text-on-surface max-w-4xl tracking-tight leading-tight mb-space-md">
+        Connecting Students, Recruiters, and Opportunities
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mb-space-lg">
+        Intelligent automated resume skill scoring, deterministic ATS parsing, and precision campus hiring workflows designed for modern university ecosystems.
+      </p>
+
+      <!-- Dual Call To Actions -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md mb-space-xl">
+        {% if request.user.is_authenticated and request.user.role == 'STUDENT' %}
+          <a class="w-full sm:w-auto flex-1 flex items-center justify-center gap-space-xs bg-primary-container text-on-primary px-space-lg py-space-md rounded-xl shadow-md hover:shadow-lg hover:opacity-95 transition-all" href="{% url 'students:dashboard' %}">
+            <span class="font-label-md text-label-md font-semibold">Go to Student Portal</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </a>
+        {% elif request.user.is_authenticated and request.user.role == 'RECRUITER' %}
+          <a class="w-full sm:w-auto flex-1 flex items-center justify-center gap-space-xs bg-primary-container text-on-primary px-space-lg py-space-md rounded-xl shadow-md hover:shadow-lg hover:opacity-95 transition-all" href="{% url 'recruiters:dashboard' %}">
+            <span class="font-label-md text-label-md font-semibold">Go to Recruiter Portal</span>
+            <span class="material-symbols-outlined text-[18px]">domain</span>
+          </a>
+        {% else %}
+          <a class="w-full sm:w-auto flex-1 flex items-center justify-center gap-space-xs bg-primary-container text-on-primary px-space-lg py-space-md rounded-xl shadow-md hover:shadow-lg hover:opacity-95 transition-all" href="{% url 'register' %}">
+            <span class="font-label-md text-label-md font-semibold">I'm a Student</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </a>
+          <a class="w-full sm:w-auto flex-1 flex items-center justify-center gap-space-xs bg-surface-container text-on-surface px-space-lg py-space-md rounded-xl hover:bg-surface-container-high transition-colors" href="{% url 'register' %}">
+            <span class="font-label-md text-label-md font-semibold">I'm a Recruiter</span>
+            <span class="material-symbols-outlined text-[18px]">domain</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mini Stats Strip -->
+      <div class="w-full max-w-4xl bg-surface-container-lowest shadow-md rounded-xl px-space-lg py-space-md flex flex-wrap items-center justify-around gap-space-md">
+        <div class="flex items-center gap-space-sm py-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">corporate_fare</span>
+          </div>
+          <div class="text-left">
+            <span class="font-headline-sm text-headline-sm text-on-surface block font-bold leading-none">500+</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Top Tier Recruiters</span>
+          </div>
+        </div>
+        <div class="h-8 w-px bg-surface-container-highest hidden sm:block"></div>
+        <div class="flex items-center gap-space-sm py-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-[22px]">verified</span>
+          </div>
+          <div class="text-left">
+            <span class="font-headline-sm text-headline-sm text-on-surface block font-bold leading-none">95%</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Annual Placement Rate</span>
+          </div>
+        </div>
+        <div class="h-8 w-px bg-surface-container-highest hidden sm:block"></div>
+        <div class="flex items-center gap-space-sm py-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-[22px]">school</span>
+          </div>
+          <div class="text-left">
+            <span class="font-headline-sm text-headline-sm text-on-surface block font-bold leading-none">10,000+</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Students Placed</span>
+          </div>
+        </div>
+        <div class="h-8 w-px bg-surface-container-highest hidden sm:block"></div>
+        <div class="flex items-center gap-space-sm py-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-primary-fixed-dim/40 flex items-center justify-center text-primary-container">
+            <span class="material-symbols-outlined text-[22px]">insights</span>
+          </div>
+          <div class="text-left">
+            <span class="font-headline-sm text-headline-sm text-on-surface block font-bold leading-none">3.4x</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Faster Screening Speed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE DASHBOARD SHOWCASE PREVIEW -->
+  <section id="preview" class="w-full bg-surface py-space-xl">
+    <div class="w-full px-margin max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg">
+        <div>
+          <span class="font-label-sm text-label-sm text-primary-container uppercase font-semibold tracking-wider block mb-space-xs">Unified Interface</span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">The Placement Intelligence Cockpit</h2>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mt-space-xs md:mt-0">
+          Engineered for continuous assessment visibility, synchronized offer tracking, and structured feedback between campus cell and hiring leads.
+        </p>
+      </div>
+
+      <!-- Dashboard Mockup Window -->
+      <div class="w-full bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden">
+        <!-- Mock Window Toolbar -->
+        <div class="bg-surface-container px-space-md py-space-sm flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="w-3 h-3 rounded-full bg-surface-dim"></span>
+            <span class="w-3 h-3 rounded-full bg-surface-dim"></span>
+            <span class="w-3 h-3 rounded-full bg-surface-dim"></span>
+            <span class="ml-space-sm font-label-sm text-label-sm text-on-surface-variant font-medium">PlacementHub Institutional Pipeline Engine</span>
+          </div>
+          <div class="flex items-center gap-space-sm">
+            <span class="font-label-sm text-label-sm bg-surface-container-lowest text-primary-container px-space-sm py-0.5 rounded-full font-medium flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span> Enterprise Drives Active
+            </span>
+          </div>
+        </div>
+
+        <!-- Cockpit Layout Body -->
+        <div class="p-space-lg grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+          <!-- Left Mini Sidebar / Navigation -->
+          <div class="lg:col-span-3 space-y-space-md">
+            <div class="bg-surface-container-low p-space-md rounded-xl">
+              <div class="flex items-center gap-space-sm mb-space-md">
+                <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold">
+                  AK
+                </div>
+                <div>
+                  <h4 class="font-label-md text-label-md font-semibold text-on-surface leading-snug">Aarav Kapoor</h4>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">B.Tech Computer Science &bull; CGPA 9.2</p>
+                </div>
+              </div>
+
+              <!-- Resume ATS Score Meter -->
+              <div class="bg-surface-container-lowest p-space-sm rounded-xl mb-space-sm shadow-sm">
+                <div class="flex justify-between items-center mb-space-xs">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant">ATS Compatibility</span>
+                  <span class="font-label-sm text-label-sm text-primary-container font-bold">96 / 100</span>
+                </div>
+                <div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+                  <div class="bg-primary-container h-full rounded-full" style="width: 96%"></div>
+                </div>
+              </div>
+
+              <!-- Skill Badges -->
+              <div class="space-y-space-xs pt-space-xs">
+                <span class="font-label-sm text-label-sm text-on-surface-variant block font-medium">Validated Proficiencies:</span>
+                <div class="flex flex-wrap gap-1">
+                  <span class="bg-primary-fixed text-primary px-2 py-0.5 rounded text-xs font-medium">Distributed Systems</span>
+                  <span class="bg-secondary-container text-on-secondary-fixed-variant px-2 py-0.5 rounded text-xs font-medium">Python / Django</span>
+                  <span class="bg-tertiary-fixed text-tertiary px-2 py-0.5 rounded text-xs font-medium">PostgreSQL</span>
+                  <span class="bg-surface-container-high text-on-surface px-2 py-0.5 rounded text-xs font-medium">Docker</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- College Drive Summary Card -->
+            <div class="bg-surface-container-low p-space-md rounded-xl">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block mb-space-xs font-medium">Campus Drives</span>
+              <ul class="space-y-space-sm">
+                <li class="flex items-center justify-between text-body-sm font-body-sm">
+                  <span class="text-on-surface font-medium">TechCorp Cloud SDE</span>
+                  <span class="text-primary-container font-semibold">Open Now</span>
+                </li>
+                <li class="flex items-center justify-between text-body-sm font-body-sm">
+                  <span class="text-on-surface font-medium">Global AI Solutions</span>
+                  <span class="text-on-surface-variant">Upcoming</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Main Stage Pipeline & Match Table -->
+          <div class="lg:col-span-9 space-y-space-md">
+            <!-- Active Candidate Stage Flow -->
+            <div class="bg-surface-container-low p-space-md rounded-xl">
+              <div class="flex items-center justify-between mb-space-sm">
+                <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Candidate Stage Progression</h3>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Live Drive Workflow</span>
+              </div>
+
+              <!-- 4-Stage Step Bar -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm pt-space-xs">
+                <div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center gap-space-xs">
+                  <div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">check</span>
+                  </div>
+                  <div>
+                    <span class="font-label-sm text-label-sm font-bold text-on-surface block">Resume Parse</span>
+                    <span class="text-xs text-on-surface-variant">Score: 98%</span>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center gap-space-xs">
+                  <div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">check</span>
+                  </div>
+                  <div>
+                    <span class="font-label-sm text-label-sm font-bold text-on-surface block">Shortlisting</span>
+                    <span class="text-xs text-on-surface-variant">Criteria Met</span>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center gap-space-xs ring-2 ring-primary-container/20">
+                  <div class="w-7 h-7 rounded-full bg-primary-fixed text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">videocam</span>
+                  </div>
+                  <div>
+                    <span class="font-label-sm text-label-sm font-bold text-primary-container block">Technical Round</span>
+                    <span class="text-xs text-primary-container font-medium">Scheduled</span>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm opacity-60 flex items-center gap-space-xs">
+                  <div class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">emoji_events</span>
+                  </div>
+                  <div>
+                    <span class="font-label-sm text-label-sm font-bold text-on-surface block">Offer Finalization</span>
+                    <span class="text-xs text-on-surface-variant">Verification</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Algorithm Matching Table -->
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-x-auto">
+              <div class="p-space-md flex items-center justify-between bg-surface-container-low/50">
+                <span class="font-label-md text-label-md font-bold text-on-surface">Precision Campus Openings</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Real-Time Eligibility Indexing</span>
+              </div>
+              <table class="w-full text-left font-body-sm text-body-sm">
+                <thead class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                  <tr>
+                    <th class="py-space-sm px-space-md">Role &amp; Company</th>
+                    <th class="py-space-sm px-space-md">Target Skills</th>
+                    <th class="py-space-sm px-space-md">AI Match</th>
+                    <th class="py-space-sm px-space-md">Package (CTC)</th>
+                    <th class="py-space-sm px-space-md text-right">Portal Link</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                  <tr class="hover:bg-surface-container-low/40 transition-colors">
+                    <td class="py-space-sm px-space-md font-medium text-on-surface">
+                      Cloud Infrastructure Engineer
+                      <span class="block text-xs text-on-surface-variant">TechCorp Global &bull; Bangalore</span>
+                    </td>
+                    <td class="py-space-sm px-space-md">
+                      <div class="flex gap-1">
+                        <span class="bg-surface-container px-1.5 py-0.5 rounded text-xs">Python</span>
+                        <span class="bg-surface-container px-1.5 py-0.5 rounded text-xs">Django</span>
+                      </div>
+                    </td>
+                    <td class="py-space-sm px-space-md">
+                      <span class="inline-flex items-center gap-1 text-primary-container font-semibold bg-primary-fixed/50 px-2 py-0.5 rounded-full text-xs">
+                        98% Match
+                      </span>
+                    </td>
+                    <td class="py-space-sm px-space-md text-on-surface font-semibold">₹14.5 LPA</td>
+                    <td class="py-space-sm px-space-md text-right">
+                      <a href="{% url 'register' %}" class="inline-block bg-primary-container text-on-primary px-space-sm py-1 rounded-lg text-xs font-medium hover:opacity-95">Explore</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low/40 transition-colors">
+                    <td class="py-space-sm px-space-md font-medium text-on-surface">
+                      Full-Stack AI Developer
+                      <span class="block text-xs text-on-surface-variant">Alpha Innovations &bull; Hyderabad</span>
+                    </td>
+                    <td class="py-space-sm px-space-md">
+                      <div class="flex gap-1">
+                        <span class="bg-surface-container px-1.5 py-0.5 rounded text-xs">JavaScript</span>
+                        <span class="bg-surface-container px-1.5 py-0.5 rounded text-xs">Tailwind</span>
+                      </div>
+                    </td>
+                    <td class="py-space-sm px-space-md">
+                      <span class="inline-flex items-center gap-1 text-primary-container font-semibold bg-primary-fixed/50 px-2 py-0.5 rounded-full text-xs">
+                        94% Match
+                      </span>
+                    </td>
+                    <td class="py-space-sm px-space-md text-on-surface font-semibold">₹12.0 LPA</td>
+                    <td class="py-space-sm px-space-md text-right">
+                      <a href="{% url 'register' %}" class="inline-block bg-primary-container text-on-primary px-space-sm py-1 rounded-lg text-xs font-medium hover:opacity-95">Explore</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-COLUMN FEATURE CARDS GRID -->
+  <section id="features" class="w-full bg-surface-container-low py-space-xl">
+    <div class="w-full px-margin max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-space-xl">
+        <span class="font-label-sm text-label-sm text-primary-container uppercase font-semibold tracking-wider block mb-space-xs">Core Intelligence</span>
+        <h2 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">Built to Modernize Campus Recruitment</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Replace tedious spreadsheets and fragmented email chains with automated skill extraction, deterministic eligibility filters, and synchronized application tracking.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <!-- Feature 1: AI Resume Analysis -->
+        <div id="students" class="bg-surface-container-lowest p-space-lg rounded-xl shadow-md flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-primary-container/10 text-primary-container flex items-center justify-center mb-space-md">
+              <span class="material-symbols-outlined text-[28px]">document_scanner</span>
+            </div>
+            <div class="flex items-center justify-between mb-space-xs">
+              <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">AI Resume Analysis</h3>
+              <span class="bg-primary-fixed text-primary px-2 py-0.5 rounded-full text-xs font-bold">ATS PARSER</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Automated skill extraction, candidate profiling, and instant alignment check to ensure applications highlight key competencies.
+            </p>
+          </div>
+          <div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center gap-space-xs text-primary-container font-label-md text-label-md font-semibold hover:gap-space-sm transition-all">
+            <a href="{% url 'register' %}" class="flex items-center gap-1">
+              <span>Start as Student</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Feature 2: Smart Job Matching -->
+        <div id="recruiters" class="bg-surface-container-lowest p-space-lg rounded-xl shadow-md flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-tertiary-container/10 text-tertiary-container flex items-center justify-center mb-space-md">
+              <span class="material-symbols-outlined text-[28px]">hub</span>
+            </div>
+            <div class="flex items-center justify-between mb-space-xs">
+              <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Corporate Drives</h3>
+              <span class="bg-tertiary-fixed text-tertiary px-2 py-0.5 rounded-full text-xs font-bold">RECRUITER SUITE</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Post job drives, customize eligibility thresholds (CGPA, allowed branches, max backlogs), and review verified applicant pools effortlessly.
+            </p>
+          </div>
+          <div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center gap-space-xs text-tertiary-container font-label-md text-label-md font-semibold hover:gap-space-sm transition-all">
+            <a href="{% url 'register' %}" class="flex items-center gap-1">
+              <span>Partner as Recruiter</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Feature 3: Real-Time Application Tracking -->
+        <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-md flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center mb-space-md">
+              <span class="material-symbols-outlined text-[28px]">notifications_active</span>
+            </div>
+            <div class="flex items-center justify-between mb-space-xs">
+              <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Zero Ghosting Tracker</h3>
+              <span class="bg-secondary-container text-on-secondary-fixed-variant px-2 py-0.5 rounded-full text-xs font-bold">STAGE SYNC</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Live updates across Applied, Shortlisted, Interview rounds, and Final Selection with verified institutional audit trails.
+            </p>
+          </div>
+          <div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center gap-space-xs text-secondary font-label-md text-label-md font-semibold hover:gap-space-sm transition-all">
+            <a href="{% url 'login' %}" class="flex items-center gap-1">
+              <span>Track Applications</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECONDARY PRE-FOOTER CALLOUT -->
+  <section class="w-full bg-primary-container py-space-xl text-on-primary relative overflow-hidden">
+    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-on-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="relative w-full px-margin max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-space-lg text-center md:text-left">
+      <div class="max-w-2xl">
+        <span class="bg-on-primary/20 text-on-primary text-xs uppercase px-space-sm py-0.5 rounded-full font-semibold tracking-wider mb-space-xs inline-block">Institutional Placement Acceleration</span>
+        <h2 class="font-headline-xl text-headline-xl font-bold tracking-tight mb-space-xs">
+          Ready to streamline campus recruitment drives?
+        </h2>
+        <p class="font-body-lg text-body-lg text-on-primary/90">
+          PlacementHub provides a modern, transparent campus recruitment pipeline for students, recruiters, and placement directors.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center gap-space-sm w-full md:w-auto">
+        <a class="w-full sm:w-auto bg-surface-container-lowest text-primary-container px-space-lg py-space-md rounded-xl font-label-md text-label-md font-bold shadow-lg hover:bg-surface-bright transition-all" href="{% url 'register' %}">
+          Get Started Now
+        </a>
+        <a class="w-full sm:w-auto bg-on-primary/15 text-on-primary px-space-lg py-space-md rounded-xl font-label-md text-label-md font-semibold hover:bg-on-primary/25 transition-all" href="{% url 'login' %}">
+          Sign In to Portal
+        </a>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}

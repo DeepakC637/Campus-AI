@@ -1,56 +1,260 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 
 {% block title %}Create Account - PlacementHub{% endblock %}
 
 {% block content %}
-<div style="max-width: 500px; margin: 40px auto; padding: 32px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); font-family: sans-serif;">
-  <div style="text-align: center; margin-bottom: 24px;">
-    <h2 style="font-size: 24px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Create an Account</h2>
-    <p style="color: #64748b; font-size: 14px; margin: 0;">Join PlacementHub as a Student or Recruiter</p>
-  </div>
+<div class="w-full min-h-[calc(100vh-4rem)] bg-surface flex items-center justify-center p-margin">
+  <div class="flex flex-col w-full items-center justify-center py-6 px-4">
+    <!-- Subtle decorative ambient backdrop elements -->
+    <div class="relative w-full max-w-[620px]">
+      <div class="absolute -top-12 -left-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-12 w-72 h-72 bg-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
 
-  {% if form.errors %}
-    <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
-      {% for field, errors in form.errors.items %}
-        {% for error in errors %}
-          <div><strong>{{ field|title }}:</strong> {{ error }}</div>
-        {% endfor %}
-      {% endfor %}
+      <!-- Main Registration Surface Card -->
+      <div class="relative bg-surface-container-lowest shadow-xl rounded-xl p-8 sm:p-10 flex flex-col w-full overflow-hidden border border-outline-variant/30">
+        <!-- Top Decorative AI Tech Pill -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full text-on-surface-variant font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            <span>PlacementHub AI Ecosystem</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-secondary font-label-sm text-label-sm">
+            <span class="inline-block w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+            <span>Drive Live</span>
+          </div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="flex flex-col gap-2 mb-8 text-left">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Create your PlacementHub Account
+          </h1>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Get started with AI-driven placement drives, verified recruiters &amp; transparent candidate tracking.
+          </p>
+        </div>
+
+        <!-- Role Selector Tabs -->
+        <div aria-label="Registration Role Selector" class="p-1 bg-surface-container rounded-lg flex items-center mb-8 gap-1" role="tablist">
+          <button aria-selected="{% if form.role.value == 'RECRUITER' %}false{% else %}true{% endif %}" class="flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 {% if form.role.value == 'RECRUITER' %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high{% else %}bg-primary-container text-on-primary shadow-sm{% endif %}" id="btn-student" onclick="selectRole('STUDENT')" role="tab" type="button">
+            <span class="material-symbols-outlined text-[18px]">school</span>
+            <span>Student</span>
+          </button>
+          <button aria-selected="{% if form.role.value == 'RECRUITER' %}true{% else %}false{% endif %}" class="flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 {% if form.role.value == 'RECRUITER' %}bg-primary-container text-on-primary shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high{% endif %}" id="btn-recruiter" onclick="selectRole('RECRUITER')" role="tab" type="button">
+            <span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+            <span>Recruiter</span>
+          </button>
+        </div>
+
+        <!-- Form Errors -->
+        {% if form.errors %}
+          <div class="mb-6 p-4 bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm border border-error/20 flex flex-col gap-1">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]">error</span>
+                  <span><strong>{{ field|title }}:</strong> {{ error }}</span>
+                </div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Registration Form -->
+        <form class="flex flex-col gap-5" id="registration-form" method="post" action="{% url 'accounts:register' %}">
+          {% csrf_token %}
+          <input type="hidden" name="role" id="id_role" value="{{ form.role.value|default:'STUDENT' }}">
+
+          <!-- Email Field -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="id_email">
+              <span id="email-label">{% if form.role.value == 'RECRUITER' %}Corporate Email{% else %}College / Institutional Email{% endif %}</span>
+              <span class="text-secondary font-body-sm text-body-sm" id="email-subtext">{% if form.role.value == 'RECRUITER' %}Corporate domain{% else %}Official campus email{% endif %}</span>
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-[20px] text-outline pointer-events-none">mail</span>
+              <input class="w-full bg-surface-container-low focus:bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-md text-body-md pl-11 pr-4 py-3 rounded-lg outline-none transition-all duration-200 border border-transparent focus:border-primary-container focus:shadow-[0_0_0_2px_#2563eb]" id="id_email" name="email" value="{{ form.email.value|default:'' }}" placeholder="alex.parker@university.edu" required type="email"/>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-label-md text-label-md text-on-surface" for="password">Password</label>
+              <span class="font-label-sm text-label-sm text-secondary" id="strength-text">Min 8 characters</span>
+            </div>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-[20px] text-outline pointer-events-none">lock</span>
+              <input class="w-full bg-surface-container-low focus:bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-md text-body-md pl-11 pr-11 py-3 rounded-lg outline-none transition-all duration-200 border border-transparent focus:border-primary-container focus:shadow-[0_0_0_2px_#2563eb]" id="password" name="password" oninput="checkPasswordStrength(this.value)" placeholder="••••••••••••" required type="password"/>
+              <button aria-label="Toggle password visibility" class="absolute right-3.5 text-outline hover:text-on-surface flex items-center justify-center p-0.5 rounded" onclick="togglePasswordVisibility('password', this)" type="button">
+                <span class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+            <!-- Strength Indicator Bar -->
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden flex gap-1 mt-1">
+              <div class="h-full flex-1 bg-surface-container-high transition-all duration-300" id="bar-1"></div>
+              <div class="h-full flex-1 bg-surface-container-high transition-all duration-300" id="bar-2"></div>
+              <div class="h-full flex-1 bg-surface-container-high transition-all duration-300" id="bar-3"></div>
+              <div class="h-full flex-1 bg-surface-container-high transition-all duration-300" id="bar-4"></div>
+            </div>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface" for="confirm-password">Confirm Password</label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-[20px] text-outline pointer-events-none">lock_clock</span>
+              <input class="w-full bg-surface-container-low focus:bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-md text-body-md pl-11 pr-11 py-3 rounded-lg outline-none transition-all duration-200 border border-transparent focus:border-primary-container focus:shadow-[0_0_0_2px_#2563eb]" id="confirm-password" name="confirm_password" placeholder="••••••••••••" required type="password"/>
+              <button aria-label="Toggle confirm password visibility" class="absolute right-3.5 text-outline hover:text-on-surface flex items-center justify-center p-0.5 rounded" onclick="togglePasswordVisibility('confirm-password', this)" type="button">
+                <span class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Governance & Terms Checkbox -->
+          <div class="flex items-start gap-3 pt-2">
+            <input class="mt-1 w-4 h-4 accent-primary-container rounded cursor-pointer transition-all" id="terms" required type="checkbox"/>
+            <label class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer select-none" for="terms">
+              I agree to the <a class="text-primary font-label-sm hover:underline" href="#">PlacementHub Terms of Campus Placement Governance</a>, non-disclosure protocols, and automated verification rules.
+            </label>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="w-full mt-2 bg-primary-container hover:bg-primary text-on-primary py-3.5 px-6 rounded-lg font-label-md text-label-md shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer" id="submit-cta" type="submit">
+            <span id="cta-label">{% if form.role.value == 'RECRUITER' %}Create Recruiter Account{% else %}Create Student Account{% endif %}</span>
+            <span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform duration-200">arrow_forward</span>
+          </button>
+        </form>
+
+        <!-- Trust Badges Strip -->
+        <div class="mt-8 pt-6 bg-surface-container-low/50 -mx-8 sm:-mx-10 px-8 sm:px-10 py-4 flex items-center justify-around text-secondary font-label-sm text-label-sm border-t border-outline-variant/20">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+            <span>Verified Drives</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-primary">psychology</span>
+            <span>AI Resume Scoring</span>
+          </div>
+          <div class="flex items-center gap-1.5 hidden sm:flex">
+            <span class="material-symbols-outlined text-[16px] text-primary">encrypted</span>
+            <span>ISO-27001 Secured</span>
+          </div>
+        </div>
+
+        <!-- Login Redirection Footer -->
+        <div class="mt-6 text-center">
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Already have an account? 
+            <a class="font-label-md text-label-md text-primary hover:underline ml-1 inline-flex items-center gap-0.5" href="{% url 'accounts:login' %}">
+              Log In
+              <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Campus Placement Helpline Note -->
+      <div class="mt-6 text-center text-on-surface-variant font-body-sm text-body-sm">
+        <span>Official Portal for Training &amp; Placement Cell • Need support? </span>
+        <a class="text-primary hover:underline" href="mailto:support@placementhub.edu">Contact Placement Officer</a>
+      </div>
     </div>
-  {% endif %}
-
-  <form method="post" action="{% url 'accounts:register' %}">
-    {% csrf_token %}
-    <div style="margin-bottom: 16px;">
-      <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Register As</label>
-      <select name="role" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; background: #fff;">
-        <option value="STUDENT" {% if form.role.value == 'STUDENT' %}selected{% endif %}>Student</option>
-        <option value="RECRUITER" {% if form.role.value == 'RECRUITER' %}selected{% endif %}>Recruiter</option>
-      </select>
-    </div>
-
-    <div style="margin-bottom: 16px;">
-      <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Email Address</label>
-      <input type="email" name="email" value="{{ form.email.value|default:'' }}" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
-    </div>
-
-    <div style="margin-bottom: 16px;">
-      <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Password</label>
-      <input type="password" name="password" required placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
-    </div>
-
-    <div style="margin-bottom: 24px;">
-      <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Confirm Password</label>
-      <input type="password" name="confirm_password" required placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
-    </div>
-
-    <button type="submit" style="width: 100%; padding: 12px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer;">
-      Create Account
-    </button>
-  </form>
-
-  <div style="text-align: center; margin-top: 24px; font-size: 14px; color: #64748b;">
-    Already have an account? <a href="{% url 'accounts:login' %}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Sign in</a>
   </div>
 </div>
+
+<script>
+  let currentRole = "{{ form.role.value|default:'STUDENT' }}";
+
+  function selectRole(role) {
+    currentRole = role;
+    document.getElementById('id_role').value = role;
+    const btnStudent = document.getElementById('btn-student');
+    const btnRecruiter = document.getElementById('btn-recruiter');
+    const ctaLabel = document.getElementById('cta-label');
+    const emailLabel = document.getElementById('email-label');
+    const emailSubtext = document.getElementById('email-subtext');
+    const emailInput = document.getElementById('id_email');
+
+    if (role === 'STUDENT') {
+      btnStudent.className = "flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 bg-primary-container text-on-primary shadow-sm";
+      btnStudent.setAttribute('aria-selected', 'true');
+      btnRecruiter.className = "flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+      btnRecruiter.setAttribute('aria-selected', 'false');
+
+      emailLabel.innerText = "College / Institutional Email";
+      emailSubtext.innerText = "Official campus email";
+      emailInput.placeholder = "alex.parker@university.edu";
+      ctaLabel.innerText = 'Create Student Account';
+    } else {
+      btnRecruiter.className = "flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 bg-primary-container text-on-primary shadow-sm";
+      btnRecruiter.setAttribute('aria-selected', 'true');
+      btnStudent.className = "flex-1 py-2.5 px-4 rounded font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+      btnStudent.setAttribute('aria-selected', 'false');
+
+      emailLabel.innerText = "Corporate Email";
+      emailSubtext.innerText = "Corporate domain";
+      emailInput.placeholder = "recruiter@company.com";
+      ctaLabel.innerText = 'Create Recruiter Account';
+    }
+  }
+
+  function togglePasswordVisibility(inputId, triggerBtn) {
+    const input = document.getElementById(inputId);
+    const icon = triggerBtn.querySelector('.material-symbols-outlined');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.innerText = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.innerText = 'visibility';
+    }
+  }
+
+  function checkPasswordStrength(val) {
+    const bar1 = document.getElementById('bar-1');
+    const bar2 = document.getElementById('bar-2');
+    const bar3 = document.getElementById('bar-3');
+    const bar4 = document.getElementById('bar-4');
+    const strengthText = document.getElementById('strength-text');
+
+    const bars = [bar1, bar2, bar3, bar4];
+    bars.forEach(b => {
+      b.className = "h-full flex-1 bg-surface-container-high transition-all duration-300";
+    });
+
+    if (!val || val.length === 0) {
+      strengthText.innerText = 'Min 8 characters';
+      strengthText.className = 'font-label-sm text-label-sm text-secondary';
+      return;
+    }
+
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    if (score === 1) {
+      bar1.className = "h-full flex-1 bg-error transition-all duration-300";
+      strengthText.innerText = 'Weak';
+      strengthText.className = 'font-label-sm text-label-sm text-error';
+    } else if (score === 2) {
+      bar1.className = "h-full flex-1 bg-tertiary-container transition-all duration-300";
+      bar2.className = "h-full flex-1 bg-tertiary-container transition-all duration-300";
+      strengthText.innerText = 'Fair';
+      strengthText.className = 'font-label-sm text-label-sm text-tertiary';
+    } else if (score === 3) {
+      bar1.className = "h-full flex-1 bg-primary-container transition-all duration-300";
+      bar2.className = "h-full flex-1 bg-primary-container transition-all duration-300";
+      bar3.className = "h-full flex-1 bg-primary-container transition-all duration-300";
+      strengthText.innerText = 'Good';
+      strengthText.className = 'font-label-sm text-label-sm text-primary';
+    } else if (score >= 4) {
+      bars.forEach(b => b.className = "h-full flex-1 bg-primary transition-all duration-300");
+      strengthText.innerText = 'Strong';
+      strengthText.className = 'font-label-sm text-label-sm text-primary font-bold';
+    }
+  }
+</script>
 {% endblock %}
