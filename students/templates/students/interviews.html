@@ -1,0 +1,128 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Interviews - PlacementHub Student{% endblock %}
+{% block page_heading %}My Scheduled Interviews{% endblock %}
+
+{% block student_content %}
+<div class="space-y-6">
+  <!-- Interviews Table Card -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-base font-bold text-slate-800">Interview Schedules & History</h2>
+        <p class="text-xs text-slate-500 mt-1">Review scheduled interview rounds, meeting links, physical venues, and recruiter evaluations.</p>
+      </div>
+      <a href="{% url 'students:applications' %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition-colors shrink-0">
+        <span class="material-symbols-outlined text-[16px]">assignment</span>
+        <span>View Applications</span>
+      </a>
+    </div>
+
+    {% if interviews %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-700">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+            <tr>
+              <th class="px-6 py-3.5">Company & Role</th>
+              <th class="px-6 py-3.5">Round Type</th>
+              <th class="px-6 py-3.5">Scheduled Date & Time</th>
+              <th class="px-6 py-3.5">Mode & Venue / Link</th>
+              <th class="px-6 py-3.5">Status</th>
+              <th class="px-6 py-3.5">Result / Feedback</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for interview in interviews %}
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <!-- Company & Role -->
+                <td class="px-6 py-4">
+                  <div class="space-y-0.5">
+                    <span class="font-bold text-slate-900 block">
+                      {{ interview.application.job.title }}
+                    </span>
+                    <span class="text-xs text-slate-500">
+                      {{ interview.application.job.company.company_name }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Round Type -->
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 text-slate-800 text-xs font-medium">
+                    {{ interview.round_type }}
+                  </span>
+                </td>
+
+                <!-- Date & Time -->
+                <td class="px-6 py-4 text-xs text-slate-700">
+                  <span class="font-semibold block text-slate-900">{{ interview.scheduled_at|date:"M d, Y" }}</span>
+                  <span class="text-slate-500">{{ interview.scheduled_at|date:"h:i A" }}</span>
+                </td>
+
+                <!-- Mode & Location/Link -->
+                <td class="px-6 py-4 text-xs">
+                  <div class="space-y-1">
+                    <span class="inline-flex items-center gap-1 font-semibold {% if interview.mode == 'Online' %}text-blue-700{% else %}text-emerald-700{% endif %}">
+                      <span class="material-symbols-outlined text-[16px]">{% if interview.mode == 'Online' %}videocam{% else %}location_on{% endif %}</span>
+                      {{ interview.mode }}
+                    </span>
+                    {% if interview.link_or_venue %}
+                      <div class="text-slate-600 truncate max-w-xs">
+                        {% if interview.mode == 'Online' and 'http' in interview.link_or_venue %}
+                          <a href="{{ interview.link_or_venue }}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
+                            <span>Join Meeting</span>
+                            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                          </a>
+                        {% else %}
+                          <span>{{ interview.link_or_venue }}</span>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </td>
+
+                <!-- Status Badge -->
+                <td class="px-6 py-4">
+                  {% if interview.status == 'Scheduled' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Scheduled
+                    </span>
+                  {% elif interview.status == 'Completed' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
+                    </span>
+                  {% elif interview.status == 'Cancelled' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Cancelled
+                    </span>
+                  {% endif %}
+                </td>
+
+                <!-- Result & Feedback -->
+                <td class="px-6 py-4 text-xs">
+                  <div class="space-y-0.5">
+                    {% if interview.result %}
+                      <span class="font-bold text-slate-800 block">{{ interview.result }}</span>
+                    {% else %}
+                      <span class="text-slate-400 italic">Result awaited</span>
+                    {% endif %}
+                    {% if interview.feedback %}
+                      <p class="text-slate-500 italic max-w-xs truncate" title="{{ interview.feedback }}">"{{ interview.feedback }}"</p>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-12 text-center text-slate-500 space-y-3">
+        <span class="material-symbols-outlined text-[44px] text-slate-300">event_busy</span>
+        <h3 class="text-base font-bold text-slate-800">No scheduled interviews yet</h3>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto">When recruiters review and shortlist your application, interview invitations will appear here with date, mode, and meeting links.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

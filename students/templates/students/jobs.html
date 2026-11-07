@@ -1,0 +1,166 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Job Drives - PlacementHub Student{% endblock %}
+{% block page_heading %}Campus Job Opportunities{% endblock %}
+
+{% block student_content %}
+<div class="space-y-6">
+  <!-- Search and Filter Bar -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <form method="get" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+      <!-- Search Input -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Search Roles or Companies</label>
+        <div class="relative">
+          <input type="text" name="search" value="{{ search_query }}" placeholder="e.g. SDE, Data Analyst..." class="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-2.5 top-2.5">search</span>
+        </div>
+      </div>
+
+      <!-- Location Filter -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Location</label>
+        <select name="location" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">All Locations</option>
+          {% for loc in all_locations %}
+            <option value="{{ loc }}" {% if location_filter == loc %}selected{% endif %}>{{ loc }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Branch Filter -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Eligible Branch</label>
+        <input type="text" name="branch" value="{{ branch_filter }}" placeholder="e.g. CSE, IT, ECE" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex items-center gap-2">
+        <button type="submit" class="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+          Filter
+        </button>
+        {% if search_query or location_filter or branch_filter %}
+          <a href="{% url 'students:jobs' %}" class="px-3.5 py-2 bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg text-sm font-semibold transition-colors">
+            Reset
+          </a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Jobs Results List -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+      <span>Showing <strong>{{ jobs|length }}</strong> active placement drives</span>
+      <span>Eligibility based on your CGPA: <strong>{{ student.cgpa }}</strong>, Backlogs: <strong>{{ student.backlogs }}</strong></span>
+    </div>
+
+    {% if jobs %}
+      <div class="grid grid-cols-1 gap-4">
+        {% for job in jobs %}
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+              <!-- Job Header Info -->
+              <div class="space-y-1">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <h3 class="text-lg font-bold text-slate-900">
+                    <a href="{% url 'students:job_detail' pk=job.pk %}" class="hover:text-blue-600">
+                      {{ job.title }}
+                    </a>
+                  </h3>
+
+                  <!-- Eligibility Status Tag -->
+                  {% if job.is_eligible %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Eligible
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200" title="{{ job.ineligibility_reasons|join:'; ' }}">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Not Eligible
+                    </span>
+                  {% endif %}
+
+                  <!-- Applied Tag -->
+                  {% if job.has_applied %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      <span class="material-symbols-outlined text-[14px]">check</span> Applied
+                    </span>
+                  {% endif %}
+                </div>
+
+                <div class="flex items-center gap-2 text-sm text-slate-600 flex-wrap">
+                  <span class="font-semibold text-slate-800">{{ job.company.company_name }}</span>
+                  <span>•</span>
+                  <span>{{ job.location }}</span>
+                  <span>•</span>
+                  <span class="font-bold text-slate-900">{{ job.package_lpa }} LPA</span>
+                </div>
+              </div>
+
+              <!-- Deadline Banner -->
+              <div class="text-right shrink-0">
+                <span class="text-xs text-slate-500 block">Apply Before</span>
+                <span class="text-xs font-semibold text-slate-800">{{ job.deadline|date:"M d, Y" }}</span>
+              </div>
+            </div>
+
+            <!-- Job Description Snippet -->
+            <p class="text-xs text-slate-600 line-clamp-2">
+              {{ job.description }}
+            </p>
+
+            <!-- Required Skills Chips -->
+            {% if job.required_skills.all %}
+              <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                <span class="text-xs text-slate-400 mr-1">Skills:</span>
+                {% for skill in job.required_skills.all %}
+                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px] font-medium">
+                    {{ skill.name }}
+                  </span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- Eligibility Note if Ineligible -->
+            {% if not job.is_eligible %}
+              <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-lg text-xs text-amber-800 flex items-start gap-2">
+                <span class="material-symbols-outlined text-[16px] text-amber-600 shrink-0 mt-0.5">info</span>
+                <span>{{ job.ineligibility_reasons|join:" • " }}</span>
+              </div>
+            {% endif %}
+
+            <!-- Actions Footer -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+              <div class="text-xs text-slate-500">
+                Min CGPA: <strong>{{ job.min_cgpa }}</strong> | Max Backlogs: <strong>{{ job.max_backlogs }}</strong>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-3.5 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                  Check Skill Gap
+                </a>
+
+                {% if job.has_applied %}
+                  <a href="{% url 'students:applications' %}" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200 transition-colors">
+                    View Application
+                  </a>
+                {% else %}
+                  <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
+                    View & Apply
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500 space-y-2">
+        <span class="material-symbols-outlined text-[44px] text-slate-300">search_off</span>
+        <h4 class="text-base font-bold text-slate-800">No matching campus jobs found</h4>
+        <p class="text-xs text-slate-500 max-w-md mx-auto">Try adjusting your search criteria or resetting filters to see all open placement drives.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

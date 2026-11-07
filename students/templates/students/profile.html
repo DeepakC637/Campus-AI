@@ -1,0 +1,135 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}My Profile - PlacementHub Student{% endblock %}
+{% block page_heading %}Edit Student Profile{% endblock %}
+
+{% block student_content %}
+<div class="max-w-4xl space-y-6">
+  <!-- Verification & Status Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="space-y-1">
+      <h2 class="text-lg font-bold text-slate-800">Academic Verification Status</h2>
+      <p class="text-xs text-slate-500">Official college credential status verified by Training & Placement Cell.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      {% if student.is_verified %}
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="material-symbols-outlined text-[18px]">verified</span> Verified by Admin
+        </span>
+      {% else %}
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+          <span class="material-symbols-outlined text-[18px]">pending</span> Verification Pending (Read-only)
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Profile Form Card -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+      <h3 class="text-base font-bold text-slate-800">Academic & Personal Details</h3>
+      <p class="text-xs text-slate-500 mt-1">Keep your profile updated to match company eligibility criteria automatically.</p>
+    </div>
+
+    <form method="post" class="p-6 space-y-6">
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+          <strong>Please resolve the errors below:</strong>
+          <ul class="list-disc list-inside mt-1 text-xs">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Full Name</label>
+          {{ form.full_name }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Roll Number / Student ID</label>
+          {{ form.roll_no }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Branch / Department</label>
+          {{ form.branch }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Graduation Year</label>
+          {{ form.year }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Current CGPA (out of 10.0)</label>
+          {{ form.cgpa }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Active Backlogs</label>
+          {{ form.backlogs }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Phone Number</label>
+          {{ form.phone }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Placement Status</label>
+          {{ form.placement_status }}
+        </div>
+      </div>
+
+      <!-- Add Skills Section -->
+      <div class="pt-4 border-t border-slate-100">
+        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">{{ form.skills_text.label }}</label>
+        {{ form.skills_text }}
+        <p class="text-xs text-slate-500 mt-1">{{ form.skills_text.help_text }}</p>
+      </div>
+
+      <div class="flex justify-end pt-4">
+        <button type="submit" class="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+          Save Profile Changes
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Manage Existing Skills Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+    <div>
+      <h3 class="text-base font-bold text-slate-800">Your Current Skills</h3>
+      <p class="text-xs text-slate-500 mt-1">Skills are used for job compatibility scoring and AI skill gap matching.</p>
+    </div>
+
+    {% if skills %}
+      <div class="flex flex-wrap gap-2 pt-2">
+        {% for skill in skills %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
+            <span>{{ skill.name }}</span>
+            <form method="post" action="{% url 'students:profile' %}" class="inline">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="remove_skill">
+              <input type="hidden" name="skill_id" value="{{ skill.id }}">
+              <button type="submit" title="Remove skill" class="text-slate-400 hover:text-red-600 focus:outline-none flex items-center">
+                <span class="material-symbols-outlined text-[14px]">close</span>
+              </button>
+            </form>
+          </span>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-sm text-slate-500 italic">No skills added yet. Add some skills above to improve job matches!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block body_wrapper %}
+<div class="min-h-screen flex bg-slate-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 fixed inset-y-0 z-30">
+    <div class="flex flex-col">
+      <!-- Brand -->
+      <div class="h-16 px-6 flex items-center gap-3 border-b border-slate-100">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+          <span class="material-symbols-outlined text-[22px]">school</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-slate-800 text-base leading-tight">PlacementHub</span>
+          <span class="text-xs text-blue-600 font-semibold tracking-wide uppercase">Student Portal</span>
+        </div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="p-4 space-y-1">
+        <a href="{% url 'students:dashboard' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'dashboard' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">grid_view</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'students:profile' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'profile' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">person</span>
+          <span>My Profile</span>
+        </a>
+        <a href="{% url 'students:resume' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'resume' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">description</span>
+          <span>Resume</span>
+        </a>
+        <a href="{% url 'students:jobs' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'jobs' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">work</span>
+          <span>Job Drives</span>
+        </a>
+        <a href="{% url 'students:applications' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'applications' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">assignment</span>
+          <span>Applications</span>
+        </a>
+        <a href="{% url 'students:interviews' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {% if active_tab == 'interviews' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+          <span>Interviews</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- User Profile & Logout in Sidebar -->
+    <div class="p-4 border-t border-slate-100 space-y-2">
+      <div class="flex items-center gap-3 px-2 py-2">
+        <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+          {{ request.user.email|slice:":1"|upper }}
+        </div>
+        <div class="flex flex-col overflow-hidden">
+          <span class="text-xs font-semibold text-slate-800 truncate">{{ student.full_name|default:request.user.email }}</span>
+          <span class="text-[11px] text-slate-500 truncate">{{ student.branch|default:"Student" }}</span>
+        </div>
+      </div>
+      <a href="{% url 'accounts:logout' %}" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="pl-64 flex-1 flex flex-col min-w-0">
+    <!-- Top Nav Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <h1 class="text-xl font-bold text-slate-800">{% block page_heading %}Student Portal{% endblock %}</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        {% if student.is_verified %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="material-symbols-outlined text-[16px]">verified</span> Verified Student
+          </span>
+        {% else %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <span class="material-symbols-outlined text-[16px]">pending</span> Verification Pending
+          </span>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Messages Banner -->
+    {% if messages %}
+      <div class="px-8 pt-4">
+        {% for message in messages %}
+          <div class="p-4 mb-2 rounded-lg text-sm font-medium {% if message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% elif message.tags == 'warning' %}bg-amber-50 text-amber-800 border border-amber-200{% elif message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Main Page Content -->
+    <main class="p-8 flex-1">
+      {% block student_content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

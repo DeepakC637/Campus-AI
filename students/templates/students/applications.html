@@ -1,0 +1,125 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Application Tracker - PlacementHub Student{% endblock %}
+{% block page_heading %}My Applications{% endblock %}
+
+{% block student_content %}
+<div class="space-y-6">
+  <!-- Applications Tracker Card -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-base font-bold text-slate-800">Submitted Applications</h2>
+        <p class="text-xs text-slate-500 mt-1">Track the hiring progress of all your campus applications. Applications in 'Applied' or 'Shortlisted' status can be withdrawn.</p>
+      </div>
+      <a href="{% url 'students:jobs' %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-[16px]">add</span>
+        <span>Explore More Jobs</span>
+      </a>
+    </div>
+
+    {% if applications %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-700">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+            <tr>
+              <th class="px-6 py-3.5">Company & Role</th>
+              <th class="px-6 py-3.5">Applied Date</th>
+              <th class="px-6 py-3.5">Status</th>
+              <th class="px-6 py-3.5">Match Score</th>
+              <th class="px-6 py-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for app in applications %}
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <!-- Company & Role -->
+                <td class="px-6 py-4">
+                  <div class="space-y-0.5">
+                    <a href="{% url 'students:job_detail' pk=app.job.pk %}" class="font-bold text-slate-900 hover:text-blue-600">
+                      {{ app.job.title }}
+                    </a>
+                    <p class="text-xs text-slate-500">{{ app.job.company.company_name }} • {{ app.job.location }}</p>
+                  </div>
+                </td>
+
+                <!-- Date -->
+                <td class="px-6 py-4 text-xs text-slate-600">
+                  {{ app.applied_at|date:"M d, Y" }}
+                </td>
+
+                <!-- Status Badge -->
+                <td class="px-6 py-4">
+                  {% if app.status == 'Applied' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Applied
+                    </span>
+                  {% elif app.status == 'Shortlisted' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Shortlisted
+                    </span>
+                  {% elif app.status == 'Interview' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Interview Stage
+                    </span>
+                  {% elif app.status == 'Selected' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Selected / Offered
+                    </span>
+                  {% elif app.status == 'Rejected' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Not Selected
+                    </span>
+                  {% elif app.status == 'Withdrawn' %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Withdrawn
+                    </span>
+                  {% endif %}
+                </td>
+
+                <!-- Match Score -->
+                <td class="px-6 py-4 text-xs font-semibold text-slate-700">
+                  {% if app.match_score %}
+                    <span class="text-blue-600">{{ app.match_score }}%</span>
+                  {% else %}
+                    <span class="text-slate-400">Pending</span>
+                  {% endif %}
+                </td>
+
+                <!-- Actions: Withdraw -->
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-3">
+                    <a href="{% url 'students:skill_gap' job_id=app.job.pk %}" class="text-xs font-semibold text-slate-600 hover:text-blue-600">
+                      Skill Gap
+                    </a>
+
+                    {% if app.status == 'Applied' or app.status == 'Shortlisted' %}
+                      <form method="post" action="{% url 'students:withdraw_application' pk=app.pk %}" onsubmit="return confirm('Are you sure you want to withdraw your application for {{ app.job.title }}?');">
+                        {% csrf_token %}
+                        <button type="submit" class="px-3 py-1 rounded border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold transition-colors">
+                          Withdraw
+                        </button>
+                      </form>
+                    {% else %}
+                      <span class="text-xs text-slate-400 italic">No actions</span>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-12 text-center text-slate-500 space-y-3">
+        <span class="material-symbols-outlined text-[44px] text-slate-300">work_off</span>
+        <h3 class="text-base font-bold text-slate-800">No applications submitted yet</h3>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto">Browse through active campus recruitment drives and apply to positions matching your qualifications.</p>
+        <a href="{% url 'students:jobs' %}" class="inline-block px-5 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
+          Browse Open Drives
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

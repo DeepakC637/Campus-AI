@@ -1,0 +1,117 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Resume Management - PlacementHub Student{% endblock %}
+{% block page_heading %}Resume Upload & History{% endblock %}
+
+{% block student_content %}
+<div class="max-w-4xl space-y-6">
+  <!-- Upload Resume Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+    <div>
+      <h2 class="text-base font-bold text-slate-800">Upload New Resume</h2>
+      <p class="text-xs text-slate-500 mt-1">Upload a PDF or DOCX file (up to 10MB). Uploading a new resume automatically sets it as your active resume.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4 pt-2">
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Select Resume Document</label>
+        {{ form.file }}
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+          <span class="material-symbols-outlined text-[18px]">upload</span>
+          <span>Upload Resume</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Active Resume Card -->
+  {% if active_resume %}
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">description</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-900 text-sm">{{ active_resume.file.name }}</h3>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">Active Resume</span>
+          </div>
+          <p class="text-xs text-slate-600 mt-0.5">Uploaded on {{ active_resume.uploaded_at|date:"M d, Y - h:i A" }}</p>
+        </div>
+      </div>
+      <a href="{{ active_resume.file.url }}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-blue-200 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-[16px]">visibility</span>
+        <span>View Document</span>
+      </a>
+    </div>
+  {% else %}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center text-amber-800 space-y-1">
+      <p class="text-sm font-semibold">No active resume uploaded yet.</p>
+      <p class="text-xs text-amber-700">Please upload your resume above to ensure recruiters can review your profile.</p>
+    </div>
+  {% endif %}
+
+  <!-- Resume Version History -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+      <h3 class="text-base font-bold text-slate-800">Resume Version History</h3>
+      <p class="text-xs text-slate-500 mt-1">Previous versions uploaded to PlacementHub.</p>
+    </div>
+
+    {% if resumes %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-700">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+            <tr>
+              <th class="px-6 py-3">File Name</th>
+              <th class="px-6 py-3">Upload Date</th>
+              <th class="px-6 py-3">Status</th>
+              <th class="px-6 py-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for r in resumes %}
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-6 py-4 font-medium text-slate-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px] text-slate-400">attach_file</span>
+                  <span class="truncate max-w-xs">{{ r.file.name }}</span>
+                </td>
+                <td class="px-6 py-4 text-xs text-slate-500">{{ r.uploaded_at|date:"M d, Y - h:i A" }}</td>
+                <td class="px-6 py-4">
+                  {% if r.is_active %}
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                  {% else %}
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500">Archived</span>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <a href="{{ r.file.url }}" target="_blank" class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                    Download
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-8 text-center text-slate-500 text-sm">No resume history available.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

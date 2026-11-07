@@ -1,0 +1,176 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Dashboard - PlacementHub Student{% endblock %}
+{% block page_heading %}Student Dashboard{% endblock %}
+
+{% block student_content %}
+<div class="space-y-6">
+  <!-- Welcome Banner & Profile Strength -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
+        <h2 class="text-2xl font-bold text-slate-900">Welcome, {{ student.full_name }}</h2>
+        <span class="text-2xl">👋</span>
+      </div>
+      <p class="text-sm text-slate-600 max-w-xl">
+        Manage your campus recruitment profile, track submitted applications, and stay prepared for upcoming interviews.
+      </p>
+    </div>
+
+    <!-- Profile Completion Widget -->
+    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 min-w-[260px] space-y-2">
+      <div class="flex items-center justify-between text-xs font-semibold">
+        <span class="text-slate-600">Profile Completion</span>
+        <span class="text-blue-600">{{ completion_percentage }}%</span>
+      </div>
+      <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: {{ completion_percentage }}%"></div>
+      </div>
+      <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+        <span>{{ student.branch }} ({{ student.year }})</span>
+        <a href="{% url 'students:profile' %}" class="text-blue-600 font-semibold hover:underline">Complete profile &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Metrics Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Applied Jobs Count -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jobs Applied</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ jobs_applied_count }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">assignment</span>
+      </div>
+    </div>
+
+    <!-- Scheduled Interviews Count -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Interviews</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ interviews_scheduled_count }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">calendar_today</span>
+      </div>
+    </div>
+
+    <!-- Shortlisted Applications -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Shortlisted</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ status_counts.Shortlisted }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">grade</span>
+      </div>
+    </div>
+
+    <!-- Selected / Placed -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Offers Received</p>
+        <p class="text-2xl font-bold text-emerald-600 mt-1">{{ status_counts.Selected }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">check_circle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applications Status Breakdown Pills -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <h3 class="text-sm font-semibold text-slate-700 mb-3">Application Pipeline Breakdown</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+      <div class="p-3 bg-slate-50 rounded-lg text-center border border-slate-100">
+        <span class="text-xs text-slate-500 block">Applied</span>
+        <span class="text-lg font-bold text-slate-800">{{ status_counts.Applied }}</span>
+      </div>
+      <div class="p-3 bg-blue-50 rounded-lg text-center border border-blue-100">
+        <span class="text-xs text-blue-600 block">Shortlisted</span>
+        <span class="text-lg font-bold text-blue-800">{{ status_counts.Shortlisted }}</span>
+      </div>
+      <div class="p-3 bg-purple-50 rounded-lg text-center border border-purple-100">
+        <span class="text-xs text-purple-600 block">Interview</span>
+        <span class="text-lg font-bold text-purple-800">{{ status_counts.Interview }}</span>
+      </div>
+      <div class="p-3 bg-emerald-50 rounded-lg text-center border border-emerald-100">
+        <span class="text-xs text-emerald-600 block">Selected</span>
+        <span class="text-lg font-bold text-emerald-800">{{ status_counts.Selected }}</span>
+      </div>
+      <div class="p-3 bg-red-50 rounded-lg text-center border border-red-100">
+        <span class="text-xs text-red-600 block">Rejected</span>
+        <span class="text-lg font-bold text-red-800">{{ status_counts.Rejected }}</span>
+      </div>
+      <div class="p-3 bg-slate-100 rounded-lg text-center border border-slate-200">
+        <span class="text-xs text-slate-500 block">Withdrawn</span>
+        <span class="text-lg font-bold text-slate-700">{{ status_counts.Withdrawn }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Jobs Section -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div>
+        <h3 class="font-bold text-base text-slate-800">Open Job Opportunities</h3>
+        <p class="text-xs text-slate-500">Active campus drives you haven't applied to yet</p>
+      </div>
+      <a href="{% url 'students:jobs' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+        Browse all jobs &rarr;
+      </a>
+    </div>
+
+    {% if open_jobs %}
+      <div class="divide-y divide-slate-100">
+        {% for job in open_jobs %}
+          <div class="p-5 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <a href="{% url 'students:job_detail' pk=job.pk %}" class="font-bold text-slate-900 hover:text-blue-600 text-base">
+                  {{ job.title }}
+                </a>
+                {% if job.is_eligible %}
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Eligible
+                  </span>
+                {% else %}
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200" title="{{ job.ineligibility_reasons|join:', ' }}">
+                    Not Eligible
+                  </span>
+                {% endif %}
+              </div>
+              <div class="flex items-center gap-4 text-xs text-slate-600 flex-wrap">
+                <span class="font-medium text-slate-800">{{ job.company.company_name }}</span>
+                <span>•</span>
+                <span>{{ job.location }}</span>
+                <span>•</span>
+                <span class="font-semibold text-slate-900">{{ job.package_lpa }} LPA</span>
+                <span>•</span>
+                <span class="text-slate-500">Deadline: {{ job.deadline|date:"M d, Y" }}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+                Skill Match
+              </a>
+              <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
+                View & Apply
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="p-12 text-center text-slate-500 space-y-2">
+        <span class="material-symbols-outlined text-[40px] text-slate-300">task_alt</span>
+        <p class="text-sm font-medium">You have applied to all current matching opportunities or no drives are open.</p>
+        <a href="{% url 'students:applications' %}" class="text-xs text-blue-600 font-semibold hover:underline">View my applications &rarr;</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

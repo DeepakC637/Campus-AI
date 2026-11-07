@@ -1,0 +1,123 @@
+{% extends "students/base_student.html" %}
+
+{% block title %}Skill Gap Analysis - {{ job.title }}{% endblock %}
+{% block page_heading %}Skill Gap Analysis{% endblock %}
+
+{% block student_content %}
+<div class="max-w-4xl space-y-6">
+  <!-- Back Link -->
+  <div>
+    <a href="{% url 'students:job_detail' pk=job.pk %}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800">
+      <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+      <span>Back to {{ job.title }}</span>
+    </a>
+  </div>
+
+  <!-- Job & Match Summary Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+      <div>
+        <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Placement Drive Role</span>
+        <h2 class="text-2xl font-bold text-slate-900 mt-0.5">{{ job.title }}</h2>
+        <p class="text-sm text-slate-600">{{ job.company.company_name }} • {{ job.location }} • {{ job.package_lpa }} LPA</p>
+      </div>
+
+      <!-- Match Score Badge -->
+      <div class="text-center sm:text-right bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 shrink-0">
+        <span class="text-xs font-semibold text-slate-500 uppercase block">Skill Match</span>
+        <span class="text-2xl font-bold {% if match_percentage >= 70 %}text-emerald-600{% elif match_percentage >= 40 %}text-amber-600{% else %}text-red-600{% endif %}">
+          {{ match_percentage }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- Match Progress Bar -->
+    <div class="space-y-2">
+      <div class="flex justify-between text-xs font-medium text-slate-600">
+        <span>Skills Alignment</span>
+        <span>{{ matched_skills|length }} of {{ job.required_skills.count }} Required Skills Matched</span>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="h-3 rounded-full transition-all duration-300 {% if match_percentage >= 70 %}bg-emerald-500{% elif match_percentage >= 40 %}bg-amber-500{% else %}bg-red-500{% endif %}" style="width: {{ match_percentage }}%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Skills Comparison Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Matched Skills Card -->
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[20px]">check</span>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Matched Skills ({{ matched_skills|length }})</h3>
+          <p class="text-xs text-slate-500">Skills on your profile required for this role.</p>
+        </div>
+      </div>
+
+      {% if matched_skills %}
+        <div class="flex flex-wrap gap-2 pt-2">
+          {% for skill in matched_skills %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+              <span>{{ skill }}</span>
+            </span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-xs text-slate-500 italic pt-2">No overlapping skills found on your current profile.</p>
+      {% endif %}
+    </div>
+
+    <!-- Missing Skills Card -->
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[20px]">priority_high</span>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Missing Skills ({{ missing_skills|length }})</h3>
+          <p class="text-xs text-slate-500">Skills required by the job that aren't on your profile.</p>
+        </div>
+      </div>
+
+      {% if missing_skills %}
+        <div class="flex flex-wrap gap-2 pt-2">
+          {% for skill in missing_skills %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+              <span class="material-symbols-outlined text-[16px] text-amber-600">add_circle_outline</span>
+              <span>{{ skill }}</span>
+            </span>
+          {% endfor %}
+        </div>
+        <p class="text-[11px] text-slate-500 pt-1">
+          Possess any of these skills? Update your profile skills to increase compatibility!
+        </p>
+      {% else %}
+        <div class="pt-2 text-xs text-emerald-700 bg-emerald-50 p-3 rounded-lg border border-emerald-100 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">sentiment_very_satisfied</span>
+          <span>Great news! You possess all required skills for this position.</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Next Steps & Action Card -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="text-xs text-slate-600 space-y-0.5">
+      <span class="font-bold text-slate-800 block text-sm">Need to update your technical skillset?</span>
+      <span>You can add or update skills on your student profile anytime.</span>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="{% url 'students:profile' %}" class="px-4 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+        Edit Profile Skills
+      </a>
+      <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
+        Proceed to Job Detail
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
