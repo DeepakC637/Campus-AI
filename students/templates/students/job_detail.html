@@ -1,189 +1,237 @@
 {% extends "students/base_student.html" %}
 
 {% block title %}{{ job.title }} - PlacementHub Student{% endblock %}
-{% block page_heading %}Job Details & Application{% endblock %}
+{% block page_heading %}Job Details &amp; Eligibility{% endblock %}
 
 {% block student_content %}
-<div class="max-w-5xl space-y-6">
-  <!-- Back Link -->
-  <div>
-    <a href="{% url 'students:jobs' %}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800">
-      <span class="material-symbols-outlined text-[16px]">arrow_back</span>
-      <span>Back to all job drives</span>
-    </a>
-  </div>
-
-  <!-- Job Header Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-      <div class="space-y-2">
-        <div class="flex items-center gap-3 flex-wrap">
-          <h2 class="text-2xl font-bold text-slate-900">{{ job.title }}</h2>
-          {% if has_applied %}
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-              Already Applied
-            </span>
-          {% elif is_eligible %}
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Eligible to Apply
-            </span>
-          {% else %}
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-              Criteria Not Met
-            </span>
-          {% endif %}
-        </div>
-
-        <div class="flex items-center gap-3 text-sm text-slate-600 flex-wrap">
-          <span class="font-bold text-slate-800 text-base">{{ job.company.company_name }}</span>
-          {% if job.company.website %}
-            <span>•</span>
-            <a href="{{ job.company.website }}" target="_blank" class="text-blue-600 hover:underline text-xs">Website</a>
-          {% endif %}
-          <span>•</span>
-          <span>{{ job.company.industry|default:"Technology" }}</span>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Pill -->
-      <div class="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 shrink-0">
-        <div class="text-center px-2">
-          <span class="text-[11px] font-semibold text-slate-500 uppercase block">Package</span>
-          <span class="text-lg font-bold text-slate-900">{{ job.package_lpa }} LPA</span>
-        </div>
-        <div class="h-8 w-px bg-slate-200"></div>
-        <div class="text-center px-2">
-          <span class="text-[11px] font-semibold text-slate-500 uppercase block">Location</span>
-          <span class="text-sm font-semibold text-slate-800">{{ job.location }}</span>
-        </div>
-        <div class="h-8 w-px bg-slate-200"></div>
-        <div class="text-center px-2">
-          <span class="text-[11px] font-semibold text-slate-500 uppercase block">Deadline</span>
-          <span class="text-xs font-semibold text-slate-800">{{ job.deadline|date:"M d, Y" }}</span>
-        </div>
-      </div>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Breadcrumb & Quick Back Bar -->
+  <div class="flex flex-wrap items-center justify-between gap-space-sm py-space-sm mb-space-md">
+    <div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+      <a class="inline-flex items-center gap-1 text-primary font-label-md text-label-md hover:underline" href="{% url 'students:jobs' %}">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to Job Drives</span>
+      </a>
+      <span class="text-outline">/</span>
+      <span>{{ job.company.company_name }}</span>
+      <span class="text-outline">/</span>
+      <span class="font-label-sm text-label-sm text-on-surface font-semibold">{{ job.title }}</span>
+    </div>
+    <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+      <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+      <span>Live Campus Drive • ID: <span class="font-mono text-on-surface">JOB-{{ job.pk }}</span></span>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Left Column: Job Description and Requirements -->
-    <div class="lg:col-span-2 space-y-6">
-      <!-- Role Description -->
-      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-3">
-        <h3 class="text-base font-bold text-slate-800">Job Description</h3>
-        <div class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-          {{ job.description }}
+  <!-- Header Hero Card -->
+  <div class="relative bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg mb-space-lg overflow-hidden">
+    <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-gradient-to-br from-primary-fixed-dim/20 to-tertiary-fixed/10 pointer-events-none blur-2xl"></div>
+    <div class="relative flex flex-col lg:flex-row lg:items-start lg:justify-between gap-space-lg">
+      <!-- Left: Logo & Job Meta -->
+      <div class="flex items-start gap-space-md">
+        <div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center font-headline-md font-bold text-on-primary-fixed shadow-sm shrink-0">
+          {{ job.company.company_name|slice:":2"|upper }}
+        </div>
+        <div class="flex flex-col gap-1">
+          <div class="flex flex-wrap items-center gap-space-xs">
+            <span class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">{{ job.company.company_name }}</span>
+            <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+            <span class="px-space-xs py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">Campus Drive</span>
+            {% if job.company.industry %}
+              <span class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">{{ job.company.industry }}</span>
+            {% endif %}
+          </div>
+          <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">{{ job.title }}</h1>
+          {% if job.company.website %}
+            <a href="{{ job.company.website }}" target="_blank" class="font-body-md text-body-md text-primary hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">language</span>
+              <span>{{ job.company.website }}</span>
+            </a>
+          {% endif %}
         </div>
       </div>
 
-      <!-- Requirements & Responsibilities -->
-      {% if job.requirements %}
-        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-3">
-          <h3 class="text-base font-bold text-slate-800">Key Requirements</h3>
-          <div class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-            {{ job.requirements }}
-          </div>
-        </div>
-      {% endif %}
-
-      <!-- Skills Required -->
-      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-base font-bold text-slate-800">Required Skills</h3>
-          <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="text-xs font-semibold text-blue-600 hover:underline">
-            View Skill Gap Analysis &rarr;
+      <!-- Right: Status / Application Action Pill -->
+      <div class="flex flex-col sm:items-end gap-space-sm shrink-0">
+        <div class="flex items-center gap-space-xs">
+          <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+            Check Skill Gap
           </a>
         </div>
-        {% if job.required_skills.all %}
-          <div class="flex flex-wrap gap-2 pt-1">
-            {% for skill in job.required_skills.all %}
-              <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
-                {{ skill.name }}
-              </span>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p class="text-xs text-slate-500 italic">No specific technical skills specified by the recruiter.</p>
-        {% endif %}
+        <div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full {% if is_eligible %}bg-emerald-50 text-emerald-800 border border-emerald-200{% else %}bg-amber-50 text-amber-800 border border-amber-200{% endif %} font-label-sm text-label-sm">
+          <span class="material-symbols-outlined text-[16px]">{% if is_eligible %}check_circle{% else %}error{% endif %}</span>
+          <span>{% if has_applied %}Already Applied{% elif is_eligible %}Eligible for this drive{% else %}Criteria Not Met{% endif %}</span>
+        </div>
       </div>
     </div>
 
-    <!-- Right Column: Eligibility Checklist & Apply Action -->
-    <div class="space-y-6">
-      <!-- Eligibility Checklist Card -->
-      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-        <h3 class="text-base font-bold text-slate-800">Eligibility Checklist</h3>
-        <p class="text-xs text-slate-500">Evaluated against your active student profile metrics.</p>
+    <!-- Metadata Grid Inside Hero -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md mt-space-lg pt-space-md bg-surface-container-low/50 rounded-xl p-space-md border border-outline-variant/20">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[22px]">payments</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Package / CTC</span>
+          <span class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">{{ job.package_lpa }} LPA</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center text-secondary">
+          <span class="material-symbols-outlined text-[22px]">location_on</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Location</span>
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">{{ job.location }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center text-on-error-container">
+          <span class="material-symbols-outlined text-[22px]">alarm</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-sm text-label-sm text-error font-medium uppercase tracking-wider">Deadline</span>
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">{{ job.deadline|date:"M d, Y" }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary">
+          <span class="material-symbols-outlined text-[22px]">auto_awesome</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Min CGPA</span>
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">{{ job.min_cgpa }} / 10.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="space-y-3 pt-2">
+  <!-- Two-Column Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+    <!-- LEFT COLUMN (8 cols) -->
+    <div class="lg:col-span-8 flex flex-col gap-space-lg">
+      <!-- Card: Job Description -->
+      <section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col gap-space-md">
+        <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+          <span class="material-symbols-outlined text-primary text-[24px]">description</span>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Job Description &amp; Role Overview</h2>
+        </div>
+        <div class="font-body-md text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">
+          {{ job.description }}
+        </div>
+      </section>
+
+      <!-- Card: Key Requirements -->
+      {% if job.requirements %}
+        <section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col gap-space-md">
+          <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+            <span class="material-symbols-outlined text-primary text-[24px]">task_alt</span>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Key Requirements &amp; Qualifications</h2>
+          </div>
+          <div class="font-body-md text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">
+            {{ job.requirements }}
+          </div>
+        </section>
+      {% endif %}
+
+      <!-- Card: Required Skills -->
+      <section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col gap-space-md">
+        <div class="flex items-center justify-between pb-space-xs border-b border-outline-variant/20">
+          <div class="flex items-center gap-space-sm">
+            <span class="material-symbols-outlined text-primary text-[24px]">psychology</span>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Required Technical Skills</h2>
+          </div>
+          <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="text-primary font-label-md text-label-md font-semibold hover:underline flex items-center gap-1">
+            <span>Skill Gap Analysis</span>
+            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </a>
+        </div>
+        <div class="flex flex-wrap gap-space-xs">
+          {% for skill in job.required_skills.all %}
+            <span class="px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md border border-outline-variant/30">
+              {{ skill.name }}
+            </span>
+          {% empty %}
+            <span class="font-body-sm text-body-sm text-on-surface-variant italic">No specific skills listed.</span>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Eligibility Checklist & Apply (4 cols) -->
+    <div class="lg:col-span-4 flex flex-col gap-space-lg">
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col gap-space-md">
+        <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+          <span class="material-symbols-outlined text-primary text-[24px]">checklist</span>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Eligibility Checklist</h3>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Evaluated automatically against your active student academic records.
+        </p>
+
+        <!-- Checklist Items -->
+        <div class="flex flex-col gap-space-sm">
           <!-- CGPA Criterion -->
-          <div class="flex items-start gap-3 p-3 rounded-lg {% if cgpa_pass %}bg-emerald-50/70 border border-emerald-200{% else %}bg-red-50/70 border border-red-200{% endif %}">
-            <span class="material-symbols-outlined text-[20px] {% if cgpa_pass %}text-emerald-600{% else %}text-red-600{% endif %} shrink-0">
+          <div class="flex items-start gap-space-sm p-space-sm rounded-xl {% if cgpa_pass %}bg-emerald-50 border border-emerald-200 text-emerald-900{% else %}bg-rose-50 border border-rose-200 text-rose-900{% endif %}">
+            <span class="material-symbols-outlined text-[20px] {% if cgpa_pass %}text-emerald-600{% else %}text-rose-600{% endif %} shrink-0 mt-0.5">
               {% if cgpa_pass %}check_circle{% else %}cancel{% endif %}
             </span>
-            <div class="text-xs">
-              <span class="font-semibold block {% if cgpa_pass %}text-emerald-900{% else %}text-red-900{% endif %}">
-                CGPA Criterion: Min {{ job.min_cgpa }}
-              </span>
-              <span class="text-slate-600">Your CGPA: <strong>{{ student.cgpa }}</strong></span>
+            <div class="flex flex-col text-xs">
+              <span class="font-semibold">Minimum CGPA: {{ job.min_cgpa }}</span>
+              <span class="opacity-80">Your CGPA: <strong>{{ student.cgpa }}</strong></span>
             </div>
           </div>
 
           <!-- Backlogs Criterion -->
-          <div class="flex items-start gap-3 p-3 rounded-lg {% if backlogs_pass %}bg-emerald-50/70 border border-emerald-200{% else %}bg-red-50/70 border border-red-200{% endif %}">
-            <span class="material-symbols-outlined text-[20px] {% if backlogs_pass %}text-emerald-600{% else %}text-red-600{% endif %} shrink-0">
+          <div class="flex items-start gap-space-sm p-space-sm rounded-xl {% if backlogs_pass %}bg-emerald-50 border border-emerald-200 text-emerald-900{% else %}bg-rose-50 border border-rose-200 text-rose-900{% endif %}">
+            <span class="material-symbols-outlined text-[20px] {% if backlogs_pass %}text-emerald-600{% else %}text-rose-600{% endif %} shrink-0 mt-0.5">
               {% if backlogs_pass %}check_circle{% else %}cancel{% endif %}
             </span>
-            <div class="text-xs">
-              <span class="font-semibold block {% if backlogs_pass %}text-emerald-900{% else %}text-red-900{% endif %}">
-                Backlogs: Max {{ job.max_backlogs }} Allowed
-              </span>
-              <span class="text-slate-600">Your Backlogs: <strong>{{ student.backlogs }}</strong></span>
+            <div class="flex flex-col text-xs">
+              <span class="font-semibold">Max Backlogs: {{ job.max_backlogs }}</span>
+              <span class="opacity-80">Your Backlogs: <strong>{{ student.backlogs }}</strong></span>
             </div>
           </div>
 
           <!-- Allowed Branches Criterion -->
-          <div class="flex items-start gap-3 p-3 rounded-lg {% if branch_pass %}bg-emerald-50/70 border border-emerald-200{% else %}bg-red-50/70 border border-red-200{% endif %}">
-            <span class="material-symbols-outlined text-[20px] {% if branch_pass %}text-emerald-600{% else %}text-red-600{% endif %} shrink-0">
+          <div class="flex items-start gap-space-sm p-space-sm rounded-xl {% if branch_pass %}bg-emerald-50 border border-emerald-200 text-emerald-900{% else %}bg-rose-50 border border-rose-200 text-rose-900{% endif %}">
+            <span class="material-symbols-outlined text-[20px] {% if branch_pass %}text-emerald-600{% else %}text-rose-600{% endif %} shrink-0 mt-0.5">
               {% if branch_pass %}check_circle{% else %}cancel{% endif %}
             </span>
-            <div class="text-xs">
-              <span class="font-semibold block {% if branch_pass %}text-emerald-900{% else %}text-red-900{% endif %}">
-                Eligible Branches
-              </span>
-              <span class="text-slate-600">
-                Your Branch: <strong>{{ student.branch }}</strong><br>
-                Allowed: {% if job.allowed_branches %}{{ job.allowed_branches|join:", " }}{% else %}All Branches{% endif %}
-              </span>
+            <div class="flex flex-col text-xs">
+              <span class="font-semibold">Allowed Branches</span>
+              <span class="opacity-80">Your Branch: <strong>{{ student.branch }}</strong></span>
+              <span class="opacity-70 mt-0.5">Allowed: {% if job.allowed_branches %}{{ job.allowed_branches }}{% else %}All Branches{% endif %}</span>
             </div>
           </div>
         </div>
 
         <!-- Application Action Button -->
-        <div class="pt-4 border-t border-slate-100">
+        <div class="pt-space-md border-t border-outline-variant/20">
           {% if has_applied %}
-            <div class="space-y-2">
-              <button disabled class="w-full py-3 rounded-lg bg-slate-100 text-slate-400 text-sm font-semibold cursor-not-allowed">
+            <div class="flex flex-col gap-2">
+              <button disabled class="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md font-semibold cursor-not-allowed">
                 Already Applied
               </button>
-              <a href="{% url 'students:applications' %}" class="block text-center text-xs text-blue-600 hover:underline">
+              <a href="{% url 'students:applications' %}" class="text-center font-body-sm text-body-sm text-primary hover:underline">
                 View in Application Tracker &rarr;
               </a>
             </div>
           {% elif not is_eligible %}
-            <div class="space-y-2">
-              <button disabled class="w-full py-3 rounded-lg bg-slate-200 text-slate-500 text-sm font-semibold cursor-not-allowed" title="{{ ineligibility_reasons|join:'; ' }}">
+            <div class="flex flex-col gap-2">
+              <button disabled class="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md font-semibold cursor-not-allowed" title="{{ ineligibility_reasons|join:'; ' }}">
                 Not Eligible to Apply
               </button>
-              <p class="text-[11px] text-amber-700 text-center">
+              <p class="font-body-sm text-body-sm text-amber-700 text-center">
                 {{ ineligibility_reasons|first }}
               </p>
             </div>
           {% else %}
             <form method="post" action="{% url 'students:apply_job' pk=job.pk %}">
               {% csrf_token %}
-              <button type="submit" class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors shadow-sm">
-                Apply for this Position
+              <button type="submit" class="w-full py-3.5 px-4 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <span>Submit Application</span>
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
             </form>
           {% endif %}
@@ -193,4 +241,3 @@
   </div>
 </div>
 {% endblock %}
-

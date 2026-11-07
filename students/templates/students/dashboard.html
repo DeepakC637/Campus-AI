@@ -4,174 +4,339 @@
 {% block page_heading %}Student Dashboard{% endblock %}
 
 {% block student_content %}
-<div class="space-y-6">
-  <!-- Welcome Banner & Profile Strength -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-    <div class="space-y-2">
-      <div class="flex items-center gap-2">
-        <h2 class="text-2xl font-bold text-slate-900">Welcome, {{ student.full_name }}</h2>
-        <span class="text-2xl">👋</span>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Welcome & Orientation Zone -->
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md mb-space-lg">
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center gap-space-xs">
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Welcome back, {{ student.full_name|default:request.user.email }}</h1>
+        <span class="text-[28px] animate-pulse">👋</span>
       </div>
-      <p class="text-sm text-slate-600 max-w-xl">
-        Manage your campus recruitment profile, track submitted applications, and stay prepared for upcoming interviews.
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+        Track your placement readiness, active applications, and upcoming interview rounds across current campus drives.
       </p>
     </div>
-
-    <!-- Profile Completion Widget -->
-    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 min-w-[260px] space-y-2">
-      <div class="flex items-center justify-between text-xs font-semibold">
-        <span class="text-slate-600">Profile Completion</span>
-        <span class="text-blue-600">{{ completion_percentage }}%</span>
-      </div>
-      <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: {{ completion_percentage }}%"></div>
-      </div>
-      <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-        <span>{{ student.branch }} ({{ student.year }})</span>
-        <a href="{% url 'students:profile' %}" class="text-blue-600 font-semibold hover:underline">Complete profile &rarr;</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Key Metrics Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <!-- Applied Jobs Count -->
-    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
-      <div>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jobs Applied</p>
-        <p class="text-2xl font-bold text-slate-900 mt-1">{{ jobs_applied_count }}</p>
-      </div>
-      <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-        <span class="material-symbols-outlined text-[24px]">assignment</span>
-      </div>
-    </div>
-
-    <!-- Scheduled Interviews Count -->
-    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
-      <div>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Interviews</p>
-        <p class="text-2xl font-bold text-slate-900 mt-1">{{ interviews_scheduled_count }}</p>
-      </div>
-      <div class="w-11 h-11 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-        <span class="material-symbols-outlined text-[24px]">calendar_today</span>
-      </div>
-    </div>
-
-    <!-- Shortlisted Applications -->
-    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
-      <div>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Shortlisted</p>
-        <p class="text-2xl font-bold text-slate-900 mt-1">{{ status_counts.Shortlisted }}</p>
-      </div>
-      <div class="w-11 h-11 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-        <span class="material-symbols-outlined text-[24px]">grade</span>
-      </div>
-    </div>
-
-    <!-- Selected / Placed -->
-    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
-      <div>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Offers Received</p>
-        <p class="text-2xl font-bold text-emerald-600 mt-1">{{ status_counts.Selected }}</p>
-      </div>
-      <div class="w-11 h-11 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-        <span class="material-symbols-outlined text-[24px]">check_circle</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Applications Status Breakdown Pills -->
-  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-    <h3 class="text-sm font-semibold text-slate-700 mb-3">Application Pipeline Breakdown</h3>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-      <div class="p-3 bg-slate-50 rounded-lg text-center border border-slate-100">
-        <span class="text-xs text-slate-500 block">Applied</span>
-        <span class="text-lg font-bold text-slate-800">{{ status_counts.Applied }}</span>
-      </div>
-      <div class="p-3 bg-blue-50 rounded-lg text-center border border-blue-100">
-        <span class="text-xs text-blue-600 block">Shortlisted</span>
-        <span class="text-lg font-bold text-blue-800">{{ status_counts.Shortlisted }}</span>
-      </div>
-      <div class="p-3 bg-purple-50 rounded-lg text-center border border-purple-100">
-        <span class="text-xs text-purple-600 block">Interview</span>
-        <span class="text-lg font-bold text-purple-800">{{ status_counts.Interview }}</span>
-      </div>
-      <div class="p-3 bg-emerald-50 rounded-lg text-center border border-emerald-100">
-        <span class="text-xs text-emerald-600 block">Selected</span>
-        <span class="text-lg font-bold text-emerald-800">{{ status_counts.Selected }}</span>
-      </div>
-      <div class="p-3 bg-red-50 rounded-lg text-center border border-red-100">
-        <span class="text-xs text-red-600 block">Rejected</span>
-        <span class="text-lg font-bold text-red-800">{{ status_counts.Rejected }}</span>
-      </div>
-      <div class="p-3 bg-slate-100 rounded-lg text-center border border-slate-200">
-        <span class="text-xs text-slate-500 block">Withdrawn</span>
-        <span class="text-lg font-bold text-slate-700">{{ status_counts.Withdrawn }}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Open Jobs Section -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-      <div>
-        <h3 class="font-bold text-base text-slate-800">Open Job Opportunities</h3>
-        <p class="text-xs text-slate-500">Active campus drives you haven't applied to yet</p>
-      </div>
-      <a href="{% url 'students:jobs' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
-        Browse all jobs &rarr;
+    <!-- Quick Action Hub -->
+    <div class="flex items-center gap-space-sm shrink-0">
+      <a href="{% url 'students:resume' %}" class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all duration-150 shadow-sm active:scale-95">
+        <span class="material-symbols-outlined text-[18px] text-primary">upload_file</span>
+        <span>Update Resume</span>
+      </a>
+      <a href="{% url 'students:jobs' %}" class="flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm hover:brightness-105 transition-all duration-150 active:scale-95">
+        <span class="material-symbols-outlined text-[18px]">work</span>
+        <span>View All Jobs</span>
       </a>
     </div>
+  </div>
 
-    {% if open_jobs %}
-      <div class="divide-y divide-slate-100">
-        {% for job in open_jobs %}
-          <div class="p-5 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="space-y-1.5 flex-1">
-              <div class="flex items-center gap-2.5 flex-wrap">
-                <a href="{% url 'students:job_detail' pk=job.pk %}" class="font-bold text-slate-900 hover:text-blue-600 text-base">
-                  {{ job.title }}
-                </a>
-                {% if job.is_eligible %}
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    Eligible
-                  </span>
-                {% else %}
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200" title="{{ job.ineligibility_reasons|join:', ' }}">
-                    Not Eligible
-                  </span>
-                {% endif %}
-              </div>
-              <div class="flex items-center gap-4 text-xs text-slate-600 flex-wrap">
-                <span class="font-medium text-slate-800">{{ job.company.company_name }}</span>
-                <span>•</span>
-                <span>{{ job.location }}</span>
-                <span>•</span>
-                <span class="font-semibold text-slate-900">{{ job.package_lpa }} LPA</span>
-                <span>•</span>
-                <span class="text-slate-500">Deadline: {{ job.deadline|date:"M d, Y" }}</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3 shrink-0">
-              <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
-                Skill Match
-              </a>
-              <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-                View & Apply
-              </a>
-            </div>
+  <!-- Profile Strength Interactive Banner -->
+  <div class="relative overflow-hidden rounded-xl bg-surface-container-lowest p-space-lg shadow-sm mb-space-lg group border border-outline-variant/30">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+      <div class="flex items-start gap-space-md">
+        <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center shrink-0 text-primary">
+          <span class="material-symbols-outlined text-[26px]">verified_user</span>
+        </div>
+        <div class="flex flex-col gap-space-xs max-w-3xl">
+          <div class="flex items-center gap-space-sm flex-wrap">
+            <span class="font-headline-sm text-headline-sm text-on-surface">Profile Strength: {{ completion_percentage }}% Complete</span>
+            {% if completion_percentage >= 80 %}
+              <span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-primary-fixed-variant font-label-sm text-label-sm font-semibold">High Visibility Tier</span>
+            {% else %}
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-label-sm font-semibold">Action Needed</span>
+            {% endif %}
           </div>
-        {% endfor %}
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            {% if completion_percentage >= 80 %}
+              Your profile is verified and active for campus recruitment drives.
+            {% else %}
+              Complete your CGPA, phone number, and skills in your profile to maximize recruiter visibility and eligibility.
+            {% endif %}
+          </p>
+        </div>
       </div>
-    {% else %}
-      <div class="p-12 text-center text-slate-500 space-y-2">
-        <span class="material-symbols-outlined text-[40px] text-slate-300">task_alt</span>
-        <p class="text-sm font-medium">You have applied to all current matching opportunities or no drives are open.</p>
-        <a href="{% url 'students:applications' %}" class="text-xs text-blue-600 font-semibold hover:underline">View my applications &rarr;</a>
+      <a class="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold hover:underline group-hover:translate-x-1 transition-transform self-start md:self-center shrink-0" href="{% url 'students:profile' %}">
+        <span>Complete Profile</span>
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+    <!-- Progress Track & Dynamic Fill -->
+    <div class="mt-space-md w-full bg-surface-container-high rounded-full h-2.5 overflow-hidden">
+      <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-container transition-all duration-700 ease-out" style="width: {{ completion_percentage }}%;"></div>
+    </div>
+  </div>
+
+  <!-- Four Core Metric Stat Cards Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">
+    <!-- Stat 1: Jobs Applied -->
+    <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-space-sm">
+        <span class="font-label-md text-label-md text-on-surface-variant">Jobs Applied</span>
+        <div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">business_center</span>
+        </div>
       </div>
-    {% endif %}
+      <div class="flex flex-col">
+        <span class="font-headline-xl text-headline-xl text-on-surface leading-none mb-space-xs">{{ jobs_applied_count }}</span>
+        <div class="flex items-center gap-1 font-body-sm text-body-sm text-primary font-medium">
+          <span class="material-symbols-outlined text-[16px]">trending_up</span>
+          <span>Active Applications</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 2: Interviews Scheduled -->
+    <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-space-sm">
+        <span class="font-label-md text-label-md text-on-surface-variant">Interviews Scheduled</span>
+        <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-on-secondary-fixed-variant">
+          <span class="material-symbols-outlined text-[20px]">event_available</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-headline-xl text-headline-xl text-on-surface leading-none mb-space-xs">{{ interviews_scheduled_count }}</span>
+        <div class="flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+          <span class="material-symbols-outlined text-[16px] text-tertiary">schedule</span>
+          <span class="font-medium text-on-surface">Upcoming Rounds</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 3: Shortlisted -->
+    <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-space-sm">
+        <span class="font-label-md text-label-md text-on-surface-variant">Shortlisted</span>
+        <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+          <span class="material-symbols-outlined text-[20px]">grade</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-headline-xl text-headline-xl text-on-surface leading-none mb-space-xs">{{ status_counts.Shortlisted }}</span>
+        <div class="flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+          <span class="material-symbols-outlined text-[16px] text-primary">military_tech</span>
+          <span class="font-medium text-on-surface">Recruiter Shortlists</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 4: Offers / Selected -->
+    <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-space-sm">
+        <span class="font-label-md text-label-md text-on-surface-variant">Offers Received</span>
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700">
+          <span class="material-symbols-outlined text-[20px]">check_circle</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-headline-xl text-headline-xl text-emerald-700 leading-none mb-space-xs">{{ status_counts.Selected }}</span>
+        <div class="flex items-center gap-1 font-body-sm text-body-sm text-emerald-700 font-medium">
+          <span class="material-symbols-outlined text-[16px]">stars</span>
+          <span>Final Placement Offers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applications Pipeline Status Breakdown -->
+  <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 mb-space-lg">
+    <div class="flex items-center justify-between mb-space-md">
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Application Pipeline Breakdown</h3>
+      <a href="{% url 'students:applications' %}" class="text-primary font-label-md text-label-md font-semibold hover:underline flex items-center gap-1">
+        <span>View Tracker</span>
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-space-sm">
+      <div class="p-space-md bg-surface-container-low rounded-xl text-center">
+        <span class="font-body-sm text-body-sm text-on-surface-variant block">Applied</span>
+        <span class="font-headline-md text-headline-md text-on-surface font-bold mt-1">{{ status_counts.Applied }}</span>
+      </div>
+      <div class="p-space-md bg-blue-50 rounded-xl text-center border border-blue-100">
+        <span class="font-body-sm text-body-sm text-blue-700 block">Shortlisted</span>
+        <span class="font-headline-md text-headline-md text-blue-800 font-bold mt-1">{{ status_counts.Shortlisted }}</span>
+      </div>
+      <div class="p-space-md bg-purple-50 rounded-xl text-center border border-purple-100">
+        <span class="font-body-sm text-body-sm text-purple-700 block">Interview</span>
+        <span class="font-headline-md text-headline-md text-purple-800 font-bold mt-1">{{ status_counts.Interview }}</span>
+      </div>
+      <div class="p-space-md bg-emerald-50 rounded-xl text-center border border-emerald-100">
+        <span class="font-body-sm text-body-sm text-emerald-700 block">Selected</span>
+        <span class="font-headline-md text-headline-md text-emerald-800 font-bold mt-1">{{ status_counts.Selected }}</span>
+      </div>
+      <div class="p-space-md bg-rose-50 rounded-xl text-center border border-rose-100">
+        <span class="font-body-sm text-body-sm text-rose-700 block">Rejected</span>
+        <span class="font-headline-md text-headline-md text-rose-800 font-bold mt-1">{{ status_counts.Rejected }}</span>
+      </div>
+      <div class="p-space-md bg-surface-container-high rounded-xl text-center">
+        <span class="font-body-sm text-body-sm text-on-surface-variant block">Withdrawn</span>
+        <span class="font-headline-md text-headline-md text-on-surface font-bold mt-1">{{ status_counts.Withdrawn }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Layout (Left Column: Open Jobs / Right Column: Readiness & Info) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+    <!-- Left Column: Open Job Opportunities (col-span-8) -->
+    <div class="lg:col-span-8 flex flex-col gap-space-md">
+      <div class="flex items-center justify-between pb-space-xs">
+        <div>
+          <div class="flex items-center gap-space-xs">
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">Open Job Drives</h2>
+            <span class="material-symbols-outlined text-[20px] text-primary">auto_awesome</span>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Active campus drives you have not applied to yet
+          </p>
+        </div>
+        <a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary font-semibold hover:underline" href="{% url 'students:jobs' %}">
+          <span>Browse all ({{ open_jobs|length }})</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+      </div>
+
+      {% if open_jobs %}
+        <div class="flex flex-col gap-space-md">
+          {% for job in open_jobs %}
+            <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between">
+              <div class="flex flex-col sm:flex-row items-start justify-between gap-space-md">
+                <div class="flex items-start gap-space-md">
+                  <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[28px] text-primary">business</span>
+                  </div>
+                  <div class="flex flex-col gap-space-xs">
+                    <div class="flex items-center gap-space-xs flex-wrap">
+                      <span class="font-label-md text-label-md text-on-surface-variant font-semibold">{{ job.company.company_name }}</span>
+                      <span class="text-on-surface-variant">•</span>
+                      {% if job.is_eligible %}
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-label-sm text-label-sm font-semibold">Eligible</span>
+                      {% else %}
+                        <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-label-sm font-semibold" title="{{ job.ineligibility_reasons|join:', ' }}">Not Eligible</span>
+                      {% endif %}
+                    </div>
+                    <a href="{% url 'students:job_detail' pk=job.pk %}" class="font-headline-sm text-headline-sm text-on-surface hover:text-primary transition-colors">
+                      {{ job.title }}
+                    </a>
+                    <div class="flex flex-wrap items-center gap-y-1 gap-x-space-md font-body-sm text-body-sm text-on-surface-variant">
+                      <span class="flex items-center gap-1 text-on-surface font-semibold">
+                        <span class="material-symbols-outlined text-[16px] text-on-surface-variant">payments</span>
+                        {{ job.package_lpa }} LPA
+                      </span>
+                      <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">location_on</span>
+                        {{ job.location }}
+                      </span>
+                      <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Deadline: {{ job.deadline|date:"M d, Y" }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Match Score / AI Placement Placeholder -->
+                <div class="flex items-center gap-space-sm sm:flex-col sm:items-end self-end sm:self-auto shrink-0">
+                  <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center">
+                    <span class="font-headline-sm text-[16px] font-bold text-on-surface-variant">—</span>
+                  </div>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant" title="AI match scoring unlocks in Phase 8">Match Score</span>
+                </div>
+              </div>
+
+              <!-- Required Skills & Action Buttons -->
+              <div class="mt-space-md pt-space-md border-t border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+                <div class="flex flex-wrap items-center gap-space-xs">
+                  {% for skill in job.required_skills.all|slice:":4" %}
+                    <span class="px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-medium">{{ skill.name }}</span>
+                  {% empty %}
+                    <span class="text-xs text-on-surface-variant">General Skills</span>
+                  {% endfor %}
+                </div>
+                <div class="flex items-center gap-space-sm shrink-0">
+                  <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-space-md py-space-sm rounded-xl border border-outline-variant/40 hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+                    Skill Gap
+                  </a>
+                  <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:brightness-105 transition-all shadow-sm active:scale-95">
+                    View &amp; Apply
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="rounded-xl bg-surface-container-lowest p-space-xl shadow-sm border border-outline-variant/30 text-center flex flex-col items-center gap-space-sm">
+          <span class="material-symbols-outlined text-[44px] text-outline">task_alt</span>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">No New Open Drives</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+            You have applied to all matching open campus recruitment drives or no drives are currently active.
+          </p>
+          <a href="{% url 'students:applications' %}" class="mt-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md shadow-sm">
+            View My Applications
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Interviews & Preparation Readiness (col-span-4) -->
+    <div class="lg:col-span-4 flex flex-col gap-space-lg">
+      <!-- Placement Readiness Widget -->
+      <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-[22px] text-primary">auto_fix_high</span>
+            <h3 class="font-headline-sm text-[18px] text-on-surface font-semibold">Placement Readiness</h3>
+          </div>
+          <span class="text-primary font-label-sm text-label-sm font-semibold">Campus Grid</span>
+        </div>
+
+        <div class="flex flex-col gap-space-xs p-space-md rounded-xl bg-surface-container-low">
+          <div class="flex items-center justify-between">
+            <span class="font-label-md text-label-md text-on-surface-variant">Profile Completion</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">{{ completion_percentage }}%</span>
+          </div>
+          <div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+            <div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: {{ completion_percentage }}%;"></div>
+          </div>
+          <span class="font-body-sm text-body-sm text-tertiary font-medium">
+            {% if completion_percentage >= 80 %}✓ Minimum threshold met for drives{% else %}Upload resume &amp; skills to boost{% endif %}
+          </span>
+        </div>
+
+        <div class="flex items-start gap-space-sm p-space-md rounded-xl bg-surface-container-low">
+          <div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined text-[18px]">badge</span>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Roll &amp; Branch</span>
+            <span class="font-label-md text-label-md text-on-surface font-semibold">{{ student.roll_no }} • {{ student.branch }}</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">CGPA: {{ student.cgpa|floatformat:2 }} | Backlogs: {{ student.backlogs }}</span>
+          </div>
+        </div>
+
+        <a href="{% url 'students:resume' %}" class="w-full flex items-center justify-center gap-space-xs py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:brightness-105 transition-all shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">upload_file</span>
+          <span>Manage Resume</span>
+        </a>
+      </div>
+
+      <!-- Quick Links Card -->
+      <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col gap-space-sm">
+        <h3 class="font-headline-sm text-[18px] text-on-surface font-semibold mb-1">Quick Links</h3>
+        <a href="{% url 'students:interviews' %}" class="flex items-center justify-between p-space-sm rounded-xl hover:bg-surface-container-low transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
+            <span class="font-label-md text-label-md text-on-surface">Scheduled Interviews</span>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">{{ interviews_scheduled_count }}</span>
+        </a>
+        <a href="{% url 'students:applications' %}" class="flex items-center justify-between p-space-sm rounded-xl hover:bg-surface-container-low transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">assignment</span>
+            <span class="font-label-md text-label-md text-on-surface">Application Tracker</span>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">{{ jobs_applied_count }}</span>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
-

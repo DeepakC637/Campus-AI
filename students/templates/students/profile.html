@@ -4,40 +4,59 @@
 {% block page_heading %}Edit Student Profile{% endblock %}
 
 {% block student_content %}
-<div class="max-w-4xl space-y-6">
-  <!-- Verification & Status Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-    <div class="space-y-1">
-      <h2 class="text-lg font-bold text-slate-800">Academic Verification Status</h2>
-      <p class="text-xs text-slate-500">Official college credential status verified by Training & Placement Cell.</p>
-    </div>
-    <div class="flex items-center gap-3">
-      {% if student.is_verified %}
-        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="material-symbols-outlined text-[18px]">verified</span> Verified by Admin
-        </span>
-      {% else %}
-        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-          <span class="material-symbols-outlined text-[18px]">pending</span> Verification Pending (Read-only)
-        </span>
-      {% endif %}
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Breadcrumb & Metadata Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center gap-space-sm">
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Student Portal</span>
+        <span class="material-symbols-outlined text-outline text-[14px]">chevron_right</span>
+        <span class="font-label-sm text-label-sm text-primary font-semibold">Profile Management</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-space-md">
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Student Profile &amp; Academic Credentials</h1>
+        {% if student.is_verified %}
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-label-sm font-label-sm">
+            <span class="material-symbols-outlined text-[16px] text-emerald-600" style="font-variation-settings: 'FILL' 1;">verified</span>
+            <span class="font-semibold">Verified by Placement Cell</span>
+          </div>
+        {% else %}
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-label-sm font-label-sm">
+            <span class="material-symbols-outlined text-[16px] text-amber-600">pending</span>
+            <span class="font-semibold">Verification Pending (Read-only Badge)</span>
+          </div>
+        {% endif %}
+      </div>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+        Manage your official academic records, contact info, and technical skills used for campus drive eligibility.
+      </p>
     </div>
   </div>
 
-  <!-- Profile Form Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-slate-100">
-      <h3 class="text-base font-bold text-slate-800">Academic & Personal Details</h3>
-      <p class="text-xs text-slate-500 mt-1">Keep your profile updated to match company eligibility criteria automatically.</p>
+  <!-- Notification Banner for Profile Quality -->
+  <div class="mb-space-lg p-space-md rounded-xl bg-secondary-container/40 flex items-center justify-between gap-space-md shadow-sm border border-outline-variant/20">
+    <div class="flex items-center gap-space-md min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary shrink-0 shadow-sm">
+        <span class="material-symbols-outlined text-[22px]">auto_awesome</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="font-label-md text-label-md text-on-surface font-semibold truncate">Placement Drive Readiness</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Keeping your skills and academic metrics up-to-date ensures accurate eligibility matching for top recruiters.</span>
+      </div>
     </div>
+  </div>
 
-    <form method="post" class="p-6 space-y-6">
-      {% csrf_token %}
+  <!-- Profile Form -->
+  <form method="post" action="{% url 'students:profile' %}" class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+    {% csrf_token %}
 
+    <!-- LEFT COLUMN: Personal Info & Academic Records (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-space-lg">
+      <!-- Form Errors -->
       {% if form.errors %}
-        <div class="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
-          <strong>Please resolve the errors below:</strong>
-          <ul class="list-disc list-inside mt-1 text-xs">
+        <div class="p-space-md rounded-xl bg-rose-50 border border-rose-200 text-rose-800 font-body-sm text-body-sm flex flex-col gap-1">
+          <strong class="font-semibold">Please correct the following errors:</strong>
+          <ul class="list-disc list-inside">
             {% for field, errors in form.errors.items %}
               {% for error in errors %}
                 <li><strong>{{ field|title }}:</strong> {{ error }}</li>
@@ -47,90 +66,151 @@
         </div>
       {% endif %}
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Full Name</label>
-          {{ form.full_name }}
+      <!-- Section 1: Personal Information -->
+      <section class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+        <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+          <span class="material-symbols-outlined text-primary text-[24px]">badge</span>
+          <div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">Personal Information</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Update identity and campus contact records</p>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Roll Number / Student ID</label>
-          {{ form.roll_no }}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+          <!-- Full Name -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.full_name.id_for_label }}">Full Name</label>
+            {{ form.full_name }}
+          </div>
+
+          <!-- Institutional Email (Read-only + badge) -->
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-label-md text-label-md text-on-surface font-medium">Institutional Email</label>
+              <span class="text-[11px] font-label-sm text-tertiary bg-secondary-container px-1.5 py-0.5 rounded font-semibold">Locked</span>
+            </div>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3 text-tertiary text-[18px]">lock</span>
+              <input class="w-full bg-surface-container-low pl-10 pr-space-md py-2.5 rounded-xl text-on-surface-variant font-body-md text-body-md cursor-not-allowed border border-outline-variant/30 outline-none" readonly type="email" value="{{ request.user.email }}"/>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.phone.id_for_label }}">Phone Number</label>
+            {{ form.phone }}
+          </div>
+
+          <!-- Placement Status -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.placement_status.id_for_label }}">Placement Status</label>
+            {{ form.placement_status }}
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Academic Records & Eligibility -->
+      <section class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+        <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+          <span class="material-symbols-outlined text-primary text-[24px]">school</span>
+          <div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">Academic Records &amp; Eligibility</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Validated academic data used for drive eligibility</p>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Branch / Department</label>
-          {{ form.branch }}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+          <!-- Roll Number -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.roll_no.id_for_label }}">Roll Number / ID</label>
+            {{ form.roll_no }}
+          </div>
+
+          <!-- Branch -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.branch.id_for_label }}">Academic Branch</label>
+            {{ form.branch }}
+          </div>
+
+          <!-- Graduation Year -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.year.id_for_label }}">Graduation Year</label>
+            {{ form.year }}
+          </div>
+
+          <!-- CGPA -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.cgpa.id_for_label }}">CGPA (Scale 0-10)</label>
+            {{ form.cgpa }}
+          </div>
+
+          <!-- Active Backlogs -->
+          <div class="flex flex-col gap-1.5 sm:col-span-2">
+            <label class="font-label-md text-label-md text-on-surface font-medium" for="{{ form.backlogs.id_for_label }}">Active Backlogs Count</label>
+            {{ form.backlogs }}
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Graduation Year</label>
-          {{ form.year }}
+        <div class="pt-space-md flex justify-end">
+          <button type="submit" class="px-space-xl py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-sm hover:shadow transition-all flex items-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">save</span>
+            <span>Save Profile</span>
+          </button>
         </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Current CGPA (out of 10.0)</label>
-          {{ form.cgpa }}
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Active Backlogs</label>
-          {{ form.backlogs }}
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Phone Number</label>
-          {{ form.phone }}
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Placement Status</label>
-          {{ form.placement_status }}
-        </div>
-      </div>
-
-      <!-- Add Skills Section -->
-      <div class="pt-4 border-t border-slate-100">
-        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">{{ form.skills_text.label }}</label>
-        {{ form.skills_text }}
-        <p class="text-xs text-slate-500 mt-1">{{ form.skills_text.help_text }}</p>
-      </div>
-
-      <div class="flex justify-end pt-4">
-        <button type="submit" class="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
-          Save Profile Changes
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Manage Existing Skills Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-    <div>
-      <h3 class="text-base font-bold text-slate-800">Your Current Skills</h3>
-      <p class="text-xs text-slate-500 mt-1">Skills are used for job compatibility scoring and AI skill gap matching.</p>
+      </section>
     </div>
 
-    {% if skills %}
-      <div class="flex flex-wrap gap-2 pt-2">
-        {% for skill in skills %}
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
-            <span>{{ skill.name }}</span>
-            <form method="post" action="{% url 'students:profile' %}" class="inline">
-              {% csrf_token %}
-              <input type="hidden" name="action" value="remove_skill">
-              <input type="hidden" name="skill_id" value="{{ skill.id }}">
-              <button type="submit" title="Remove skill" class="text-slate-400 hover:text-red-600 focus:outline-none flex items-center">
-                <span class="material-symbols-outlined text-[14px]">close</span>
-              </button>
-            </form>
-          </span>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-sm text-slate-500 italic">No skills added yet. Add some skills above to improve job matches!</p>
-    {% endif %}
-  </div>
+    <!-- RIGHT COLUMN: Technical Skills (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-space-lg">
+      <section class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+        <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+          <span class="material-symbols-outlined text-primary text-[24px]">psychology</span>
+          <div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">Technical Skills</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Validated skills for skill-gap matching</p>
+          </div>
+        </div>
+
+        <!-- Add Skills Input -->
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface font-medium">{{ form.skills_text.label }}</label>
+          {{ form.skills_text }}
+          <span class="font-body-sm text-body-sm text-on-surface-variant">{{ form.skills_text.help_text }}</span>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all flex items-center justify-center gap-2 cursor-pointer border border-outline-variant/30">
+            <span class="material-symbols-outlined text-[18px] text-primary">add_circle</span>
+            <span>Add Entered Skills</span>
+          </button>
+        </div>
+      </section>
+  </form>
+
+  <!-- Current Skills Section with Remove Action -->
+  <section class="mt-space-lg p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+    <div class="flex items-center justify-between">
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Current Added Skills ({{ skills|length }})</h3>
+      <span class="font-body-sm text-body-sm text-on-surface-variant">Click × to remove</span>
+    </div>
+
+    <div class="flex flex-wrap gap-space-sm">
+      {% for skill in skills %}
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/30 text-on-surface font-label-md text-label-md">
+          <span>{{ skill.name }}</span>
+          <form method="post" action="{% url 'students:profile' %}" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="remove_skill">
+            <input type="hidden" name="skill_id" value="{{ skill.id }}">
+            <button type="submit" class="hover:text-error transition-colors p-0.5 rounded flex items-center cursor-pointer" title="Remove {{ skill.name }}">
+              <span class="material-symbols-outlined text-[16px]">close</span>
+            </button>
+          </form>
+        </div>
+      {% empty %}
+        <p class="font-body-sm text-body-sm text-on-surface-variant italic">No skills added yet. Use the form above to add your technical proficiencies.</p>
+      {% endfor %}
+    </div>
+  </section>
 </div>
 {% endblock %}
-

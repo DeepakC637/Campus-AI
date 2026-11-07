@@ -4,126 +4,162 @@
 {% block page_heading %}My Scheduled Interviews{% endblock %}
 
 {% block student_content %}
-<div class="space-y-6">
-  <!-- Interviews Table Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div>
-        <h2 class="text-base font-bold text-slate-800">Interview Schedules & History</h2>
-        <p class="text-xs text-slate-500 mt-1">Review scheduled interview rounds, meeting links, physical venues, and recruiter evaluations.</p>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Meta / Action Bar -->
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md py-space-sm mb-space-lg">
+    <div class="flex flex-col gap-space-xs max-w-2xl">
+      <div class="flex items-center gap-space-xs">
+        <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Campus Placement Hub • Placement Cycle 2024–25</span>
       </div>
-      <a href="{% url 'students:applications' %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition-colors shrink-0">
-        <span class="material-symbols-outlined text-[16px]">assignment</span>
-        <span>View Applications</span>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Upcoming &amp; Past Technical Interviews</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Access verified meeting links, physical campus venues, round specifications, and panel feedback for campus drives.
+      </p>
+    </div>
+    <div class="flex items-center gap-space-sm">
+      <a href="{% url 'students:applications' %}" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">assignment</span>
+        <span>Application Tracker</span>
       </a>
+    </div>
+  </div>
+
+  <!-- Metric Quick Stats Strip -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-space-md mb-space-lg">
+    <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Scheduled</span>
+        <span class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[18px]">event_upcoming</span>
+        </span>
+      </div>
+      <div class="mt-space-md flex items-baseline gap-space-xs">
+        <span class="font-headline-lg text-headline-lg text-on-surface font-bold">{{ interviews|length }}</span>
+        <span class="font-label-sm text-label-sm text-primary font-medium">Interview Rounds</span>
+      </div>
+    </div>
+
+    <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Candidate</span>
+        <span class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center text-secondary">
+          <span class="material-symbols-outlined text-[18px]">badge</span>
+        </span>
+      </div>
+      <div class="mt-space-md flex items-baseline gap-space-xs">
+        <span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">{{ student.full_name }}</span>
+      </div>
+    </div>
+
+    <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Placement Status</span>
+        <span class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+          <span class="material-symbols-outlined text-[18px]">verified</span>
+        </span>
+      </div>
+      <div class="mt-space-md flex items-baseline gap-space-xs">
+        <span class="font-headline-sm text-headline-sm text-emerald-800 font-bold">{{ student.placement_status }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interviews List Card -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+    <div class="p-space-lg border-b border-outline-variant/20 flex items-center justify-between">
+      <div>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Scheduled Interview Rounds &amp; History</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Review meeting coordinates, venues, and status evaluations</p>
+      </div>
+      <span class="font-label-sm text-label-sm text-on-surface-variant">{{ interviews|length }} sessions</span>
     </div>
 
     {% if interviews %}
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-700">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
-            <tr>
-              <th class="px-6 py-3.5">Company & Role</th>
-              <th class="px-6 py-3.5">Round Type</th>
-              <th class="px-6 py-3.5">Scheduled Date & Time</th>
-              <th class="px-6 py-3.5">Mode & Venue / Link</th>
-              <th class="px-6 py-3.5">Status</th>
-              <th class="px-6 py-3.5">Result / Feedback</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            {% for interview in interviews %}
-              <tr class="hover:bg-slate-50/80 transition-colors">
-                <!-- Company & Role -->
-                <td class="px-6 py-4">
-                  <div class="space-y-0.5">
-                    <span class="font-bold text-slate-900 block">
-                      {{ interview.application.job.title }}
-                    </span>
-                    <span class="text-xs text-slate-500">
-                      {{ interview.application.job.company.company_name }}
-                    </span>
-                  </div>
-                </td>
-
-                <!-- Round Type -->
-                <td class="px-6 py-4">
-                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 text-slate-800 text-xs font-medium">
-                    {{ interview.round_type }}
+      <div class="divide-y divide-outline-variant/20">
+        {% for interview in interviews %}
+          <div class="p-space-lg hover:bg-surface-container-low transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+            <!-- Left Info -->
+            <div class="flex items-start gap-space-md min-w-0">
+              <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0 shadow-xs">
+                <span class="material-symbols-outlined text-[24px]">{% if interview.mode == 'Online' %}videocam{% else %}domain{% endif %}</span>
+              </div>
+              <div class="flex flex-col gap-1 min-w-0">
+                <div class="flex items-center gap-space-xs flex-wrap">
+                  <span class="font-headline-sm text-[16px] text-on-surface font-bold">{{ interview.application.job.company.company_name }}</span>
+                  <span class="text-on-surface-variant">•</span>
+                  <span class="font-label-md text-label-md text-primary font-semibold">{{ interview.round_type }}</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold {% if interview.mode == 'Online' %}bg-blue-50 text-blue-700 border border-blue-200{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+                    <span class="material-symbols-outlined text-[14px]">{% if interview.mode == 'Online' %}videocam{% else %}location_on{% endif %}</span>
+                    <span>{{ interview.mode }}</span>
                   </span>
-                </td>
-
-                <!-- Date & Time -->
-                <td class="px-6 py-4 text-xs text-slate-700">
-                  <span class="font-semibold block text-slate-900">{{ interview.scheduled_at|date:"M d, Y" }}</span>
-                  <span class="text-slate-500">{{ interview.scheduled_at|date:"h:i A" }}</span>
-                </td>
-
-                <!-- Mode & Location/Link -->
-                <td class="px-6 py-4 text-xs">
-                  <div class="space-y-1">
-                    <span class="inline-flex items-center gap-1 font-semibold {% if interview.mode == 'Online' %}text-blue-700{% else %}text-emerald-700{% endif %}">
-                      <span class="material-symbols-outlined text-[16px]">{% if interview.mode == 'Online' %}videocam{% else %}location_on{% endif %}</span>
-                      {{ interview.mode }}
-                    </span>
-                    {% if interview.link_or_venue %}
-                      <div class="text-slate-600 truncate max-w-xs">
-                        {% if interview.mode == 'Online' and 'http' in interview.link_or_venue %}
-                          <a href="{{ interview.link_or_venue }}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
-                            <span>Join Meeting</span>
-                            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
-                          </a>
-                        {% else %}
-                          <span>{{ interview.link_or_venue }}</span>
-                        {% endif %}
-                      </div>
-                    {% endif %}
-                  </div>
-                </td>
-
-                <!-- Status Badge -->
-                <td class="px-6 py-4">
-                  {% if interview.status == 'Scheduled' %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                      <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Scheduled
-                    </span>
-                  {% elif interview.status == 'Completed' %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
-                    </span>
-                  {% elif interview.status == 'Cancelled' %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Cancelled
+                </div>
+                <a href="{% url 'students:job_detail' pk=interview.application.job.pk %}" class="font-body-md text-body-md text-on-surface font-medium hover:text-primary transition-colors truncate">
+                  {{ interview.application.job.title }} ({{ interview.application.job.package_lpa }} LPA)
+                </a>
+                <div class="flex items-center gap-space-md text-body-sm font-body-sm text-on-surface-variant flex-wrap">
+                  <span class="flex items-center gap-1 text-on-surface font-semibold">
+                    <span class="material-symbols-outlined text-[16px] text-primary">calendar_clock</span>
+                    {{ interview.scheduled_at|date:"M d, Y • h:i A" }}
+                  </span>
+                  {% if interview.link_or_venue %}
+                    <span>•</span>
+                    <span class="flex items-center gap-1 truncate max-w-md">
+                      <span class="material-symbols-outlined text-[16px]">pin_drop</span>
+                      {% if interview.mode == 'Online' and 'http' in interview.link_or_venue %}
+                        <a href="{{ interview.link_or_venue }}" target="_blank" class="text-primary hover:underline truncate">{{ interview.link_or_venue }}</a>
+                      {% else %}
+                        <span class="truncate">{{ interview.link_or_venue }}</span>
+                      {% endif %}
                     </span>
                   {% endif %}
-                </td>
-
-                <!-- Result & Feedback -->
-                <td class="px-6 py-4 text-xs">
-                  <div class="space-y-0.5">
-                    {% if interview.result %}
-                      <span class="font-bold text-slate-800 block">{{ interview.result }}</span>
-                    {% else %}
-                      <span class="text-slate-400 italic">Result awaited</span>
-                    {% endif %}
-                    {% if interview.feedback %}
-                      <p class="text-slate-500 italic max-w-xs truncate" title="{{ interview.feedback }}">"{{ interview.feedback }}"</p>
-                    {% endif %}
+                </div>
+                {% if interview.feedback or interview.result %}
+                  <div class="mt-1 p-space-xs px-space-sm rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface-variant">
+                    {% if interview.result %}<strong class="text-on-surface">Result:</strong> {{ interview.result }} {% endif %}
+                    {% if interview.feedback %}• <strong class="text-on-surface">Feedback:</strong> {{ interview.feedback }}{% endif %}
                   </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Right Actions & Status -->
+            <div class="flex items-center gap-space-md shrink-0 self-end lg:self-center">
+              {% if interview.status == 'Scheduled' %}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                  Scheduled
+                </span>
+                {% if interview.mode == 'Online' and interview.link_or_venue and 'http' in interview.link_or_venue %}
+                  <a href="{{ interview.link_or_venue }}" target="_blank" class="px-space-md py-2 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary shadow-sm transition-all flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">video_call</span>
+                    <span>Join Meeting</span>
+                  </a>
+                {% endif %}
+              {% elif interview.status == 'Completed' %}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Completed
+                </span>
+              {% elif interview.status == 'Cancelled' %}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                  Cancelled
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
       </div>
     {% else %}
-      <div class="p-12 text-center text-slate-500 space-y-3">
-        <span class="material-symbols-outlined text-[44px] text-slate-300">event_busy</span>
-        <h3 class="text-base font-bold text-slate-800">No scheduled interviews yet</h3>
-        <p class="text-xs text-slate-500 max-w-sm mx-auto">When recruiters review and shortlist your application, interview invitations will appear here with date, mode, and meeting links.</p>
+      <div class="p-space-xl text-center text-on-surface-variant flex flex-col items-center gap-space-sm">
+        <span class="material-symbols-outlined text-[44px] text-outline">calendar_today</span>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">No Scheduled Interviews</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          When recruiters shortlist your applications and schedule interview rounds, dates and meeting links will appear here.
+        </p>
+        <a href="{% url 'students:jobs' %}" class="mt-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md">
+          Browse Active Drives
+        </a>
       </div>
     {% endif %}
   </div>
 </div>
 {% endblock %}
-

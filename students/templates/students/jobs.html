@@ -1,167 +1,184 @@
 {% extends "students/base_student.html" %}
 
-{% block title %}Job Drives - PlacementHub Student{% endblock %}
-{% block page_heading %}Campus Job Opportunities{% endblock %}
+{% block title %}Browse Job Drives - PlacementHub Student{% endblock %}
+{% block page_heading %}Campus Job Drives{% endblock %}
 
 {% block student_content %}
-<div class="space-y-6">
-  <!-- Search and Filter Bar -->
-  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-    <form method="get" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
-      <!-- Search Input -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Search Roles or Companies</label>
-        <div class="relative">
-          <input type="text" name="search" value="{{ search_query }}" placeholder="e.g. SDE, Data Analyst..." class="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-2.5 top-2.5">search</span>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Banner / Summary Header -->
+  <div class="relative w-full rounded-2xl bg-gradient-to-r from-primary via-primary-container to-tertiary p-space-xl text-on-primary shadow-sm mb-space-lg overflow-hidden">
+    <div class="absolute -right-12 -top-12 w-64 h-64 rounded-full bg-surface-container-lowest/10 blur-2xl pointer-events-none"></div>
+    <div class="absolute right-48 -bottom-16 w-48 h-48 rounded-full bg-tertiary-fixed-dim/15 blur-xl pointer-events-none"></div>
+    <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+      <div class="max-w-3xl flex flex-col gap-space-xs">
+        <div class="flex items-center gap-space-sm mb-1">
+          <span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-lowest/15 backdrop-blur-md text-on-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+            <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+            Verified Drives Active
+          </span>
+          <span class="font-label-sm text-label-sm text-on-primary-container/80">• Academic Session 2024-25</span>
+        </div>
+        <h1 class="font-headline-lg text-headline-lg font-bold text-on-primary tracking-tight">
+          Campus Placement Drives &amp; Job Openings
+        </h1>
+        <p class="font-body-md text-body-md text-on-primary-container max-w-2xl">
+          Explore and apply to active campus recruitment drives vetted by University Training &amp; Placement Cell.
+        </p>
+      </div>
+      <div class="bg-surface-container-lowest/10 backdrop-blur-md rounded-xl p-space-md flex items-center gap-space-md self-start md:self-auto shadow-sm">
+        <div class="w-10 h-10 rounded-lg bg-surface-container-lowest/20 flex items-center justify-center text-on-primary shrink-0">
+          <span class="material-symbols-outlined text-[24px]">verified</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-headline-sm text-headline-sm text-on-primary font-bold leading-none">{{ jobs|length }} Drives</span>
+          <span class="font-label-sm text-label-sm text-on-primary-container leading-tight">Active for your campus</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Location Filter -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Location</label>
-        <select name="location" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">All Locations</option>
-          {% for loc in all_locations %}
-            <option value="{{ loc }}" {% if location_filter == loc %}selected{% endif %}>{{ loc }}</option>
-          {% endfor %}
-        </select>
+  <!-- Filter & Query Control Center -->
+  <form method="get" action="{% url 'students:jobs' %}" class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 mb-space-lg flex flex-col gap-space-md">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-center">
+      <!-- Search Input -->
+      <div class="lg:col-span-5 relative flex items-center">
+        <span class="material-symbols-outlined absolute left-space-md text-outline text-[22px] pointer-events-none">search</span>
+        <input name="search" value="{{ search_query }}" class="w-full bg-surface-container-low pl-11 pr-space-md py-space-sm rounded-xl text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest border border-outline-variant/30 shadow-sm transition-all" placeholder="Search by job title, company, or tech stack..." type="text"/>
       </div>
 
-      <!-- Branch Filter -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Eligible Branch</label>
-        <input type="text" name="branch" value="{{ branch_filter }}" placeholder="e.g. CSE, IT, ECE" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+      <!-- Quick Dropdowns: Location & Branch -->
+      <div class="lg:col-span-7 flex flex-wrap items-center gap-space-sm justify-between">
+        <div class="flex flex-wrap items-center gap-space-sm">
+          <!-- Location Dropdown -->
+          <select name="location" class="bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-xl font-label-md text-label-md border border-outline-variant/30 focus:outline-none cursor-pointer">
+            <option value="">All Locations</option>
+            {% for loc in all_locations %}
+              <option value="{{ loc }}" {% if location_filter == loc %}selected{% endif %}>{{ loc }}</option>
+            {% endfor %}
+          </select>
 
-      <!-- Filter Buttons -->
-      <div class="flex items-center gap-2">
-        <button type="submit" class="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-          Filter
-        </button>
+          <!-- Branch Filter Input -->
+          <input name="branch" value="{{ branch_filter }}" placeholder="Filter by branch (e.g. CS)" class="bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-xl font-label-md text-label-md border border-outline-variant/30 focus:outline-none"/>
+
+          <button type="submit" class="bg-primary-container text-on-primary px-space-md py-space-sm rounded-xl font-label-md text-label-md shadow-sm hover:bg-primary transition-all cursor-pointer">
+            Filter
+          </button>
+        </div>
+
         {% if search_query or location_filter or branch_filter %}
-          <a href="{% url 'students:jobs' %}" class="px-3.5 py-2 bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg text-sm font-semibold transition-colors">
-            Reset
+          <a href="{% url 'students:jobs' %}" class="font-label-sm text-label-sm text-error hover:underline flex items-center gap-1 font-semibold">
+            <span class="material-symbols-outlined text-[16px]">refresh</span>
+            <span>Clear Filters</span>
           </a>
         {% endif %}
       </div>
-    </form>
-  </div>
-
-  <!-- Jobs Results List -->
-  <div class="space-y-4">
-    <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-      <span>Showing <strong>{{ jobs|length }}</strong> active placement drives</span>
-      <span>Eligibility based on your CGPA: <strong>{{ student.cgpa }}</strong>, Backlogs: <strong>{{ student.backlogs }}</strong></span>
     </div>
+  </form>
 
-    {% if jobs %}
-      <div class="grid grid-cols-1 gap-4">
-        {% for job in jobs %}
-          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-              <!-- Job Header Info -->
-              <div class="space-y-1">
-                <div class="flex items-center gap-3 flex-wrap">
-                  <h3 class="text-lg font-bold text-slate-900">
-                    <a href="{% url 'students:job_detail' pk=job.pk %}" class="hover:text-blue-600">
-                      {{ job.title }}
-                    </a>
-                  </h3>
-
-                  <!-- Eligibility Status Tag -->
-                  {% if job.is_eligible %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Eligible
-                    </span>
-                  {% else %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200" title="{{ job.ineligibility_reasons|join:'; ' }}">
-                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Not Eligible
-                    </span>
-                  {% endif %}
-
-                  <!-- Applied Tag -->
-                  {% if job.has_applied %}
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                      <span class="material-symbols-outlined text-[14px]">check</span> Applied
-                    </span>
-                  {% endif %}
+  <!-- Job Listings Grid (3 Columns) -->
+  {% if jobs %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg mb-space-xl">
+      {% for job in jobs %}
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md border border-outline-variant/30 transition-all duration-200 flex flex-col justify-between overflow-hidden group">
+          <div class="p-space-lg flex flex-col gap-space-md">
+            <!-- Top Card Header -->
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="flex items-center gap-space-md">
+                <div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center font-headline-sm text-headline-sm font-bold text-on-primary-fixed shadow-sm">
+                  {{ job.company.company_name|slice:":2"|upper }}
                 </div>
-
-                <div class="flex items-center gap-2 text-sm text-slate-600 flex-wrap">
-                  <span class="font-semibold text-slate-800">{{ job.company.company_name }}</span>
-                  <span>•</span>
-                  <span>{{ job.location }}</span>
-                  <span>•</span>
-                  <span class="font-bold text-slate-900">{{ job.package_lpa }} LPA</span>
+                <div class="flex flex-col">
+                  <span class="font-headline-sm text-headline-sm text-on-surface leading-tight font-semibold">{{ job.company.company_name }}</span>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
+                      Campus Drive
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <!-- Deadline Banner -->
-              <div class="text-right shrink-0">
-                <span class="text-xs text-slate-500 block">Apply Before</span>
-                <span class="text-xs font-semibold text-slate-800">{{ job.deadline|date:"M d, Y" }}</span>
+              <!-- Match Score / AI Score Placeholder -->
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low font-label-md text-label-md text-on-surface shadow-sm" title="AI match score unlocks in Phase 8">
+                <span class="material-symbols-outlined text-[16px] text-primary">neurology</span>
+                <span class="font-bold text-on-surface-variant">—</span>
               </div>
             </div>
 
-            <!-- Job Description Snippet -->
-            <p class="text-xs text-slate-600 line-clamp-2">
-              {{ job.description }}
-            </p>
-
-            <!-- Required Skills Chips -->
-            {% if job.required_skills.all %}
-              <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                <span class="text-xs text-slate-400 mr-1">Skills:</span>
-                {% for skill in job.required_skills.all %}
-                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px] font-medium">
-                    {{ skill.name }}
-                  </span>
-                {% endfor %}
+            <!-- Role & Financial Metrics -->
+            <div class="flex flex-col gap-1">
+              <a href="{% url 'students:job_detail' pk=job.pk %}" class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">
+                {{ job.title }}
+              </a>
+              <div class="flex items-baseline gap-space-xs mt-1">
+                <span class="font-headline-md text-headline-md text-primary font-bold">
+                  {{ job.package_lpa }} LPA
+                </span>
               </div>
-            {% endif %}
-
-            <!-- Eligibility Note if Ineligible -->
-            {% if not job.is_eligible %}
-              <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-lg text-xs text-amber-800 flex items-start gap-2">
-                <span class="material-symbols-outlined text-[16px] text-amber-600 shrink-0 mt-0.5">info</span>
-                <span>{{ job.ineligibility_reasons|join:" • " }}</span>
+              <div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+                <span class="material-symbols-outlined text-[16px]">location_on</span>
+                <span>{{ job.location }}</span>
               </div>
-            {% endif %}
+            </div>
 
-            <!-- Actions Footer -->
-            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-              <div class="text-xs text-slate-500">
-                Min CGPA: <strong>{{ job.min_cgpa }}</strong> | Max Backlogs: <strong>{{ job.max_backlogs }}</strong>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-3.5 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
-                  Check Skill Gap
-                </a>
-
+            <!-- Eligibility Matrix Box -->
+            <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+              <div class="flex items-center justify-between">
                 {% if job.has_applied %}
-                  <a href="{% url 'students:applications' %}" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200 transition-colors">
-                    View Application
-                  </a>
+                  <span class="font-label-sm text-label-sm text-blue-700 font-semibold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-blue-600">check_circle</span>
+                    Applied
+                  </span>
+                {% elif job.is_eligible %}
+                  <span class="font-label-sm text-label-sm text-emerald-700 font-semibold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+                    Eligible
+                  </span>
                 {% else %}
-                  <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-                    View & Apply
-                  </a>
+                  <span class="font-label-sm text-label-sm text-amber-700 font-semibold flex items-center gap-1" title="{{ job.ineligibility_reasons|join:', ' }}">
+                    <span class="material-symbols-outlined text-[16px] text-amber-600">error</span>
+                    Not Eligible
+                  </span>
                 {% endif %}
+                <span class="font-label-sm text-label-sm text-outline">Deadline: {{ job.deadline|date:"M d, Y" }}</span>
               </div>
+              <p class="text-on-surface-variant text-[12px] leading-relaxed">
+                Min CGPA: {{ job.min_cgpa }} • Max Backlogs: {{ job.max_backlogs }}
+              </p>
+            </div>
+
+            <!-- Tech Stack Tags -->
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              {% for skill in job.required_skills.all|slice:":4" %}
+                <span class="px-2.5 py-1 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface font-medium">{{ skill.name }}</span>
+              {% empty %}
+                <span class="text-xs text-on-surface-variant">General Skills</span>
+              {% endfor %}
             </div>
           </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500 space-y-2">
-        <span class="material-symbols-outlined text-[44px] text-slate-300">search_off</span>
-        <h4 class="text-base font-bold text-slate-800">No matching campus jobs found</h4>
-        <p class="text-xs text-slate-500 max-w-md mx-auto">Try adjusting your search criteria or resetting filters to see all open placement drives.</p>
-      </div>
-    {% endif %}
-  </div>
+
+          <!-- Card Action Footer -->
+          <div class="p-space-lg pt-0 flex items-center justify-between gap-space-sm border-t border-outline-variant/10 mt-space-md">
+            <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="flex-1 py-2 text-center rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
+              Skill Gap
+            </a>
+            <a href="{% url 'students:job_detail' pk=job.pk %}" class="flex-1 py-2 text-center rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:brightness-105 transition-all shadow-sm">
+              View Details
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="rounded-xl bg-surface-container-lowest p-space-xl text-center border border-outline-variant/30 flex flex-col items-center gap-space-sm my-space-lg">
+      <span class="material-symbols-outlined text-[48px] text-outline">work_off</span>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">No Campus Drives Found</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+        No active recruitment drives match your filter criteria or there are no open drives at this time.
+      </p>
+      <a href="{% url 'students:jobs' %}" class="mt-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-md text-label-md">
+        View All Drives
+      </a>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
-

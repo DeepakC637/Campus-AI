@@ -1,124 +1,209 @@
 {% extends "students/base_student.html" %}
 
 {% block title %}Skill Gap Analysis - {{ job.title }}{% endblock %}
-{% block page_heading %}Skill Gap Analysis{% endblock %}
+{% block page_heading %}Skill Gap Benchmark{% endblock %}
 
 {% block student_content %}
-<div class="max-w-4xl space-y-6">
-  <!-- Back Link -->
-  <div>
-    <a href="{% url 'students:job_detail' pk=job.pk %}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800">
-      <span class="material-symbols-outlined text-[16px]">arrow_back</span>
-      <span>Back to {{ job.title }}</span>
-    </a>
-  </div>
-
-  <!-- Job & Match Summary Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-      <div>
-        <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Placement Drive Role</span>
-        <h2 class="text-2xl font-bold text-slate-900 mt-0.5">{{ job.title }}</h2>
-        <p class="text-sm text-slate-600">{{ job.company.company_name }} • {{ job.location }} • {{ job.package_lpa }} LPA</p>
-      </div>
-
-      <!-- Match Score Badge -->
-      <div class="text-center sm:text-right bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 shrink-0">
-        <span class="text-xs font-semibold text-slate-500 uppercase block">Skill Match</span>
-        <span class="text-2xl font-bold {% if match_percentage >= 70 %}text-emerald-600{% elif match_percentage >= 40 %}text-amber-600{% else %}text-red-600{% endif %}">
-          {{ match_percentage }}%
-        </span>
-      </div>
-    </div>
-
-    <!-- Match Progress Bar -->
-    <div class="space-y-2">
-      <div class="flex justify-between text-xs font-medium text-slate-600">
-        <span>Skills Alignment</span>
-        <span>{{ matched_skills|length }} of {{ job.required_skills.count }} Required Skills Matched</span>
-      </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="h-3 rounded-full transition-all duration-300 {% if match_percentage >= 70 %}bg-emerald-500{% elif match_percentage >= 40 %}bg-amber-500{% else %}bg-red-500{% endif %}" style="width: {{ match_percentage }}%"></div>
-      </div>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Top Breadcrumb & Quick Back Bar -->
+  <div class="flex flex-wrap items-center justify-between gap-space-sm py-space-sm mb-space-md">
+    <div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+      <a class="inline-flex items-center gap-1 text-primary font-label-md text-label-md hover:underline" href="{% url 'students:job_detail' pk=job.pk %}">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to {{ job.title }}</span>
+      </a>
+      <span class="text-outline">/</span>
+      <span>Skill Gap Analysis</span>
     </div>
   </div>
 
-  <!-- Detailed Skills Comparison Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Matched Skills Card -->
-    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-          <span class="material-symbols-outlined text-[20px]">check</span>
+  <!-- Header Section -->
+  <section class="mb-space-lg">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-sm">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-space-xs px-space-sm py-1 bg-secondary-container/50 text-primary font-label-sm text-label-sm rounded-full mb-space-xs">
+          <span class="material-symbols-outlined text-[16px]">insights</span>
+          <span>Placement Competency Benchmark Engine</span>
         </div>
-        <div>
-          <h3 class="text-base font-bold text-slate-900">Matched Skills ({{ matched_skills|length }})</h3>
-          <p class="text-xs text-slate-500">Skills on your profile required for this role.</p>
-        </div>
-      </div>
-
-      {% if matched_skills %}
-        <div class="flex flex-wrap gap-2 pt-2">
-          {% for skill in matched_skills %}
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
-              <span>{{ skill }}</span>
-            </span>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-xs text-slate-500 italic pt-2">No overlapping skills found on your current profile.</p>
-      {% endif %}
-    </div>
-
-    <!-- Missing Skills Card -->
-    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-          <span class="material-symbols-outlined text-[20px]">priority_high</span>
-        </div>
-        <div>
-          <h3 class="text-base font-bold text-slate-900">Missing Skills ({{ missing_skills|length }})</h3>
-          <p class="text-xs text-slate-500">Skills required by the job that aren't on your profile.</p>
-        </div>
-      </div>
-
-      {% if missing_skills %}
-        <div class="flex flex-wrap gap-2 pt-2">
-          {% for skill in missing_skills %}
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-              <span class="material-symbols-outlined text-[16px] text-amber-600">add_circle_outline</span>
-              <span>{{ skill }}</span>
-            </span>
-          {% endfor %}
-        </div>
-        <p class="text-[11px] text-slate-500 pt-1">
-          Possess any of these skills? Update your profile skills to increase compatibility!
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Skill Gap Analysis &amp; Competency Match</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          Benchmark your verified profile skills against employer requirements for <strong>{{ job.title }}</strong> at <strong>{{ job.company.company_name }}</strong>.
         </p>
-      {% else %}
-        <div class="pt-2 text-xs text-emerald-700 bg-emerald-50 p-3 rounded-lg border border-emerald-100 flex items-center gap-2">
-          <span class="material-symbols-outlined text-[18px]">sentiment_very_satisfied</span>
-          <span>Great news! You possess all required skills for this position.</span>
-        </div>
-      {% endif %}
+      </div>
+      <div class="flex items-center gap-space-sm self-start lg:self-auto">
+        <a href="{% url 'students:profile' %}" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md shadow-sm transition-all">
+          <span class="material-symbols-outlined text-[18px] text-primary">edit</span>
+          <span>Update Profile Skills</span>
+        </a>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Next Steps & Action Card -->
-  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-    <div class="text-xs text-slate-600 space-y-0.5">
-      <span class="font-bold text-slate-800 block text-sm">Need to update your technical skillset?</span>
-      <span>You can add or update skills on your student profile anytime.</span>
+  <!-- Overall Benchmark Panel -->
+  <section class="mb-space-xl">
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 relative overflow-hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+        <!-- Job Meta Info -->
+        <div class="lg:col-span-5 flex flex-col gap-space-sm">
+          <span class="font-semibold text-on-surface flex items-center gap-1.5 font-label-md text-label-md">
+            <span class="material-symbols-outlined text-[18px] text-primary">target</span>
+            <span>Target Role &amp; CTC Package</span>
+          </span>
+          <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20">
+            <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">{{ job.title }}</h2>
+            <div class="flex items-center gap-space-md text-body-sm font-body-sm text-on-surface-variant mt-2 flex-wrap">
+              <span class="flex items-center gap-1 font-semibold text-on-surface"><span class="material-symbols-outlined text-[16px] text-primary">domain</span> {{ job.company.company_name }}</span>
+              <span>•</span>
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-outline">location_on</span> {{ job.location }}</span>
+              <span>•</span>
+              <span class="text-primary font-bold">{{ job.package_lpa }} LPA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compatibility Gauge & Metrics -->
+        <div class="lg:col-span-7 flex flex-col sm:flex-row items-center justify-between gap-space-lg bg-surface-container-low p-space-md rounded-xl border border-outline-variant/20">
+          <div class="flex items-center gap-space-md">
+            <!-- Radial Progress Gauge -->
+            <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
+              <svg class="w-20 h-20 -rotate-90" viewbox="0 0 36 36">
+                <path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                <path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="{{ match_percentage }}, 100" stroke-linecap="round" stroke-width="3.5"></path>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="font-headline-sm text-headline-sm text-on-surface font-bold leading-none">{{ match_percentage }}<span class="text-body-sm text-primary">%</span></span>
+                <span class="text-[9px] text-on-surface-variant uppercase font-semibold tracking-wider">MATCH</span>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Skills Alignment</span>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+                {{ matched_skills|length }} of {{ job.required_skills.count }} required competencies currently present on your profile.
+              </p>
+            </div>
+          </div>
+
+          <!-- Missing Skills Delta Pill -->
+          <div class="w-full sm:w-auto flex-shrink-0 bg-surface-container-lowest p-space-sm sm:px-space-md sm:py-space-sm rounded-xl shadow-sm text-center sm:text-right border border-outline-variant/20">
+            {% if missing_skills %}
+              <span class="font-label-sm text-label-sm text-error font-semibold flex items-center justify-center sm:justify-end gap-1">
+                <span class="material-symbols-outlined text-[16px]">priority_high</span>
+                <span>{{ missing_skills|length }} Missing Skills</span>
+              </span>
+            {% else %}
+              <span class="font-label-sm text-label-sm text-emerald-700 font-semibold flex items-center justify-center sm:justify-end gap-1">
+                <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>Full Skill Alignment</span>
+              </span>
+            {% endif %}
+            <span class="font-body-sm text-body-sm text-on-surface-variant block mt-1">Profile Readiness</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flex items-center gap-3 shrink-0">
-      <a href="{% url 'students:profile' %}" class="px-4 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
-        Edit Profile Skills
-      </a>
-      <a href="{% url 'students:job_detail' pk=job.pk %}" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-        Proceed to Job Detail
-      </a>
+  </section>
+
+  <!-- Two-Column Deep-Dive Skills Breakdown -->
+  <section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg mb-space-xl">
+    <!-- LEFT: Verified Skills Matched -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between pb-space-md mb-space-md border-b border-outline-variant/20">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+              <span class="material-symbols-outlined text-[20px]">verified</span>
+            </div>
+            <div>
+              <h2 class="font-headline-sm text-headline-sm text-on-surface">Matched Skills ({{ matched_skills|length }})</h2>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Validated skills matching employer criteria</span>
+            </div>
+          </div>
+          <span class="px-space-sm py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-label-md text-label-md font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">check_circle</span>
+            <span>{{ matched_skills|length }} of {{ job.required_skills.count }}</span>
+          </span>
+        </div>
+
+        <!-- Matched Skills List -->
+        <div class="space-y-space-sm">
+          {% for skill in matched_skills %}
+            <div class="p-space-sm sm:p-space-md rounded-xl bg-surface-container-low flex items-center justify-between gap-space-sm">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-7 h-7 rounded-lg bg-surface-container-lowest flex items-center justify-center text-emerald-600 shadow-sm">
+                  <span class="material-symbols-outlined text-[18px]">check</span>
+                </div>
+                <span class="font-label-md text-label-md font-semibold text-on-surface">{{ skill }}</span>
+              </div>
+              <span class="font-label-sm text-label-sm font-semibold text-emerald-700 flex items-center gap-0.5">
+                <span>Matched</span>
+              </span>
+            </div>
+          {% empty %}
+            <p class="font-body-sm text-body-sm text-on-surface-variant italic py-space-md">No overlapping skills found on your current profile.</p>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-  </div>
+
+    <!-- RIGHT: Missing Skills -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between pb-space-md mb-space-md border-b border-outline-variant/20">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700">
+              <span class="material-symbols-outlined text-[20px]">warning</span>
+            </div>
+            <div>
+              <h2 class="font-headline-sm text-headline-sm text-on-surface">Missing Skills ({{ missing_skills|length }})</h2>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Required by job but absent from profile</span>
+            </div>
+          </div>
+          <span class="px-space-sm py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-label-md text-label-md font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">priority_high</span>
+            <span>{{ missing_skills|length }} Gap</span>
+          </span>
+        </div>
+
+        <!-- Missing Skills List -->
+        <div class="space-y-space-sm">
+          {% for skill in missing_skills %}
+            <div class="p-space-sm sm:p-space-md rounded-xl bg-surface-container-low flex items-center justify-between gap-space-sm">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-7 h-7 rounded-lg bg-surface-container-lowest flex items-center justify-center text-amber-600 shadow-sm">
+                  <span class="material-symbols-outlined text-[18px]">add_circle_outline</span>
+                </div>
+                <span class="font-label-md text-label-md font-semibold text-on-surface">{{ skill }}</span>
+              </div>
+              <a href="{% url 'students:profile' %}" class="font-label-sm text-label-sm text-primary font-semibold hover:underline">
+                Add to Profile
+              </a>
+            </div>
+          {% empty %}
+            <div class="p-space-md rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">sentiment_very_satisfied</span>
+              <span class="font-body-sm text-body-sm font-medium">Congratulations! You possess all required skills for this job.</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Course & Upskilling Recommendations Placeholder -->
+  <section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 flex flex-col gap-space-md">
+    <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant/20">
+      <span class="material-symbols-outlined text-primary text-[24px]">school</span>
+      <div>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">AI Career Upskilling &amp; Recommended Courses</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Personalized course pathways to close missing skill gaps</p>
+      </div>
+    </div>
+    <div class="p-space-md rounded-xl bg-surface-container-low flex items-center gap-space-md text-on-surface-variant">
+      <span class="material-symbols-outlined text-primary text-[28px]">auto_awesome</span>
+      <p class="font-body-md text-body-md">
+        Automated course recommendations and external learning pathways unlock in <strong>Phase 8 (AI Engine Integration)</strong>.
+      </p>
+    </div>
+  </section>
 </div>
 {% endblock %}
-

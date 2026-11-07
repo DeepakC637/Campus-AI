@@ -1,22 +1,42 @@
 {% extends "students/base_student.html" %}
 
 {% block title %}Resume Management - PlacementHub Student{% endblock %}
-{% block page_heading %}Resume Upload & History{% endblock %}
+{% block page_heading %}Resume Upload &amp; AI Analysis{% endblock %}
 
 {% block student_content %}
-<div class="max-w-4xl space-y-6">
-  <!-- Upload Resume Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
-    <div>
-      <h2 class="text-base font-bold text-slate-800">Upload New Resume</h2>
-      <p class="text-xs text-slate-500 mt-1">Upload a PDF or DOCX file (up to 10MB). Uploading a new resume automatically sets it as your active resume.</p>
+<div class="flex flex-col w-full pb-space-xl">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md mb-space-lg">
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+        <span class="material-symbols-outlined text-[16px]">verified</span>
+        <span>Campus Career Suite • Placement Cycle 2024-25</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface">Resume Management &amp; AI Analysis</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+        Upload, manage, and benchmark your resume against top campus recruiter ATS criteria.
+      </p>
     </div>
+    {% if active_resume %}
+      <div class="flex items-center gap-space-sm self-start md:self-auto">
+        <a href="{{ active_resume.file.url }}" target="_blank" class="flex items-center gap-space-sm bg-primary-container text-on-primary px-space-md py-space-sm rounded-xl font-label-md text-label-md shadow-sm hover:bg-primary transition-all duration-150">
+          <span class="material-symbols-outlined text-[18px]">download</span>
+          <span>Download Active Resume</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
 
-    <form method="post" enctype="multipart/form-data" class="space-y-4 pt-2">
+  <!-- Upload Resume Card / Zone -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col items-center justify-center relative overflow-hidden group mb-space-lg">
+    <div class="absolute -top-12 -right-12 w-48 h-48 bg-secondary-container/40 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-10 -left-10 w-44 h-44 bg-primary-fixed/30 rounded-full blur-xl pointer-events-none"></div>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'students:resume' %}" class="w-full flex flex-col items-center justify-center relative z-10" id="resume-upload-form">
       {% csrf_token %}
 
       {% if form.errors %}
-        <div class="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+        <div class="w-full p-space-md mb-space-md rounded-xl bg-rose-50 border border-rose-200 text-rose-800 font-body-sm text-body-sm">
           {% for field, errors in form.errors.items %}
             {% for error in errors %}
               <p>{{ error }}</p>
@@ -25,83 +45,166 @@
         </div>
       {% endif %}
 
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Select Resume Document</label>
-        {{ form.file }}
-      </div>
+      <div class="w-full flex flex-col items-center justify-center py-space-xl px-space-md rounded-xl bg-surface-container-low transition-all duration-200 border-2 border-dashed border-outline-variant/60 hover:border-primary-container text-center" id="drop-zone">
+        <div class="w-16 h-16 rounded-full bg-secondary-container/60 flex items-center justify-center mb-space-md group-hover:scale-105 transition-transform duration-200">
+          <span class="material-symbols-outlined text-primary text-[36px]">cloud_upload</span>
+        </div>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">
+          Select or drag your resume here
+        </h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md mb-space-md">
+          Supported formats: PDF, DOCX (Max 10MB). Uploading a new resume sets it as your active campus credential.
+        </p>
 
-      <div class="flex justify-end pt-2">
-        <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
-          <span class="material-symbols-outlined text-[18px]">upload</span>
-          <span>Upload Resume</span>
-        </button>
+        <!-- Real Form Input -->
+        <div class="flex flex-col sm:flex-row items-center gap-space-sm">
+          <label class="cursor-pointer">
+            <span class="bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-md text-label-md px-space-md py-2.5 rounded-xl hover:bg-surface-container transition-all flex items-center gap-space-xs shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">folder_open</span>
+              <span id="file-name-display">Choose File</span>
+            </span>
+            <input type="file" name="file" id="id_file" accept=".pdf,.docx" class="hidden" required onchange="handleFileSelected(this)"/>
+          </label>
+          <button type="submit" class="bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-2.5 rounded-xl shadow-sm hover:bg-primary transition-all flex items-center gap-space-xs cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">upload</span>
+            <span>Upload &amp; Activate</span>
+          </button>
+        </div>
       </div>
     </form>
+
+    <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-space-md mt-space-md pt-space-md text-on-surface-variant border-t border-outline-variant/20">
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+        <span class="font-body-sm text-body-sm">Automated Recruiter ATS Screening</span>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-primary text-[20px]">lock</span>
+        <span class="font-body-sm text-body-sm">Strictly Private to Verified Recruiters</span>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-primary text-[20px]">speed</span>
+        <span class="font-body-sm text-body-sm">Sub-second Parsing &amp; Skill Extraction</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Active Resume Card -->
-  {% if active_resume %}
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-[24px]">description</span>
+  <!-- Active Resume & AI Diagnostics Card -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-space-lg flex flex-col gap-space-lg mb-space-lg">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-9 h-9 rounded-xl bg-secondary-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h3 class="font-bold text-slate-900 text-sm">{{ active_resume.file.name }}</h3>
-            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">Active Resume</span>
-          </div>
-          <p class="text-xs text-slate-600 mt-0.5">Uploaded on {{ active_resume.uploaded_at|date:"M d, Y - h:i A" }}</p>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface">Resume Diagnostics &amp; Active File</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Validated against active Tier-1 campus hiring profiles</p>
         </div>
       </div>
-      <a href="{{ active_resume.file.url }}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-blue-200 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition-colors shrink-0">
-        <span class="material-symbols-outlined text-[16px]">visibility</span>
-        <span>View Document</span>
-      </a>
+      <div class="flex items-center gap-space-xs">
+        <span class="w-2.5 h-2.5 rounded-full {% if active_resume %}bg-emerald-500{% else %}bg-amber-500{% endif %}"></span>
+        <span class="font-label-sm text-label-sm font-semibold {% if active_resume %}text-emerald-700{% else %}text-amber-700{% endif %}">
+          {% if active_resume %}Active Profile Synchronized{% else %}No Active Resume Uploaded{% endif %}
+        </span>
+      </div>
     </div>
-  {% else %}
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center text-amber-800 space-y-1">
-      <p class="text-sm font-semibold">No active resume uploaded yet.</p>
-      <p class="text-xs text-amber-700">Please upload your resume above to ensure recruiters can review your profile.</p>
-    </div>
-  {% endif %}
 
-  <!-- Resume Version History -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-slate-100">
-      <h3 class="text-base font-bold text-slate-800">Resume Version History</h3>
-      <p class="text-xs text-slate-500 mt-1">Previous versions uploaded to PlacementHub.</p>
+    <!-- Active Resume Summary Card -->
+    {% if active_resume %}
+      <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md border border-outline-variant/20">
+        <div class="flex items-center gap-space-md">
+          <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[24px]">description</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="font-headline-sm text-[16px] text-on-surface font-semibold truncate">{{ active_resume.file.name }}</span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">Current Active</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Uploaded on {{ active_resume.uploaded_at|date:"M d, Y - h:i A" }}</span>
+          </div>
+        </div>
+        <a href="{{ active_resume.file.url }}" target="_blank" class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/30 text-primary font-label-md text-label-md hover:bg-surface-container transition-colors shrink-0">
+          <span class="material-symbols-outlined text-[16px]">visibility</span>
+          <span>View Document</span>
+        </a>
+      </div>
+    {% endif %}
+
+    <!-- Diagnostics Breakdown (Phase 8 Placeholder) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center bg-surface-container-low p-space-md rounded-xl">
+      <!-- Score Circular Gauge Placeholder -->
+      <div class="lg:col-span-4 flex flex-col items-center justify-center p-space-md bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20">
+        <div class="relative w-32 h-32 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewbox="0 0 120 120">
+            <circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
+          </svg>
+          <div class="absolute flex flex-col items-center justify-center text-center">
+            <span class="font-headline-xl text-headline-xl text-on-surface leading-none">—</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+          </div>
+        </div>
+        <div class="mt-space-sm text-center">
+          <p class="font-headline-sm text-[16px] text-on-surface font-semibold">ATS Compatibility Score</p>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">AI ATS analysis engine coming soon in Phase 8</p>
+        </div>
+      </div>
+
+      <!-- Mini Metrics Triad -->
+      <div class="lg:col-span-8 flex flex-col gap-space-md">
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-outline-variant/20 flex gap-space-md">
+          <span class="material-symbols-outlined text-primary text-[24px] shrink-0 mt-0.5">psychology</span>
+          <div class="flex flex-col gap-space-xs">
+            <span class="font-label-md text-label-md font-semibold text-on-surface">AI Resume Diagnostics Status</span>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Resume text extraction and skill gap benchmark analytics are scheduled for Phase 8. Currently, uploaded resumes are stored and served directly to recruiters reviewing your job applications.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume Version History Table -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+    <div class="p-space-lg border-b border-outline-variant/20 flex items-center justify-between">
+      <div>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Resume Version History</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Archive of uploaded resumes and submission history</p>
+      </div>
+      <span class="font-label-sm text-label-sm text-on-surface-variant">{{ resumes|length }} versions logged</span>
     </div>
 
     {% if resumes %}
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-700">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+        <table class="w-full text-left text-body-sm text-on-surface">
+          <thead class="bg-surface-container-low text-on-surface-variant font-label-md text-label-sm uppercase font-semibold border-b border-outline-variant/20">
             <tr>
-              <th class="px-6 py-3">File Name</th>
-              <th class="px-6 py-3">Upload Date</th>
-              <th class="px-6 py-3">Status</th>
-              <th class="px-6 py-3 text-right">Action</th>
+              <th class="px-space-lg py-3">File Name</th>
+              <th class="px-space-lg py-3">Uploaded Date</th>
+              <th class="px-space-lg py-3">Status</th>
+              <th class="px-space-lg py-3 text-right">Action</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-outline-variant/20">
             {% for r in resumes %}
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 font-medium text-slate-900 flex items-center gap-2">
-                  <span class="material-symbols-outlined text-[18px] text-slate-400">attach_file</span>
-                  <span class="truncate max-w-xs">{{ r.file.name }}</span>
+              <tr class="hover:bg-surface-container-low transition-colors">
+                <td class="px-space-lg py-4 font-medium text-on-surface flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[20px] text-primary">description</span>
+                  <span class="truncate max-w-sm">{{ r.file.name }}</span>
                 </td>
-                <td class="px-6 py-4 text-xs text-slate-500">{{ r.uploaded_at|date:"M d, Y - h:i A" }}</td>
-                <td class="px-6 py-4">
+                <td class="px-space-lg py-4 text-on-surface-variant">{{ r.uploaded_at|date:"M d, Y - h:i A" }}</td>
+                <td class="px-space-lg py-4">
                   {% if r.is_active %}
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Active</span>
                   {% else %}
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500">Archived</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container-high text-on-surface-variant">Archived</span>
                   {% endif %}
                 </td>
-                <td class="px-6 py-4 text-right">
-                  <a href="{{ r.file.url }}" target="_blank" class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                    Download
+                <td class="px-space-lg py-4 text-right">
+                  <a href="{{ r.file.url }}" target="_blank" class="inline-flex items-center gap-1 text-primary hover:underline font-label-md text-label-sm font-semibold">
+                    <span>Download</span>
+                    <span class="material-symbols-outlined text-[14px]">open_in_new</span>
                   </a>
                 </td>
               </tr>
@@ -110,9 +213,19 @@
         </table>
       </div>
     {% else %}
-      <div class="p-8 text-center text-slate-500 text-sm">No resume history available.</div>
+      <div class="p-space-xl text-center text-on-surface-variant flex flex-col items-center gap-2">
+        <span class="material-symbols-outlined text-[36px] text-outline">history</span>
+        <p class="font-body-md text-body-md">No previous resumes in history.</p>
+      </div>
     {% endif %}
   </div>
 </div>
-{% endblock %}
 
+<script>
+  function handleFileSelected(input) {
+    if (input.files && input.files[0]) {
+      document.getElementById('file-name-display').innerText = input.files[0].name;
+    }
+  }
+</script>
+{% endblock %}
