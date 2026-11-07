@@ -1,132 +1,200 @@
-{% extends 'core/base_admin.html' %}
+{% extends "core/base_admin.html" %}
 
-{% block title %}Admin Dashboard - PlacementHub{% endblock %}
-{% block header_title %}Institutional Overview{% endblock %}
+{% block header_title %}Institutional Command Center{% endblock %}
 
-{% block content %}
-<div class="space-y-8">
-    <!-- Stat Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <!-- Total Students -->
-        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Students</p>
-                <p class="text-2xl font-bold text-slate-800 mt-1">{{ total_students }}</p>
-                <p class="text-xs text-slate-400 mt-1">{{ placed_count }} currently placed</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            </div>
-        </div>
-
-        <!-- Total Recruiters -->
-        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Recruiters</p>
-                <p class="text-2xl font-bold text-slate-800 mt-1">{{ total_recruiters }}</p>
-                <p class="text-xs text-slate-400 mt-1">{% if pending_recruiters_count %}{{ pending_recruiters_count }} pending approval{% else %}All approved{% endif %}</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-            </div>
-        </div>
-
-        <!-- Active Jobs -->
-        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Active Jobs</p>
-                <p class="text-2xl font-bold text-slate-800 mt-1">{{ active_jobs }}</p>
-                <p class="text-xs text-slate-400 mt-1">Currently open for applications</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-            </div>
-        </div>
-
-        <!-- Placement Rate % -->
-        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Placement Rate</p>
-                <p class="text-2xl font-bold text-slate-800 mt-1">{{ placement_rate }}%</p>
-                <p class="text-xs text-emerald-600 mt-1 font-medium">{{ total_placements_count }} total verified offers</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-        </div>
+{% block admin_content %}
+<div class="flex flex-col w-full gap-space-lg">
+  <!-- Command Header & Quick Action Row -->
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+    <div class="space-y-space-xs">
+      <div class="flex items-center gap-space-sm text-label-sm font-label-sm text-primary tracking-wide uppercase font-semibold">
+        <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <span>Institutional Management Sync Active</span>
+      </div>
+      <h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Institutional Placement Command Center</h1>
+      <p class="text-body-md font-body-md text-on-surface-variant">Central University Placement Cell Overview &bull; Live Drive Analytics</p>
     </div>
 
-    <!-- Approvals Banner if any -->
-    {% if pending_students_count or pending_recruiters_count %}
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-amber-900 text-sm">Pending Verification & Approvals</h3>
-                    <p class="text-xs text-amber-800 mt-0.5">
-                        {{ pending_students_count }} student{{ pending_students_count|pluralize }} unverified, {{ pending_recruiters_count }} recruiter{{ pending_recruiters_count|pluralize }} awaiting platform approval.
-                    </p>
-                </div>
-            </div>
-            <a href="{% url 'core:admin_approvals' %}" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
-                Review Approvals Queue &rarr;
-            </a>
-        </div>
-    {% endif %}
-
-    <!-- 2 Column Section: Recent Placements & Recent Jobs -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Recent Placements -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-slate-800 text-base">Recent Placements</h3>
-                <a href="{% url 'core:admin_placements' %}" class="text-xs font-semibold text-blue-600 hover:text-blue-800">View All</a>
-            </div>
-            <div class="divide-y divide-slate-100">
-                {% for record in recent_placements %}
-                    <div class="py-3 flex items-center justify-between text-sm">
-                        <div>
-                            <p class="font-bold text-slate-800">{{ record.student.full_name }}</p>
-                            <p class="text-xs text-slate-500">{{ record.company.company_name }} &bull; {{ record.student.branch }}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-flex px-2 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700">₹{{ record.package_lpa }} LPA</span>
-                            <p class="text-[11px] text-slate-400 mt-0.5">{{ record.offer_date|date:"M d, Y"|default:"Recently" }}</p>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p class="text-xs text-slate-400 py-6 text-center">No placement records recorded yet.</p>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Recent Job Openings -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-slate-800 text-base">Recent Job Openings</h3>
-                <span class="text-xs text-slate-400">{{ active_jobs }} active openings</span>
-            </div>
-            <div class="divide-y divide-slate-100">
-                {% for job in recent_jobs %}
-                    <div class="py-3 flex items-center justify-between text-sm">
-                        <div>
-                            <p class="font-bold text-slate-800">{{ job.title }}</p>
-                            <p class="text-xs text-slate-500">{{ job.company.company_name }} &bull; {{ job.location }}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold {% if job.status == 'OPEN' %}bg-emerald-50 text-emerald-700{% elif job.status == 'DRAFT' %}bg-amber-50 text-amber-700{% else %}bg-slate-100 text-slate-600{% endif %}">
-                                {{ job.status }}
-                            </span>
-                            <p class="text-[11px] text-slate-400 mt-0.5">₹{{ job.package_lpa }} LPA</p>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p class="text-xs text-slate-400 py-6 text-center">No job postings created yet.</p>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- Quick Action Bar -->
+    <div class="flex flex-wrap items-center gap-space-sm">
+      <a href="{% url 'core:admin_approvals' %}" class="relative flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-label-md font-label-md transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
+        <span>Approvals Queue</span>
+        {% if pending_students_count or pending_recruiters_count %}
+          <span class="ml-space-xs px-2 py-0.5 rounded-full bg-primary text-on-primary text-label-sm font-bold text-xs">
+            {{ pending_students_count|add:pending_recruiters_count }}
+          </span>
+        {% endif %}
+      </a>
+      <a href="{% url 'core:admin_placement_create' %}" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary text-label-md font-label-md transition-all shadow-sm hover:shadow-md">
+        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+        <span>Record Placement Offer</span>
+      </a>
     </div>
+  </div>
+
+  <!-- Key Institutional Metrics (4 Cards) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+    <!-- Card 1: Total Students -->
+    <div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/15 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <span class="text-label-md font-label-md text-on-surface-variant">Total Students Registered</span>
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">school</span>
+        </div>
+      </div>
+      <div class="mt-space-md">
+        <div class="text-headline-md font-headline-md text-on-surface tracking-tight font-bold">{{ total_students }}</div>
+        <div class="flex items-center gap-space-xs mt-space-xs">
+          <span class="text-label-sm font-label-sm text-primary font-semibold">{{ pending_students_count }} unverified</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">requiring verification</span>
+        </div>
+      </div>
+      <div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+        <div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 100%"></div>
+      </div>
+    </div>
+
+    <!-- Card 2: Corporate Partners -->
+    <div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/15 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <span class="text-label-md font-label-md text-on-surface-variant">Corporate Partners</span>
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-tertiary">
+          <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+        </div>
+      </div>
+      <div class="mt-space-md">
+        <div class="text-headline-md font-headline-md text-on-surface tracking-tight font-bold">{{ total_recruiters }}</div>
+        <div class="flex items-center gap-space-xs mt-space-xs">
+          <span class="text-label-sm font-label-sm text-amber-700 font-semibold">{{ pending_recruiters_count }} pending</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">auditing reviews</span>
+        </div>
+      </div>
+      <div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+        <div class="bg-tertiary h-full rounded-full transition-all duration-1000" style="width: 75%"></div>
+      </div>
+    </div>
+
+    <!-- Card 3: Active Job Drives -->
+    <div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/15 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <span class="text-label-md font-label-md text-on-surface-variant">Active Job Drives</span>
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
+          <span class="material-symbols-outlined text-[20px]">work_history</span>
+        </div>
+      </div>
+      <div class="mt-space-md">
+        <div class="text-headline-md font-headline-md text-on-surface tracking-tight font-bold">{{ active_jobs }}</div>
+        <div class="flex items-center gap-space-xs mt-space-xs">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-600"></span>
+          <span class="text-body-sm font-body-sm text-on-surface">Accepting student applications</span>
+        </div>
+      </div>
+      <div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+        <div class="bg-secondary h-full rounded-full transition-all duration-1000" style="width: 65%"></div>
+      </div>
+    </div>
+
+    <!-- Card 4: Placement Rate -->
+    <div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/15 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <span class="text-label-md font-label-md text-on-surface-variant">Placement Rate</span>
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container">
+          <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+        </div>
+      </div>
+      <div class="mt-space-md">
+        <div class="text-headline-md font-headline-md text-on-surface tracking-tight font-bold">{{ placement_rate }}%</div>
+        <div class="flex items-center gap-space-xs mt-space-xs">
+          <span class="text-label-sm font-label-sm text-emerald-700 font-semibold">{{ placed_count }} of {{ total_students }}</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">students placed</span>
+        </div>
+      </div>
+      <div class="w-full bg-surface-container h-1.5 rounded-full mt-space-md overflow-hidden">
+        <div class="bg-primary-container h-full rounded-full transition-all duration-1000" style="width: {{ placement_rate }}%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Grid: Recent Placements & Recent Job Drives -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+    <!-- Left Card: Recent Placement Records (7 Cols) -->
+    <div class="lg:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 p-space-lg flex flex-col gap-space-md">
+      <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/15">
+        <div>
+          <h2 class="text-headline-sm font-headline-sm text-on-surface">Recent Final Placements</h2>
+          <p class="text-body-sm font-body-sm text-on-surface-variant">Verified student recruitment offers and packages</p>
+        </div>
+        <a href="{% url 'core:admin_placements' %}" class="text-label-md font-label-md text-primary hover:underline flex items-center gap-1">
+          <span>View All Placements</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-low text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+              <th class="py-2.5 px-3">Student</th>
+              <th class="py-2.5 px-3">Company</th>
+              <th class="py-2.5 px-3">Package</th>
+              <th class="py-2.5 px-3">Offer Date</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant/10 text-body-sm">
+            {% for record in recent_placements %}
+              <tr class="hover:bg-surface-container-low/60 transition-colors">
+                <td class="py-3 px-3">
+                  <div class="font-semibold text-on-surface">{{ record.student.full_name }}</div>
+                  <div class="text-xs text-on-surface-variant">{{ record.student.roll_no }} &bull; {{ record.student.branch }}</div>
+                </td>
+                <td class="py-3 px-3 font-medium text-on-surface">{{ record.company.company_name }}</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">₹{{ record.package_lpa }} LPA</td>
+                <td class="py-3 px-3 text-on-surface-variant">{{ record.offer_date|date:"M d, Y" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="py-8 text-center text-on-surface-variant text-sm">
+                  No placement records created yet.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Card: Recent Campus Job Drives (5 Cols) -->
+    <div class="lg:col-span-5 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 p-space-lg flex flex-col gap-space-md">
+      <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/15">
+        <div>
+          <h2 class="text-headline-sm font-headline-sm text-on-surface">Recent Job Drives</h2>
+          <p class="text-body-sm font-body-sm text-on-surface-variant">Latest campus postings</p>
+        </div>
+        <a href="{% url 'core:admin_reports' %}" class="text-label-md font-label-md text-primary hover:underline flex items-center gap-1">
+          <span>Reports</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="flex flex-col gap-space-sm">
+        {% for job in recent_jobs %}
+          <div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between gap-space-sm">
+            <div class="flex flex-col min-w-0">
+              <span class="font-semibold text-body-md text-on-surface truncate">{{ job.title }}</span>
+              <span class="text-body-sm text-xs text-on-surface-variant truncate">{{ job.company.company_name }} &bull; ₹{{ job.package_lpa }} LPA</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold {% if job.status == 'OPEN' %}bg-emerald-100 text-emerald-800{% elif job.status == 'CLOSED' %}bg-rose-100 text-rose-800{% else %}bg-amber-100 text-amber-800{% endif %} shrink-0">
+              {{ job.get_status_display }}
+            </span>
+          </div>
+        {% empty %}
+          <div class="py-8 text-center text-on-surface-variant text-sm">
+            No job drives posted yet.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,91 +1,168 @@
-{% extends 'core/base_admin.html' %}
+{% extends "core/base_admin.html" %}
 
-{% block title %}Placement Records - PlacementHub{% endblock %}
 {% block header_title %}Placement Records{% endblock %}
 
-{% block content %}
-<div class="space-y-6">
-    <!-- Top Stats and Action Bar -->
-    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800">Verified Placement Records</h2>
-            <p class="text-sm text-slate-500">
-                Total Placements: <strong class="text-slate-800">{{ total_count }}</strong> &bull; 
-                Average Package: <strong class="text-emerald-600">₹{{ avg_package|floatformat:2 }} LPA</strong>
-            </p>
-        </div>
-        <a href="{% url 'core:admin_placement_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Add Placement Record
-        </a>
+{% block admin_content %}
+<div class="flex flex-col w-full gap-space-lg pb-24">
+  <!-- Breadcrumbs & Page Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase">
+        <span>Admin Central</span>
+        <span class="text-outline-variant">•</span>
+        <span class="text-primary font-semibold">Placement Directory</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Institutional Placement Records &amp; Offers</h1>
+      <p class="text-body-md text-body-md text-on-surface-variant max-w-3xl">Official collegiate placement repository, student compensation packages, and drive offer validations.</p>
     </div>
 
-    <!-- Placements Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
-                        <th class="py-3.5 px-6">Candidate</th>
-                        <th class="py-3.5 px-6">Company</th>
-                        <th class="py-3.5 px-6">Position</th>
-                        <th class="py-3.5 px-6">Package (LPA)</th>
-                        <th class="py-3.5 px-6">Offer Date</th>
-                        <th class="py-3.5 px-6 text-center">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-sm">
-                    {% for record in records %}
-                        <tr class="hover:bg-slate-50/50 transition">
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800">{{ record.student.full_name }}</div>
-                                <div class="text-xs text-slate-500">{{ record.student.roll_no }} &bull; {{ record.student.branch }}</div>
-                            </td>
-                            <td class="py-4 px-6 font-semibold text-slate-700">
-                                {{ record.company.company_name }}
-                            </td>
-                            <td class="py-4 px-6 text-slate-600">
-                                {{ record.application.job.title|default:"Campus Recruit" }}
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700">
-                                    ₹{{ record.package_lpa }} LPA
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-slate-500 text-xs">
-                                {{ record.offer_date|date:"M d, Y"|default:"-" }}
-                            </td>
-                            <td class="py-4 px-6 text-center">
-                                {% if record.is_final %}
-                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">
-                                        Accepted / Final
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800">
-                                        Provisional
-                                    </span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="6" class="py-12 text-center text-slate-400">
-                                <div class="max-w-sm mx-auto space-y-3">
-                                    <svg class="w-12 h-12 mx-auto text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <p class="font-medium text-slate-600">No placement records recorded</p>
-                                    <p class="text-xs text-slate-400">Add an institutional placement record when an applicant receives a final offer.</p>
-                                    <div class="pt-2">
-                                        <a href="{% url 'core:admin_placement_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">
-                                            Add Placement
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <!-- Header Actions -->
+    <div class="flex flex-wrap items-center gap-space-sm self-start lg:self-center">
+      <a href="{% url 'core:admin_reports' %}" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">analytics</span>
+        <span>View Analytics</span>
+      </a>
+      <a href="{% url 'core:admin_placement_create' %}" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+        <span>Add Placement Record</span>
+      </a>
     </div>
+  </div>
+
+  <!-- Top KPI Metrics Bento -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md">
+    <!-- Card 1 -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/15 flex flex-col justify-between gap-space-sm">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Verified Offers</span>
+        <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg text-on-surface font-bold">{{ total_count }}</span>
+          <span class="font-label-sm text-label-sm text-primary font-medium">Offers confirmed</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Recorded via campus placement cell</p>
+      </div>
+      <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+        <div class="bg-primary h-full rounded-full" style="width: 100%"></div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/15 flex flex-col justify-between gap-space-sm">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Average Compensation</span>
+        <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-emerald-600">
+          <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg text-on-surface font-bold">₹{{ avg_package|floatformat:2 }}</span>
+          <span class="font-label-md text-label-md text-on-surface-variant font-medium">LPA</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Across all confirmed candidate packages</p>
+      </div>
+      <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+        <div class="bg-emerald-600 h-full rounded-full" style="width: 75%"></div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/15 flex flex-col justify-between gap-space-sm">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Offer Integrity</span>
+        <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+          <span class="material-symbols-outlined text-[20px]">verified</span>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg text-on-surface font-bold">100%</span>
+          <span class="font-label-md text-label-md text-emerald-700 font-medium">Verified</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Authenticated corporate requisitions</p>
+      </div>
+      <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+        <div class="bg-tertiary h-full rounded-full" style="width: 100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Placements Data Table Card -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 overflow-hidden flex flex-col">
+    <div class="p-space-md border-b border-outline-variant/15 flex items-center justify-between">
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-primary text-[22px]">assignment_turned_in</span>
+        <h2 class="font-headline-sm text-body-lg font-semibold text-on-surface">Verified Student Placement Registry</h2>
+      </div>
+      <span class="text-body-sm text-xs text-on-surface-variant">Showing {{ records.count }} official entries</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-surface-container-low text-secondary font-label-sm text-label-sm uppercase tracking-wider border-b border-outline-variant/15">
+            <th class="py-space-md px-space-md">Candidate</th>
+            <th class="py-space-md px-space-md">Corporate Partner</th>
+            <th class="py-space-md px-space-md">Job Designation</th>
+            <th class="py-space-md px-space-md">Package (LPA)</th>
+            <th class="py-space-md px-space-md">Offer Date</th>
+            <th class="py-space-md px-space-md text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/10 text-on-surface font-body-md text-body-md">
+          {% for record in records %}
+            <tr class="hover:bg-surface-container-low/60 transition-colors">
+              <td class="py-space-md px-space-md">
+                <div class="font-bold text-on-surface">{{ record.student.full_name }}</div>
+                <div class="text-xs text-on-surface-variant">{{ record.student.roll_no }} &bull; {{ record.student.branch }}</div>
+              </td>
+              <td class="py-space-md px-space-md font-semibold text-on-surface">
+                {{ record.company.company_name }}
+              </td>
+              <td class="py-space-md px-space-md text-on-surface-variant">
+                {{ record.application.job.title|default:"Campus Recruit" }}
+              </td>
+              <td class="py-space-md px-space-md font-bold text-emerald-700 whitespace-nowrap">
+                ₹{{ record.package_lpa }} LPA
+              </td>
+              <td class="py-space-md px-space-md text-on-surface-variant text-sm whitespace-nowrap">
+                {{ record.offer_date|date:"M d, Y"|default:"-" }}
+              </td>
+              <td class="py-space-md px-space-md text-center whitespace-nowrap">
+                {% if record.is_final %}
+                  <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                    Accepted / Final
+                  </span>
+                {% else %}
+                  <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                    Provisional Offer
+                  </span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="py-16 text-center text-on-surface-variant">
+                <div class="max-w-md mx-auto flex flex-col items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-4xl text-on-surface-variant">work_off</span>
+                  <p class="font-headline-sm text-headline-sm text-on-surface">No placement records recorded</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Add an institutional placement record when an applicant receives an official job offer.</p>
+                  <a href="{% url 'core:admin_placement_create' %}" class="inline-flex items-center gap-2 px-space-md py-2.5 bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-sm mt-2">
+                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                    <span>Add Placement Record</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}

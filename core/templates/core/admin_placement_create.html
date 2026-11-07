@@ -1,102 +1,115 @@
-{% extends 'core/base_admin.html' %}
+{% extends "core/base_admin.html" %}
 
-{% block title %}Record New Placement - PlacementHub{% endblock %}
 {% block header_title %}Create Placement Record{% endblock %}
 
-{% block content %}
-<div class="max-w-2xl mx-auto space-y-6">
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800">Add Placement Record</h2>
-            <p class="text-sm text-slate-500">Record an official offer for candidates selected in campus drives.</p>
-        </div>
-        <a href="{% url 'core:admin_placements' %}" class="text-sm font-medium text-slate-600 hover:text-slate-800 transition">
-            &larr; Back to Placements
-        </a>
+{% block admin_content %}
+<div class="max-w-3xl mx-auto space-y-space-lg pb-24">
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase mb-1">
+        <span>Admin Central</span>
+        <span class="text-outline-variant">•</span>
+        <span class="text-primary font-semibold">Offer Verification</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Record Campus Placement Offer</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">Log official employment offers for candidates selected during campus placement drives.</p>
     </div>
+    <a href="{% url 'core:admin_placements' %}" class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      <span>Back to Registry</span>
+    </a>
+  </div>
 
-    {% if eligible_count == 0 %}
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center space-y-3">
-            <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-700 mx-auto flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <h3 class="font-bold text-slate-800 text-base">No Unplaced "Selected" Applications Available</h3>
-            <p class="text-xs text-slate-600 max-w-md mx-auto">
-                Placement records can only be created for applications with status <strong>"Selected"</strong> that do not already have an associated placement record.
-            </p>
-            <div class="pt-2">
-                <a href="{% url 'core:admin_dashboard' %}" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition">
-                    Return to Dashboard
-                </a>
-            </div>
+  {% if eligible_count == 0 %}
+    <div class="bg-surface-container-lowest border border-amber-200 rounded-xl p-space-xl text-center space-y-space-md shadow-sm">
+      <div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 mx-auto flex items-center justify-center">
+        <span class="material-symbols-outlined text-[28px]">info</span>
+      </div>
+      <div class="space-y-1">
+        <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">No Unplaced "Selected" Applications Available</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+          Placement records can only be created for student applications with stage status <strong>"Selected"</strong> that do not already have an associated placement record.
+        </p>
+      </div>
+      <div class="pt-space-xs">
+        <a href="{% url 'core:admin_dashboard' %}" class="inline-flex items-center gap-2 px-space-md py-2.5 bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-sm">
+          <span>Return to Command Center</span>
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/15 p-space-xl">
+      <form method="POST" class="space-y-space-lg">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="p-space-md bg-error-container text-on-error-container rounded-xl text-body-md">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <!-- Application Selection -->
+        <div>
+          <label class="block text-label-md font-label-md text-on-surface font-semibold mb-space-xs" for="{{ form.application.id_for_label }}">
+            Selected Application Requisition <span class="text-error">*</span>
+          </label>
+          {{ form.application }}
+          <p class="text-body-sm text-xs text-on-surface-variant mt-1.5">
+            Only candidates marked as "Selected" by recruiters appear here. Candidate profile, hiring partner, and job title are automatically derived from the requisition.
+          </p>
+          {% if form.application.errors %}
+            <p class="text-error text-xs mt-1">{{ form.application.errors.0 }}</p>
+          {% endif %}
         </div>
-    {% else %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
 
-                {% if form.non_field_errors %}
-                    <div class="p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-700">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+        <!-- Package & Offer Date -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+          <div>
+            <label class="block text-label-md font-label-md text-on-surface font-semibold mb-space-xs" for="{{ form.package_lpa.id_for_label }}">
+              Verified Annual CTC (LPA in ₹) <span class="text-error">*</span>
+            </label>
+            {{ form.package_lpa }}
+            {% if form.package_lpa.errors %}
+              <p class="text-error text-xs mt-1">{{ form.package_lpa.errors.0 }}</p>
+            {% endif %}
+          </div>
 
-                <!-- Application Selection -->
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.application.id_for_label }}">
-                        Selected Application *
-                    </label>
-                    {{ form.application }}
-                    <p class="text-xs text-slate-400 mt-1">
-                        Only candidates marked as "Selected" by recruiters appear here. Candidate, company, and role are automatically linked.
-                    </p>
-                    {% if form.application.errors %}
-                        <p class="text-xs text-rose-500 mt-1">{{ form.application.errors.0 }}</p>
-                    {% endif %}
-                </div>
-
-                <!-- Package & Offer Date -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.package_lpa.id_for_label }}">
-                            Package (LPA in ₹) *
-                        </label>
-                        {{ form.package_lpa }}
-                        {% if form.package_lpa.errors %}
-                            <p class="text-xs text-rose-500 mt-1">{{ form.package_lpa.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1" for="{{ form.offer_date.id_for_label }}">
-                            Official Offer Date *
-                        </label>
-                        {{ form.offer_date }}
-                        {% if form.offer_date.errors %}
-                            <p class="text-xs text-rose-500 mt-1">{{ form.offer_date.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Final Status Checkbox -->
-                <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    {{ form.is_final }}
-                    <label class="text-sm font-medium text-slate-700" for="{{ form.is_final.id_for_label }}">
-                        Mark as Final / Accepted Offer
-                        <span class="block text-xs text-slate-400">Updates candidate placement status to "PLACED" across all institutional records.</span>
-                    </label>
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                    <a href="{% url 'core:admin_placements' %}" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
-                        Cancel
-                    </a>
-                    <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition">
-                        Confirm & Record Placement
-                    </button>
-                </div>
-            </form>
+          <div>
+            <label class="block text-label-md font-label-md text-on-surface font-semibold mb-space-xs" for="{{ form.offer_date.id_for_label }}">
+              Official Offer Date <span class="text-error">*</span>
+            </label>
+            {{ form.offer_date }}
+            {% if form.offer_date.errors %}
+              <p class="text-error text-xs mt-1">{{ form.offer_date.errors.0 }}</p>
+            {% endif %}
+          </div>
         </div>
-    {% endif %}
+
+        <!-- Final Status Checkbox -->
+        <div class="flex items-start gap-space-sm p-space-md bg-surface-container-low rounded-xl border border-outline-variant/15">
+          <div class="pt-0.5">
+            {{ form.is_final }}
+          </div>
+          <label class="text-label-md font-label-md text-on-surface cursor-pointer" for="{{ form.is_final.id_for_label }}">
+            Mark as Final Accepted Institutional Offer
+            <span class="block text-body-sm text-xs text-on-surface-variant mt-0.5 font-normal">
+              Automatically synchronizes candidate's placement status to "PLACED" across all institutional placement records and reporting tables.
+            </span>
+          </label>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-space-md flex justify-end gap-space-md border-t border-outline-variant/15">
+          <a href="{% url 'core:admin_placements' %}" class="px-space-md py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">
+            Cancel
+          </a>
+          <button type="submit" class="px-space-xl py-2.5 bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">verified</span>
+            <span>Confirm &amp; Record Placement</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

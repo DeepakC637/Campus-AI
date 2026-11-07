@@ -61,3 +61,4 @@ class PlacementRecordCreateForm(forms.ModelForm):
             student.save(update_fields=['placement_status'])
 
         return record
+

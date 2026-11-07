@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block body_wrapper %}
+<div class="min-h-screen bg-surface font-body-md text-on-surface antialiased flex flex-col">
+  <!-- Left Sidebar (Stitch Admin Design) -->
+  <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low border-r border-outline-variant/20 flex flex-col justify-between z-50 shadow-sm">
+    <div class="flex flex-col">
+      <!-- Brand & Header -->
+      <div class="h-16 px-space-lg flex items-center justify-between border-b border-outline-variant/20">
+        <a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-space-sm">
+          <span class="material-symbols-outlined text-primary text-[28px]">school</span>
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">PlacementHub</span>
+        </a>
+        <span class="bg-primary text-on-primary font-label-sm text-[10px] px-space-xs py-0.5 rounded font-bold uppercase tracking-wider">ADMIN</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 py-space-md px-space-sm flex flex-col gap-1 overflow-y-auto">
+        <a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'core:admin_approvals' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_approvals' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">verified_user</span>
+          <span>Approvals Queue</span>
+        </a>
+        <a href="{% url 'core:admin_students' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_students' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">group</span>
+          <span>Students</span>
+        </a>
+        <a href="{% url 'core:admin_recruiters' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_recruiters' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+          <span>Recruiters</span>
+        </a>
+        <a href="{% url 'core:admin_placements' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_placements' or request.resolver_match.url_name == 'admin_placement_create' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+          <span>Placements</span>
+        </a>
+        <a href="{% url 'core:admin_reports' %}" class="flex items-center gap-space-md px-space-md py-2.5 rounded-xl font-label-md text-label-md transition-colors {% if request.resolver_match.url_name == 'admin_reports' %}bg-primary-container text-on-primary font-semibold shadow-sm{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container{% endif %}">
+          <span class="material-symbols-outlined text-[20px]">analytics</span>
+          <span>Reports &amp; Analytics</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Admin Account & Logout -->
+    <div class="p-space-md border-t border-outline-variant/20 flex flex-col gap-space-sm">
+      <div class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg bg-surface-container">
+        <div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-label-md shrink-0">
+          AD
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">{{ request.user.email }}</span>
+          <span class="font-body-sm text-[11px] text-on-surface-variant">Placement Cell Admin</span>
+        </div>
+      </div>
+      <a href="{% url 'accounts:logout' %}" class="flex items-center gap-space-sm px-space-md py-2 rounded-xl font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container transition-colors">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main View Area (Offset 64 = 16rem for sidebar) -->
+  <div class="pl-64 flex-1 flex flex-col min-w-0">
+    <!-- Top Fixed / Sticky Navigation Header -->
+    <header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 z-40 flex items-center justify-between px-space-lg shadow-sm">
+      <div class="flex items-center gap-space-md">
+        <span class="text-headline-sm text-on-surface font-semibold">{% block header_title %}Admin Central{% endblock %}</span>
+      </div>
+
+      <div class="flex items-center gap-space-lg">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-primary-fixed text-on-primary-fixed border border-primary/20">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Placement Command Live
+        </span>
+        <div class="flex items-center gap-space-sm pl-space-md border-l border-outline-variant/30">
+          <div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-label-md">
+            AD
+          </div>
+          <div class="hidden sm:flex flex-col text-left">
+            <span class="text-label-md text-on-surface font-semibold leading-none">Placement Office</span>
+            <span class="text-body-sm text-on-surface-variant leading-none mt-1 text-xs">Internal Admin Console</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Messages / Alerts -->
+    {% if messages %}
+      <div class="pt-20 px-space-lg pb-0">
+        {% for message in messages %}
+          <div class="p-space-md mb-space-sm rounded-xl text-body-md font-medium flex items-center gap-space-sm {% if message.tags == 'error' %}bg-error-container text-on-error-container{% elif message.tags == 'warning' %}bg-amber-100 text-amber-900{% elif message.tags == 'success' %}bg-emerald-100 text-emerald-900 border border-emerald-200{% else %}bg-primary-fixed text-on-primary-fixed{% endif %} shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">
+              {% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}check_circle{% else %}info{% endif %}
+            </span>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Page Content Container -->
+    <main class="{% if not messages %}pt-16{% else %}pt-4{% endif %} bg-surface w-full px-space-lg pb-space-xl flex-1">
+      {% block admin_content %}{% block content %}{% endblock %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
