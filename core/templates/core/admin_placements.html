@@ -1,0 +1,91 @@
+{% extends 'core/base_admin.html' %}
+
+{% block title %}Placement Records - PlacementHub{% endblock %}
+{% block header_title %}Placement Records{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Top Stats and Action Bar -->
+    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Verified Placement Records</h2>
+            <p class="text-sm text-slate-500">
+                Total Placements: <strong class="text-slate-800">{{ total_count }}</strong> &bull; 
+                Average Package: <strong class="text-emerald-600">₹{{ avg_package|floatformat:2 }} LPA</strong>
+            </p>
+        </div>
+        <a href="{% url 'core:admin_placement_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Add Placement Record
+        </a>
+    </div>
+
+    <!-- Placements Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                        <th class="py-3.5 px-6">Candidate</th>
+                        <th class="py-3.5 px-6">Company</th>
+                        <th class="py-3.5 px-6">Position</th>
+                        <th class="py-3.5 px-6">Package (LPA)</th>
+                        <th class="py-3.5 px-6">Offer Date</th>
+                        <th class="py-3.5 px-6 text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    {% for record in records %}
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-800">{{ record.student.full_name }}</div>
+                                <div class="text-xs text-slate-500">{{ record.student.roll_no }} &bull; {{ record.student.branch }}</div>
+                            </td>
+                            <td class="py-4 px-6 font-semibold text-slate-700">
+                                {{ record.company.company_name }}
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">
+                                {{ record.application.job.title|default:"Campus Recruit" }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700">
+                                    ₹{{ record.package_lpa }} LPA
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-500 text-xs">
+                                {{ record.offer_date|date:"M d, Y"|default:"-" }}
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                {% if record.is_final %}
+                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                        Accepted / Final
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800">
+                                        Provisional
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <div class="max-w-sm mx-auto space-y-3">
+                                    <svg class="w-12 h-12 mx-auto text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <p class="font-medium text-slate-600">No placement records recorded</p>
+                                    <p class="text-xs text-slate-400">Add an institutional placement record when an applicant receives a final offer.</p>
+                                    <div class="pt-2">
+                                        <a href="{% url 'core:admin_placement_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">
+                                            Add Placement
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

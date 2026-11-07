@@ -1,0 +1,161 @@
+{% extends 'core/base_admin.html' %}
+
+{% block title %}Placement Analytics & Reports - PlacementHub{% endblock %}
+{% block header_title %}Institutional Reports & Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Top Summary Banner -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Applications Processed</p>
+            <p class="text-3xl font-bold text-slate-800 mt-2">{{ total_applications }}</p>
+            <p class="text-xs text-slate-400 mt-1">Across all posted openings</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Verified Placements</p>
+            <p class="text-3xl font-bold text-emerald-600 mt-2">{{ total_placements }}</p>
+            <p class="text-xs text-slate-400 mt-1">Active student employment offers</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Overall Average Package</p>
+            <p class="text-3xl font-bold text-blue-600 mt-2">₹{{ overall_avg_package }} LPA</p>
+            <p class="text-xs text-slate-400 mt-1">Institutional CTC average</p>
+        </div>
+    </div>
+
+    <!-- 2 Column: Branch Placements & Status Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Placements by Branch -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-4">
+            <div>
+                <h3 class="text-base font-bold text-slate-800">Placements by Branch</h3>
+                <p class="text-xs text-slate-500">Distribution of successful offers across academic branches.</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                            <th class="py-3 px-4">Branch</th>
+                            <th class="py-3 px-4 text-center">Placed Count</th>
+                            <th class="py-3 px-4 text-right">Avg Package</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for item in placements_by_branch %}
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-800">{{ item.student__branch|default:"Unspecified" }}</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700">
+                                        {{ item.count }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-right text-emerald-600 font-medium">₹{{ item.avg_package|floatformat:2 }} LPA</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="py-8 text-center text-slate-400 text-xs">No branch placement data available yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Application Status Breakdown -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-4">
+            <div>
+                <h3 class="text-base font-bold text-slate-800">Application Status Funnel</h3>
+                <p class="text-xs text-slate-500">Breakdown of student applications across hiring lifecycle stages.</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                            <th class="py-3 px-4">Status</th>
+                            <th class="py-3 px-4 text-center">Total Candidates</th>
+                            <th class="py-3 px-4 text-right">Share</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for item in application_status_breakdown %}
+                            <tr>
+                                <td class="py-3 px-4">
+                                    {% if item.status == 'Applied' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700">Applied</span>
+                                    {% elif item.status == 'Shortlisted' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-700">Shortlisted</span>
+                                    {% elif item.status == 'Interview' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700">Interview</span>
+                                    {% elif item.status == 'Selected' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700">Selected</span>
+                                    {% elif item.status == 'Rejected' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-rose-50 text-rose-700">Rejected</span>
+                                    {% elif item.status == 'Withdrawn' %}
+                                        <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-600">Withdrawn</span>
+                                    {% else %}
+                                        <span class="text-slate-700 font-medium">{{ item.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4 text-center font-bold text-slate-800">{{ item.count }}</td>
+                                <td class="py-3 px-4 text-right text-slate-500 text-xs">
+                                    {% if total_applications > 0 %}
+                                        {% widthratio item.count total_applications 100 %}%
+                                    {% else %}
+                                        0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="py-8 text-center text-slate-400 text-xs">No application funnel data available yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 5 Companies by Jobs Posted -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-4">
+        <div>
+            <h3 class="text-base font-bold text-slate-800">Top Recruiters by Openings Posted</h3>
+            <p class="text-xs text-slate-500">Corporate partners actively publishing drives on campus.</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                        <th class="py-3 px-6">Company</th>
+                        <th class="py-3 px-6">Industry</th>
+                        <th class="py-3 px-6">Contact Person</th>
+                        <th class="py-3 px-6 text-center">Jobs Posted</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for comp in top_companies %}
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="py-3.5 px-6 font-bold text-slate-800">{{ comp.company_name }}</td>
+                            <td class="py-3.5 px-6 text-slate-600">{{ comp.industry|default:"Not specified" }}</td>
+                            <td class="py-3.5 px-6 text-slate-600">{{ comp.contact_person|default:"-" }}</td>
+                            <td class="py-3.5 px-6 text-center">
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700">
+                                    {{ comp.jobs_count }} Job{{ comp.jobs_count|pluralize }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="py-8 text-center text-slate-400 text-xs">No active recruiter company postings recorded yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

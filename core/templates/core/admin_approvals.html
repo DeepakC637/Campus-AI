@@ -1,0 +1,152 @@
+{% extends 'core/base_admin.html' %}
+
+{% block title %}Approvals Queue - PlacementHub{% endblock %}
+{% block header_title %}Institutional Approvals Queue{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header banner -->
+    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Pending Approvals Queue</h2>
+            <p class="text-sm text-slate-500">Review and verify new student registrations and recruiter corporate partnerships.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                {{ pending_recruiters|length }} Recruiter{{ pending_recruiters|length|pluralize }}
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                {{ pending_students|length }} Student{{ pending_students|length|pluralize }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Section 1: Pending Recruiters -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs">
+                    R
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Recruiter Companies Pending Approval</h3>
+                    <p class="text-xs text-slate-500">Recruiters cannot post jobs or browse candidates until approved.</p>
+                </div>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                {{ pending_recruiters|length }} pending
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                        <th class="py-3 px-6">Company</th>
+                        <th class="py-3 px-6">Industry</th>
+                        <th class="py-3 px-6">Contact Person</th>
+                        <th class="py-3 px-6">Registered Date</th>
+                        <th class="py-3 px-6 text-right">Inline Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    {% for company in pending_recruiters %}
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-800">{{ company.company_name }}</div>
+                                <div class="text-xs text-slate-500">{{ company.user.email }}</div>
+                                {% if company.website %}
+                                    <a href="{{ company.website }}" target="_blank" class="text-xs text-blue-600 hover:underline">{{ company.website }}</a>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">{{ company.industry|default:"Not specified" }}</td>
+                            <td class="py-4 px-6 text-slate-600">{{ company.contact_person|default:"-" }}</td>
+                            <td class="py-4 px-6 text-xs text-slate-500">{{ company.user.date_joined|date:"M d, Y" }}</td>
+                            <td class="py-4 px-6 text-right">
+                                <form method="post" action="{% url 'core:admin_recruiter_toggle_approval' company.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Approve Recruiter
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-400">
+                                <p class="text-xs font-medium">No recruiter approval requests pending.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 2: Pending Students -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">
+                    S
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Students Awaiting Verification</h3>
+                    <p class="text-xs text-slate-500">Unverified students who need academic credential verification.</p>
+                </div>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                {{ pending_students|length }} unverified
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                        <th class="py-3 px-6">Student</th>
+                        <th class="py-3 px-6">Roll No</th>
+                        <th class="py-3 px-6">Branch & CGPA</th>
+                        <th class="py-3 px-6">Registered Date</th>
+                        <th class="py-3 px-6 text-right">Inline Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    {% for student in pending_students %}
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-800">{{ student.full_name }}</div>
+                                <div class="text-xs text-slate-500">{{ student.user.email }}</div>
+                            </td>
+                            <td class="py-4 px-6 font-mono text-xs text-slate-700">{{ student.roll_no }}</td>
+                            <td class="py-4 px-6">
+                                <div class="text-slate-800 font-medium">{{ student.branch }}</div>
+                                <div class="text-xs text-slate-500">CGPA: {{ student.cgpa }} &bull; Backlogs: {{ student.backlogs }}</div>
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-500">{{ student.user.date_joined|date:"M d, Y" }}</td>
+                            <td class="py-4 px-6 text-right">
+                                <form method="post" action="{% url 'core:admin_student_toggle_verify' student.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Verify Student
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-400">
+                                <p class="text-xs font-medium">All students are currently verified.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

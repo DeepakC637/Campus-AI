@@ -65,7 +65,7 @@ class User(AbstractUser):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self._state.adding and 'is_approved' not in kwargs:
+        if not args and self._state.adding and 'is_approved' not in kwargs:
             if self.role in [self.Role.STUDENT, self.Role.ADMIN]:
                 self.is_approved = True
             elif self.role == self.Role.RECRUITER:

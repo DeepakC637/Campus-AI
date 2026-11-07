@@ -1,0 +1,132 @@
+{% extends 'core/base_admin.html' %}
+
+{% block title %}Admin Dashboard - PlacementHub{% endblock %}
+{% block header_title %}Institutional Overview{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Stat Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Total Students -->
+        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Students</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ total_students }}</p>
+                <p class="text-xs text-slate-400 mt-1">{{ placed_count }} currently placed</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </div>
+        </div>
+
+        <!-- Total Recruiters -->
+        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Total Recruiters</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ total_recruiters }}</p>
+                <p class="text-xs text-slate-400 mt-1">{% if pending_recruiters_count %}{{ pending_recruiters_count }} pending approval{% else %}All approved{% endif %}</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            </div>
+        </div>
+
+        <!-- Active Jobs -->
+        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Active Jobs</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ active_jobs }}</p>
+                <p class="text-xs text-slate-400 mt-1">Currently open for applications</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </div>
+        </div>
+
+        <!-- Placement Rate % -->
+        <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Placement Rate</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ placement_rate }}%</p>
+                <p class="text-xs text-emerald-600 mt-1 font-medium">{{ total_placements_count }} total verified offers</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approvals Banner if any -->
+    {% if pending_students_count or pending_recruiters_count %}
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-amber-900 text-sm">Pending Verification & Approvals</h3>
+                    <p class="text-xs text-amber-800 mt-0.5">
+                        {{ pending_students_count }} student{{ pending_students_count|pluralize }} unverified, {{ pending_recruiters_count }} recruiter{{ pending_recruiters_count|pluralize }} awaiting platform approval.
+                    </p>
+                </div>
+            </div>
+            <a href="{% url 'core:admin_approvals' %}" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                Review Approvals Queue &rarr;
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- 2 Column Section: Recent Placements & Recent Jobs -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Placements -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-base">Recent Placements</h3>
+                <a href="{% url 'core:admin_placements' %}" class="text-xs font-semibold text-blue-600 hover:text-blue-800">View All</a>
+            </div>
+            <div class="divide-y divide-slate-100">
+                {% for record in recent_placements %}
+                    <div class="py-3 flex items-center justify-between text-sm">
+                        <div>
+                            <p class="font-bold text-slate-800">{{ record.student.full_name }}</p>
+                            <p class="text-xs text-slate-500">{{ record.company.company_name }} &bull; {{ record.student.branch }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex px-2 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700">₹{{ record.package_lpa }} LPA</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">{{ record.offer_date|date:"M d, Y"|default:"Recently" }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-slate-400 py-6 text-center">No placement records recorded yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Job Openings -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-base">Recent Job Openings</h3>
+                <span class="text-xs text-slate-400">{{ active_jobs }} active openings</span>
+            </div>
+            <div class="divide-y divide-slate-100">
+                {% for job in recent_jobs %}
+                    <div class="py-3 flex items-center justify-between text-sm">
+                        <div>
+                            <p class="font-bold text-slate-800">{{ job.title }}</p>
+                            <p class="text-xs text-slate-500">{{ job.company.company_name }} &bull; {{ job.location }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold {% if job.status == 'OPEN' %}bg-emerald-50 text-emerald-700{% elif job.status == 'DRAFT' %}bg-amber-50 text-amber-700{% else %}bg-slate-100 text-slate-600{% endif %}">
+                                {{ job.status }}
+                            </span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">₹{{ job.package_lpa }} LPA</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-slate-400 py-6 text-center">No job postings created yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'core/base_admin.html' %}
+
+{% block title %}Manage Students - PlacementHub{% endblock %}
+{% block header_title %}Student Directory{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Search and Filters Bar -->
+    <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+        <form method="get" class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+            <div class="flex-1 relative">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search by name, roll no, or email..." class="w-full text-sm rounded-lg border-slate-300 pl-10 pr-4 py-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800">
+                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <div class="flex items-center gap-3">
+                <select name="status" class="text-xs rounded-lg border-slate-300 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 text-slate-700">
+                    <option value="">All Statuses</option>
+                    <option value="verified" {% if status_filter == 'verified' %}selected{% endif %}>Verified Only</option>
+                    <option value="unverified" {% if status_filter == 'unverified' %}selected{% endif %}>Unverified Only</option>
+                </select>
+
+                <select name="branch" class="text-xs rounded-lg border-slate-300 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 text-slate-700">
+                    <option value="">All Branches</option>
+                    {% for b in branches %}
+                        <option value="{{ b }}" {% if branch_filter == b %}selected{% endif %}>{{ b }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition">
+                    Filter
+                </button>
+
+                {% if search_query or status_filter or branch_filter %}
+                    <a href="{% url 'core:admin_students' %}" class="text-xs text-slate-500 hover:text-slate-700 underline">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Students Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/75 border-b border-slate-100 text-xs font-semibold uppercase text-slate-500">
+                        <th class="py-3.5 px-6">Student</th>
+                        <th class="py-3.5 px-6">Roll No</th>
+                        <th class="py-3.5 px-6">Branch & CGPA</th>
+                        <th class="py-3.5 px-6">Placement Status</th>
+                        <th class="py-3.5 px-6">Verification</th>
+                        <th class="py-3.5 px-6 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    {% for student in students %}
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-800">{{ student.full_name }}</div>
+                                <div class="text-xs text-slate-500">{{ student.user.email }}</div>
+                            </td>
+                            <td class="py-4 px-6 font-mono text-xs text-slate-700">
+                                {{ student.roll_no }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="text-slate-800 font-medium">{{ student.branch }}</div>
+                                <div class="text-xs text-slate-500">CGPA: {{ student.cgpa }} &bull; Backlogs: {{ student.backlogs }}</div>
+                            </td>
+                            <td class="py-4 px-6">
+                                {% if student.placement_status == 'PLACED' %}
+                                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        Placed
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                                        Not Placed
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6">
+                                {% if student.is_verified %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Verified
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Unverified
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <form method="post" action="{% url 'core:admin_student_toggle_verify' student.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    {% if student.is_verified %}
+                                        <button type="submit" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold transition border border-rose-200">
+                                            Unverify
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition shadow-sm">
+                                            Verify Student
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <p class="text-sm">No students found matching your search or filters.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
