@@ -131,38 +131,86 @@
       </div>
     {% endif %}
 
-    <!-- Diagnostics Breakdown (Phase 8 Placeholder) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center bg-surface-container-low p-space-md rounded-xl">
-      <!-- Score Circular Gauge Placeholder -->
-      <div class="lg:col-span-4 flex flex-col items-center justify-center p-space-md bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20">
-        <div class="relative w-32 h-32 flex items-center justify-center">
-          <svg class="w-full h-full transform -rotate-90" viewbox="0 0 120 120">
-            <circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
-          </svg>
-          <div class="absolute flex flex-col items-center justify-center text-center">
-            <span class="font-headline-xl text-headline-xl text-on-surface leading-none">—</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+    <!-- Diagnostics Breakdown: Extracted Text & Skills -->
+    {% if active_resume %}
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start bg-surface-container-low p-space-md rounded-xl">
+        <!-- Score Circular Gauge -->
+        <div class="lg:col-span-4 flex flex-col items-center justify-center p-space-md bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 h-full">
+          <div class="relative w-32 h-32 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewbox="0 0 120 120">
+              <circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
+            </svg>
+            <div class="absolute flex flex-col items-center justify-center text-center">
+              <span class="font-headline-xl text-headline-xl text-on-surface leading-none">—</span>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+            </div>
+          </div>
+          <div class="mt-space-sm text-center">
+            <p class="font-headline-sm text-[16px] text-on-surface font-semibold">ATS Compatibility Score</p>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Calculated per job application based on JD requirements</p>
           </div>
         </div>
-        <div class="mt-space-sm text-center">
-          <p class="font-headline-sm text-[16px] text-on-surface font-semibold">ATS Compatibility Score</p>
-          <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">AI ATS analysis engine coming soon in Phase 8</p>
+
+        <!-- Extracted Text Snippet & Summary -->
+        <div class="lg:col-span-8 flex flex-col gap-space-md">
+          <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-outline-variant/20 flex flex-col gap-space-xs">
+            <div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+              <div class="flex items-center gap-space-xs text-primary font-semibold">
+                <span class="material-symbols-outlined text-[20px]">document_scanner</span>
+                <span class="font-label-md text-label-md text-on-surface">Extracted Text Preview</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">
+                {{ active_resume.extracted_text|length }} characters extracted
+              </span>
+            </div>
+            {% if active_resume.extracted_text %}
+              <div class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed font-mono bg-surface-container-low p-3 rounded-lg max-h-36 overflow-y-auto whitespace-pre-line text-xs border border-outline-variant/20">
+                {{ active_resume.extracted_text|truncatechars:450 }}
+              </div>
+            {% else %}
+              <p class="font-body-sm text-body-sm text-on-surface-variant italic py-2">
+                No text could be extracted from this document.
+              </p>
+            {% endif %}
+          </div>
         </div>
       </div>
 
-      <!-- Mini Metrics Triad -->
-      <div class="lg:col-span-8 flex flex-col gap-space-md">
-        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-outline-variant/20 flex gap-space-md">
-          <span class="material-symbols-outlined text-primary text-[24px] shrink-0 mt-0.5">psychology</span>
-          <div class="flex flex-col gap-space-xs">
-            <span class="font-label-md text-label-md font-semibold text-on-surface">AI Resume Diagnostics Status</span>
-            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              Resume text extraction and skill gap benchmark analytics are scheduled for Phase 8. Currently, uploaded resumes are stored and served directly to recruiters reviewing your job applications.
-            </p>
+      <!-- Extracted Skills Subsection -->
+      <div class="flex flex-col gap-space-sm p-space-md bg-surface-container-low rounded-xl border border-outline-variant/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Extracted Skills</h3>
           </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">
+            {{ active_resume.parsed_skills|length }} Recognized Competenc{{ active_resume.parsed_skills|length|pluralize:"y,ies" }}
+          </span>
         </div>
+        {% if active_resume.parsed_skills %}
+          <div class="flex flex-wrap gap-space-xs pt-1">
+            {% for skill in active_resume.parsed_skills %}
+              <span class="px-space-md py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-sm hover:bg-secondary-container hover:text-on-secondary-fixed transition-colors flex items-center gap-space-xs border border-outline-variant/30 shadow-sm">
+                <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                <span>{{ skill }}</span>
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            No known technical skills recognized in the parsed resume text.
+          </p>
+        {% endif %}
       </div>
-    </div>
+    {% else %}
+      <div class="p-space-lg rounded-xl bg-surface-container-low text-center flex flex-col items-center justify-center gap-space-xs border border-outline-variant/20">
+        <span class="material-symbols-outlined text-[36px] text-primary">upload_file</span>
+        <h3 class="font-headline-sm text-on-surface font-semibold">No Active Resume Uploaded</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+          Upload a PDF or DOCX resume above to extract technical skills and preview parsed text.
+        </p>
+      </div>
+    {% endif %}
   </div>
 
   <!-- Resume Version History Table -->

@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
@@ -9,6 +10,7 @@ from .forms import StudentProfileForm, ResumeUploadForm
 from jobs.models import Job
 from applications.models import Application
 from interviews.models import Interview
+from ai_engine.parsing import extract_text, extract_skills
 
 
 def get_student_profile(user):
@@ -163,6 +165,21 @@ def resume_view(request):
                 extracted_text="",
                 parsed_skills=[],
             )
+
+            # Extract text and skills from the uploaded resume file
+            file_ext = os.path.splitext(new_resume.file.name)[1]
+            extracted_text = extract_text(new_resume.file.path, file_ext)
+            matched_skills = extract_skills(extracted_text, Skill.objects.all())
+
+            new_resume.extracted_text = extracted_text
+            new_resume.parsed_skills = matched_skills
+            new_resume.save()
+
+            # Add matched skills to student profile without removing existing manual skills
+            if matched_skills:
+                skills_to_add = Skill.objects.filter(name__in=matched_skills)
+                student.skills.add(*skills_to_add)
+
             messages.success(request, f"Resume '{new_resume.file.name}' uploaded successfully.")
             return redirect('students:resume')
     else:
