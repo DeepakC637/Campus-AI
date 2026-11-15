@@ -231,10 +231,20 @@ def jobs_view(request):
 
     applied_job_ids = set(student.applications.values_list('job_id', flat=True))
 
+    active_resume = student.resumes.filter(is_active=True).first()
+    student_resume_text = active_resume.extracted_text if active_resume else ""
+    student_skills = list(student.skills.all())
+
     jobs_list = list(jobs_qs)
     for job in jobs_list:
         job.is_eligible, job.ineligibility_reasons = check_job_eligibility(student, job)
         job.has_applied = job.id in applied_job_ids
+        job.match_score = compute_match_score(
+            student_skills=student_skills,
+            job_required_skills=job.required_skills.all(),
+            student_resume_text=student_resume_text,
+            job_description=job.description,
+        )
 
     # Extract distinct locations for filter dropdown
     all_locations = Job.objects.filter(

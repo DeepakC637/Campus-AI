@@ -184,10 +184,10 @@
 
                 <!-- Match Score -->
                 <td class="px-space-lg py-4 font-label-md text-label-md">
-                  {% if app.match_score %}
-                    <span class="text-primary font-bold">{{ app.match_score }}%</span>
+                  {% if app.match_score is not None %}
+                    <span class="text-primary font-bold">{{ app.match_score|floatformat:0 }}%</span>
                   {% else %}
-                    <span class="text-on-surface-variant" title="AI match scoring unlocks in Phase 8">—</span>
+                    <span class="text-on-surface-variant font-medium">—</span>
                   {% endif %}
                 </td>
 

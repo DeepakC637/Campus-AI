@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'placements',
     'ai_engine',
     'core',
+    'integration_tests',
 ]
 
 # Custom User Model configuration

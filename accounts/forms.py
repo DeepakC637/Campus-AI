@@ -38,6 +38,17 @@ class RegistrationForm(forms.Form):
             is_approved=is_approved,
             username=data['email'].split('@')[0]
         )
+        if role == User.Role.RECRUITER:
+            from recruiters.models import Company
+            Company.objects.get_or_create(
+                user=user,
+                defaults={
+                    'company_name': f"Company-{user.id}",
+                    'industry': 'Technology',
+                    'contact_person': user.email,
+                    'is_approved': is_approved,
+                }
+            )
         return user
 
 

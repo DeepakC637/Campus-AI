@@ -97,10 +97,10 @@
                 </div>
               </div>
 
-              <!-- Match Score / AI Score Placeholder -->
-              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low font-label-md text-label-md text-on-surface shadow-sm" title="AI match score unlocks in Phase 8">
-                <span class="material-symbols-outlined text-[16px] text-primary">neurology</span>
-                <span class="font-bold text-on-surface-variant">—</span>
+              <!-- AI Match Score -->
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full {% if job.match_score >= 70 %}bg-emerald-100 text-emerald-800{% elif job.match_score >= 40 %}bg-primary-fixed/60 text-primary{% else %}bg-surface-container-low text-on-surface-variant{% endif %} font-label-md text-label-md shadow-sm">
+                <span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+                <span class="font-bold">{% if job.match_score is not None %}{{ job.match_score|floatformat:0 }}%{% else %}—{% endif %}</span>
               </div>
             </div>
 

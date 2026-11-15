@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <!-- AI Fit Metric Badge (Phase 8 placeholder) -->
+      <!-- AI Fit Metric Badge -->
       <div class="flex items-center gap-space-md bg-surface-container-low px-space-lg py-space-sm rounded-xl self-start lg:self-center border border-outline-variant/15">
         <div class="relative w-12 h-12 flex items-center justify-center">
           <svg class="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
@@ -60,13 +60,13 @@
             <circle class="text-primary-container" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="30" stroke-linecap="round" stroke-width="4"></circle>
           </svg>
           <span class="absolute font-bold text-on-surface text-label-md">
-            {% if application.match_score %}{{ application.match_score|floatformat:0 }}%{% else %}—{% endif %}
+            {% if application.match_score is not None %}{{ application.match_score|floatformat:0 }}%{% else %}—{% endif %}
           </span>
         </div>
         <div>
           <div class="flex items-center gap-1">
             <span class="text-label-md font-label-md text-on-surface font-semibold">AI Match Score</span>
-            <span class="material-symbols-outlined text-primary text-[16px]">spark</span>
+            <span class="material-symbols-outlined text-primary text-[16px]">auto_awesome</span>
           </div>
           <p class="text-body-sm text-xs text-on-surface-variant">Semantic evaluation matrix</p>
         </div>
