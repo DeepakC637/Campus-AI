@@ -11,6 +11,12 @@ from jobs.models import Job
 from applications.models import Application
 from interviews.models import Interview
 from ai_engine.parsing import extract_text, extract_skills
+from ai_engine.scoring import (
+    compute_match_score,
+    compute_skill_gap,
+    recommend_jobs,
+    get_courses_for_missing_skills,
+)
 
 
 def get_student_profile(user):
@@ -90,17 +96,13 @@ def dashboard_view(request):
         'Withdrawn': student.applications.filter(status=Application.Status.WITHDRAWN).count(),
     }
 
-    # Open jobs not yet applied to
-    open_jobs = Job.objects.filter(
-        status=Job.Status.OPEN,
-        deadline__gte=timezone.now()
-    ).exclude(
-        id__in=applied_job_ids
-    ).select_related('company').prefetch_related('required_skills').order_by('deadline')[:10]
-
-    # Annotate open jobs with eligibility
-    for job in open_jobs:
+    # Top recommended jobs powered by AI Engine (ranked by match score)
+    recommended_pairs = recommend_jobs(student, top_n=5)
+    open_jobs = []
+    for job, score in recommended_pairs:
+        job.match_score = score
         job.is_eligible, job.ineligibility_reasons = check_job_eligibility(student, job)
+        open_jobs.append(job)
 
     context = {
         'active_tab': 'dashboard',
@@ -110,6 +112,7 @@ def dashboard_view(request):
         'interviews_scheduled_count': interviews_scheduled_count,
         'status_counts': status_counts,
         'open_jobs': open_jobs,
+        'recommended_jobs': open_jobs,
     }
     return render(request, 'students/dashboard.html', context)
 
@@ -279,10 +282,21 @@ def job_detail_view(request, pk):
     else:
         branch_pass = True
 
+    # Live compatibility match score calculation
+    active_resume = student.resumes.filter(is_active=True).first()
+    resume_text = active_resume.extracted_text if active_resume else ""
+    live_match_score = compute_match_score(
+        student_skills=student.skills.all(),
+        job_required_skills=job.required_skills.all(),
+        student_resume_text=resume_text,
+        job_description=job.description,
+    )
+
     context = {
         'active_tab': 'jobs',
         'student': student,
         'job': job,
+        'match_score': live_match_score,
         'has_applied': has_applied,
         'is_eligible': is_eligible,
         'ineligibility_reasons': ineligibility_reasons,
@@ -319,11 +333,22 @@ def apply_job_view(request, pk):
         messages.error(request, f"Application rejected: You do not meet the eligibility criteria ({reason_msg}).")
         return HttpResponseForbidden(f"Ineligible: {reason_msg}")
 
+    # Calculate compatibility match score at application time
+    active_resume = student.resumes.filter(is_active=True).first()
+    resume_text = active_resume.extracted_text if active_resume else ""
+    match_score = compute_match_score(
+        student_skills=student.skills.all(),
+        job_required_skills=job.required_skills.all(),
+        student_resume_text=resume_text,
+        job_description=job.description,
+    )
+
     # Create application
     Application.objects.create(
         student=student,
         job=job,
         status=Application.Status.APPLIED,
+        match_score=match_score,
     )
     messages.success(request, f"Application submitted successfully for {job.title} at {job.company.company_name}!")
     return redirect('students:applications')
@@ -388,33 +413,27 @@ def skill_gap_view(request, job_id):
         pk=job_id
     )
 
-    student_skill_names = set(student.skills.values_list('name', flat=True))
-    student_skill_lower = {s.lower(): s for s in student_skill_names}
+    gap = compute_skill_gap(student.skills.all(), job.required_skills.all())
+    matched_skills = gap["matched"]
+    missing_skills = gap["missing"]
 
-    job_required_skills = list(job.required_skills.all())
-
-    matched_skills = []
-    missing_skills = []
-
-    for skill in job_required_skills:
-        if skill.name.lower() in student_skill_lower:
-            matched_skills.append(skill.name)
-        else:
-            missing_skills.append(skill.name)
-
-    total_required = len(job_required_skills)
+    total_required = len(matched_skills) + len(missing_skills)
     if total_required > 0:
         match_percentage = int((len(matched_skills) / total_required) * 100)
     else:
         match_percentage = 100
 
+    course_recommendations = get_courses_for_missing_skills(missing_skills)
+    student_skill_names = sorted(student.skills.values_list('name', flat=True))
+
     context = {
         'active_tab': 'jobs',
         'student': student,
         'job': job,
-        'student_skills': sorted(student_skill_names),
+        'student_skills': student_skill_names,
         'matched_skills': matched_skills,
         'missing_skills': missing_skills,
         'match_percentage': match_percentage,
+        'course_recommendations': course_recommendations,
     }
     return render(request, 'students/skill_gap.html', context)

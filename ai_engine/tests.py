@@ -7,9 +7,20 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.urls import reverse
 
+from datetime import timedelta
+from django.utils import timezone
 import docx
 from students.models import Skill, StudentProfile, Resume
+from recruiters.models import Company
+from jobs.models import Job
+from applications.models import Application
 from ai_engine.parsing import extract_text, extract_skills
+from ai_engine.scoring import (
+    compute_match_score,
+    compute_skill_gap,
+    recommend_jobs,
+    get_courses_for_missing_skills,
+)
 
 User = get_user_model()
 
@@ -193,3 +204,262 @@ class ResumeUploadIntegrationTests(TestCase):
         self.assertEqual(resume.parsed_skills, [])
         # Manual skill is still intact
         self.assertTrue(self.student.skills.filter(name="Git").exists())
+
+
+class ScoringAndRecommendationEngineTests(TestCase):
+    def setUp(self):
+        call_command("seed_skills")
+        self.client = Client()
+
+        # Create Recruiter and Company
+        self.recruiter_user = User.objects.create_user(
+            email="recruiter_scoring@example.com",
+            password="Password123!",
+            role=User.Role.RECRUITER,
+            is_approved=True,
+        )
+        self.company = Company.objects.create(
+            user=self.recruiter_user,
+            company_name="TechWave Solutions",
+            description="Enterprise Cloud & AI Solutions",
+        )
+
+        # Create Student A (Tech focus: Python, Django, PostgreSQL)
+        self.user_a = User.objects.create_user(
+            email="candidate_a@example.com",
+            password="Password123!",
+            role=User.Role.STUDENT,
+        )
+        self.student_a = StudentProfile.objects.create(
+            user=self.user_a,
+            roll_no="STU-SCORE-001",
+            full_name="Alice Engineer",
+            branch="Computer Science",
+            year=2026,
+            cgpa=9.0,
+        )
+        self.skill_python = Skill.objects.get(name="Python")
+        self.skill_django = Skill.objects.get(name="Django")
+        self.skill_postgres = Skill.objects.get(name="PostgreSQL")
+        self.student_a.skills.add(self.skill_python, self.skill_django, self.skill_postgres)
+        Resume.objects.create(
+            student=self.student_a,
+            file="resumes/dummy_a.pdf",
+            extracted_text="Senior Backend Developer with extensive Python and Django microservices experience. Master of PostgreSQL database design, query optimization, and REST APIs.",
+            parsed_skills=["Python", "Django", "PostgreSQL"],
+            is_active=True,
+        )
+
+        # Create Student B (Unrelated focus: UI/Design)
+        self.user_b = User.objects.create_user(
+            email="candidate_b@example.com",
+            password="Password123!",
+            role=User.Role.STUDENT,
+        )
+        self.student_b = StudentProfile.objects.create(
+            user=self.user_b,
+            roll_no="STU-SCORE-002",
+            full_name="Bob Designer",
+            branch="Mechanical",
+            year=2026,
+            cgpa=8.0,
+        )
+        Resume.objects.create(
+            student=self.student_b,
+            file="resumes/dummy_b.pdf",
+            extracted_text="Creative UI/UX Designer specialized in Figma, wireframing, color theory, and user journey mapping for mobile applications.",
+            parsed_skills=[],
+            is_active=True,
+        )
+
+        # Create Target Job: Python Backend
+        self.target_job = Job.objects.create(
+            company=self.company,
+            title="Python Django Backend Developer",
+            description="We are seeking an experienced Python Django Backend Developer to build scalable APIs and manage PostgreSQL databases.",
+            min_cgpa=7.0,
+            allowed_branches=["Computer Science", "Information Technology"],
+            max_backlogs=0,
+            package_lpa=12.5,
+            location="Bangalore",
+            deadline=timezone.now() + timedelta(days=20),
+            status=Job.Status.OPEN,
+        )
+        self.target_job.required_skills.add(self.skill_python, self.skill_django, self.skill_postgres)
+
+    def test_matching_student_scores_higher_than_non_matching(self):
+        # Student A matches both required skills and resume text
+        score_a = compute_match_score(
+            student_skills=self.student_a.skills.all(),
+            job_required_skills=self.target_job.required_skills.all(),
+            student_resume_text=self.student_a.resumes.first().extracted_text,
+            job_description=self.target_job.description,
+        )
+
+        # Student B has no skill overlap and unrelated resume text
+        score_b = compute_match_score(
+            student_skills=self.student_b.skills.all(),
+            job_required_skills=self.target_job.required_skills.all(),
+            student_resume_text=self.student_b.resumes.first().extracted_text,
+            job_description=self.target_job.description,
+        )
+
+        self.assertGreater(score_a, score_b)
+        self.assertGreaterEqual(score_a, 70.0, "Candidate with exact skill match should score >= 70%")
+        self.assertLess(score_b, 30.0, "Candidate with zero skill match should score < 30%")
+
+    def test_skill_gap_separates_matched_and_missing_correctly(self):
+        # Student A has Python, Django, PostgreSQL
+        # Suppose a job requires Python, Kubernetes, Docker, and AWS
+        skill_k8s = Skill.objects.get(name="Kubernetes")
+        skill_docker = Skill.objects.get(name="Docker")
+        skill_aws = Skill.objects.get(name="AWS")
+
+        job_reqs = [self.skill_python, skill_k8s, skill_docker, skill_aws]
+        gap = compute_skill_gap(self.student_a.skills.all(), job_reqs)
+
+        self.assertEqual(gap["matched"], ["Python"])
+        self.assertEqual(set(gap["missing"]), {"Kubernetes", "Docker", "AWS"})
+
+    def test_scoring_edge_cases_do_not_crash(self):
+        # 1. Both skills and texts empty
+        score_empty = compute_match_score([], [], "", "")
+        self.assertEqual(score_empty, 0.0)
+
+        # 2. Zero student skills, non-empty job
+        score_no_student_skills = compute_match_score([], [self.skill_python], "", "Python job description")
+        self.assertIsInstance(score_no_student_skills, float)
+        self.assertGreaterEqual(score_no_student_skills, 0.0)
+
+        # 3. Zero required skills, non-empty student
+        score_no_reqs = compute_match_score([self.skill_python], [], "Experienced Python developer", "Job description")
+        self.assertIsInstance(score_no_reqs, float)
+        self.assertGreaterEqual(score_no_reqs, 0.0)
+
+        # 4. Empty resume text with valid skills
+        score_no_resume = compute_match_score([self.skill_python, self.skill_django], [self.skill_python], "", "Python role")
+        self.assertEqual(score_no_resume, 100.0)
+
+        # 5. Empty job description with valid skills
+        score_no_jd = compute_match_score([self.skill_python], [self.skill_python], "Python developer", "")
+        self.assertEqual(score_no_jd, 100.0)
+
+        # 6. None inputs
+        score_none = compute_match_score(None, None, None, None)
+        self.assertEqual(score_none, 0.0)
+
+    def test_recommend_jobs_excludes_applied_closed_expired(self):
+        # Job 1 is target_job: OPEN, future deadline, unapplied -> should be recommended
+
+        # Job 2: OPEN, future deadline, but applied by student_a
+        job_applied = Job.objects.create(
+            company=self.company,
+            title="Full Stack Engineer",
+            description="React and Django",
+            deadline=timezone.now() + timedelta(days=10),
+            status=Job.Status.OPEN,
+        )
+        Application.objects.create(
+            student=self.student_a,
+            job=job_applied,
+            status=Application.Status.APPLIED,
+            match_score=85.0,
+        )
+
+        # Job 3: CLOSED status
+        job_closed = Job.objects.create(
+            company=self.company,
+            title="Closed Job Role",
+            description="Closed job",
+            deadline=timezone.now() + timedelta(days=10),
+            status=Job.Status.CLOSED,
+        )
+
+        # Job 4: Expired deadline
+        job_expired = Job.objects.create(
+            company=self.company,
+            title="Expired Job Role",
+            description="Expired job",
+            deadline=timezone.now() - timedelta(days=2),
+            status=Job.Status.OPEN,
+        )
+
+        recommended = recommend_jobs(self.student_a, top_n=10)
+        rec_job_ids = [job.id for job, _ in recommended]
+
+        self.assertIn(self.target_job.id, rec_job_ids)
+        self.assertNotIn(job_applied.id, rec_job_ids, "Applied jobs must be excluded")
+        self.assertNotIn(job_closed.id, rec_job_ids, "Closed jobs must be excluded")
+        self.assertNotIn(job_expired.id, rec_job_ids, "Expired jobs must be excluded")
+
+    def test_score_is_saved_on_application_and_not_silently_null(self):
+        self.client.login(email="candidate_a@example.com", password="Password123!")
+
+        apply_url = reverse("students:apply_job", kwargs={"pk": self.target_job.pk})
+        response = self.client.post(apply_url)
+        self.assertEqual(response.status_code, 302)
+
+        application = Application.objects.filter(student=self.student_a, job=self.target_job).first()
+        self.assertIsNotNone(application)
+        self.assertIsNotNone(application.match_score)
+        self.assertIsInstance(application.match_score, float)
+        self.assertGreaterEqual(application.match_score, 70.0)
+
+    def test_student_with_zero_resumes_does_not_crash_views(self):
+        # Create student with zero resumes
+        user_no_resume = User.objects.create_user(
+            email="candidate_no_resume@example.com",
+            password="Password123!",
+            role=User.Role.STUDENT,
+        )
+        student_no_resume = StudentProfile.objects.create(
+            user=user_no_resume,
+            roll_no="STU-NO-RESUME",
+            full_name="Charlie NoResume",
+            branch="Computer Science",
+            year=2026,
+            cgpa=8.2,
+        )
+
+        self.client.login(email="candidate_no_resume@example.com", password="Password123!")
+
+        # 1. Dashboard View
+        dash_res = self.client.get(reverse("students:dashboard"))
+        self.assertEqual(dash_res.status_code, 200)
+
+        # 2. Job Detail View
+        detail_res = self.client.get(reverse("students:job_detail", kwargs={"pk": self.target_job.pk}))
+        self.assertEqual(detail_res.status_code, 200)
+        self.assertIn("match_score", detail_res.context)
+
+        # 3. Skill Gap View
+        gap_res = self.client.get(reverse("students:skill_gap", kwargs={"job_id": self.target_job.pk}))
+        self.assertEqual(gap_res.status_code, 200)
+
+    def test_course_recommendations_and_recruiter_view(self):
+        # Check course recommendations
+        courses = get_courses_for_missing_skills(["Python", "Kubernetes", "UncommonCustomSkill"])
+        self.assertEqual(len(courses), 3)
+        python_course = next(c for c in courses if c["skill"] == "Python")
+        self.assertTrue(len(python_course["courses"]) >= 1)
+
+        # Recruiter applicants list fallback testing
+        app_with_score = Application.objects.create(
+            student=self.student_a,
+            job=self.target_job,
+            status=Application.Status.APPLIED,
+            match_score=92.0,
+        )
+        app_null_score = Application.objects.create(
+            student=self.student_b,
+            job=self.target_job,
+            status=Application.Status.APPLIED,
+            match_score=None,
+        )
+
+        self.client.login(email="recruiter_scoring@example.com", password="Password123!")
+        applicants_url = reverse("recruiters:job_applicants", kwargs={"pk": self.target_job.pk})
+        response = self.client.get(applicants_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "92% Fit")
+        self.assertContains(response, "--")

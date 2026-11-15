@@ -51,9 +51,13 @@
         </div>
       </div>
 
-      <!-- Right: Status / Application Action Pill -->
+      <!-- Right: Status / Application Action Pill & Live AI Score -->
       <div class="flex flex-col sm:items-end gap-space-sm shrink-0">
-        <div class="flex items-center gap-space-xs">
+        <div class="flex items-center gap-space-xs flex-wrap justify-end">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-fixed/60 text-primary border border-primary/20 font-label-md text-label-md font-bold shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+            <span>{{ match_score }}% Match</span>
+          </div>
           <a href="{% url 'students:skill_gap' job_id=job.pk %}" class="px-space-md py-space-sm rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm">
             Check Skill Gap
           </a>

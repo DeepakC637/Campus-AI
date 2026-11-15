@@ -141,15 +141,15 @@
                 <div class="font-label-sm text-label-sm text-secondary">{{ app.student.backlogs }} Backlogs</div>
               </td>
 
-              <!-- Match score (Phase 8 placeholder if none) -->
+              <!-- Match score -->
               <td class="py-space-md px-space-md whitespace-nowrap">
-                {% if app.match_score %}
-                  <div class="flex items-center gap-1.5 font-bold text-emerald-700">
+                {% if app.match_score is not None %}
+                  <div class="flex items-center gap-1.5 font-bold {% if app.match_score >= 70 %}text-emerald-700{% elif app.match_score >= 40 %}text-primary{% else %}text-amber-700{% endif %}">
                     <span class="material-symbols-outlined text-[18px]">verified</span>
                     <span>{{ app.match_score|floatformat:0 }}% Fit</span>
                   </div>
                 {% else %}
-                  <span class="text-on-surface-variant font-medium">—</span>
+                  <span class="text-on-surface-variant font-medium">--</span>
                 {% endif %}
               </td>
 

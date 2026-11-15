@@ -180,15 +180,15 @@
       <div class="flex items-center justify-between pb-space-xs">
         <div>
           <div class="flex items-center gap-space-xs">
-            <h2 class="font-headline-sm text-headline-sm text-on-surface">Open Job Drives</h2>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">Recommended Job Drives</h2>
             <span class="material-symbols-outlined text-[20px] text-primary">auto_awesome</span>
           </div>
           <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-            Active campus drives you have not applied to yet
+            Top campus drives ranked by profile compatibility &amp; skill matching
           </p>
         </div>
         <a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary font-semibold hover:underline" href="{% url 'students:jobs' %}">
-          <span>Browse all ({{ open_jobs|length }})</span>
+          <span>Browse all</span>
           <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
         </a>
       </div>
@@ -232,12 +232,15 @@
                   </div>
                 </div>
 
-                <!-- Match Score / AI Placement Placeholder -->
+                <!-- Real AI Match Score -->
                 <div class="flex items-center gap-space-sm sm:flex-col sm:items-end self-end sm:self-auto shrink-0">
-                  <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center">
-                    <span class="font-headline-sm text-[16px] font-bold text-on-surface-variant">—</span>
+                  <div class="w-14 h-12 px-2 rounded-xl {% if job.match_score >= 70 %}bg-emerald-100 text-emerald-800{% elif job.match_score >= 40 %}bg-primary-fixed/60 text-primary{% else %}bg-surface-container text-on-surface-variant{% endif %} flex items-center justify-center shadow-sm">
+                    <span class="font-headline-sm text-[15px] font-bold">{% if job.match_score is not None %}{{ job.match_score|floatformat:0 }}%{% else %}—{% endif %}</span>
                   </div>
-                  <span class="font-label-sm text-label-sm text-on-surface-variant" title="AI match scoring unlocks in Phase 8">Match Score</span>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-[14px] text-primary">auto_awesome</span>
+                    <span>AI Match</span>
+                  </span>
                 </div>
               </div>
 
