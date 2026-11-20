@@ -1,5 +1,6 @@
 """
-Django settings for placementhub_project project.
+Base Django settings for placementhub_project project.
+Shared across development and production environments.
 """
 
 from pathlib import Path
@@ -7,29 +8,29 @@ import environ
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# settings/base.py -> settings -> placementhub_project -> project root
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Initialize django-environ
 env = environ.Env(
     DEBUG=(bool, True)
 )
 
-# Read .env file from project root
+# Read .env file from project root if it exists
 env_file = BASE_DIR / '.env'
 if env_file.exists():
     environ.Env.read_env(str(env_file))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Shared secret key fallback for development
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-secret-key-for-dev-placementhub-12345')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug flag (overridden in dev.py and prod.py)
 DEBUG = env('DEBUG', cast=bool, default=True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # PlacementHub Apps
     'accounts',
     'students',
@@ -89,7 +90,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'placementhub_project.wsgi.application'
 
 
-# Database configuration using django-environ
+# Default database configuration using django-environ
 DATABASES = {
     'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
@@ -187,4 +188,3 @@ LOGGING = {
 
 # Authentication URL redirects
 LOGIN_URL = 'accounts:login'
-
